@@ -25,7 +25,7 @@ Une case de la carte masque cette zone.
 
 ## Méthode
 
-- Sources : HelloWork, emploi-territorial.fr, sites des collectivités (MACS, Agglo Pays Basque), le 13/11/2026.
+- Sources : HelloWork, emploi-territorial.fr et sites des mairies, le 13/11/2026. Détail commune par commune dans `data/sources-mairies.md`.
 - Seules des annonces réellement consultées sont listées, avec leur lien. Les offres expirées sont exclues.
 - Email et téléphone restent vides quand l'annonce ne les donne pas. Aucun contact n'est inventé.
 - **Score techno /5** : recouvrement avec le CV master (TypeScript/Node, CI/CD, Kubernetes, Docker, tests, Linux).
@@ -35,7 +35,8 @@ Une case de la carte masque cette zone.
 
 ## Constats
 
-- Aucune offre informatique ouverte dans les sites de MACS ou de l'Agglo Pays Basque à cette date.
+- Sur les ~45 mairies et collectivités, seule la Ville de Bayonne a une offre informatique ouverte.
+- Anglet n'a pas pu être lu automatiquement : à vérifier à la main.
 - Aucune offre trouvée à Saint-Pierre-d'Irube ou ses communes limitrophes hors Bayonne.
 - Aucune annonce ne mentionne de contribution aux communs numériques. Les scores « libre » restent donc bas.
 
