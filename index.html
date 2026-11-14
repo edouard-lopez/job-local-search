@@ -64,13 +64,14 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,att
 L.circleMarker(ORX,{radius:8,color:"#c0392b",fillOpacity:.9}).addTo(map).bindTooltip("Orx (domicile)");
 const markers = OFFRES.map(o => L.marker([o.lat,o.lon]).bindPopup(
   `<b>${o.poste}</b><br>${o.entite}<br>${o.commune} · ${o.contrat}<br>🚲 ~${o.velo_min} min · 🚗 ~${o.voiture_min} min<br><a href="${o.lien}" target="_blank" rel="noopener">Annonce</a>`));
-function chips(el, values, set){
-  values.forEach(v=>{const b=document.createElement("button");b.className="chip";b.textContent=v;b.setAttribute("aria-pressed","false");
+function chips(el, values, set, counts){
+  values.forEach(v=>{const b=document.createElement("button");b.className="chip";b.textContent=`${v} (${counts[v]})`;b.setAttribute("aria-pressed","false");
     b.onclick=()=>{set.has(v)?set.delete(v):set.add(v);b.setAttribute("aria-pressed",set.has(v));render();};el.appendChild(b);});
 }
-chips(fContrat,[...new Set(OFFRES.map(o=>cat(o.contrat)))].sort(),state.contrat);
+const contratCount={};OFFRES.forEach(o=>{const c=cat(o.contrat);contratCount[c]=(contratCount[c]||0)+1;});
+chips(fContrat,Object.keys(contratCount).sort(),state.contrat,contratCount);
 const techCount={};OFFRES.forEach(o=>o.technos.forEach(t=>techCount[t]=(techCount[t]||0)+1));
-chips(fTech,Object.keys(techCount).sort((a,b)=>techCount[b]-techCount[a]||a.localeCompare(b)),state.tech);
+chips(fTech,Object.keys(techCount).sort((a,b)=>techCount[b]-techCount[a]||a.localeCompare(b)),state.tech,techCount);
 fZone.onchange=render; map.on("moveend",render);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 function render(){
