@@ -20,7 +20,7 @@ jobs:
       - uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          claude_args: --max-turns 40 --allowedTools "WebSearch,WebFetch,Read,Write,Edit,Bash(python3 scripts/build.py)"
+          claude_args: --model sonnet --effort low --max-turns 40 --allowedTools "WebSearch,WebFetch,Read,Write,Edit,Bash(python3 scripts/build.py)"
           prompt: |
             Tu mets à jour une liste d'offres d'emploi locales.
             1. Lis SEARCH-CRITERIA.md : il définit le profil, les zones, les scores et les règles.
