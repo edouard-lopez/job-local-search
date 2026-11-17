@@ -23,6 +23,6 @@ jobs:
           ref: main
       - run: python3 scripts/build.py
       - run: mkdir _site && cp index.html _site/ && cp -r data _site/
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v4
       - id: deploy
         uses: actions/deploy-pages@v4
