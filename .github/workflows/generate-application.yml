@@ -1,0 +1,39 @@
+name: Générer une candidature
+on:
+  workflow_dispatch:
+    inputs:
+      offer_id:
+        description: "Numéro de l'offre (affiché sur la carte)"
+        required: true
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Vérifier qui lance le workflow
+        if: github.actor != 'edouard-lopez'
+        run: |
+          echo "::error::Seul edouard-lopez peut lancer ce workflow. Connecte-toi avec ce compte, ou forke le dépôt pour lancer ta propre recherche."
+          exit 1
+      - uses: actions/checkout@v4
+      - name: Préparer le CV master (secret, jamais committé)
+        env:
+          CV: ${{ secrets.CV_MASTER_MD }}
+        run: printf '%s' "$CV" > cv-extended-master.claude.md
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_args: --allowedTools "Skill,WebFetch,Read,Write,Edit,Glob"
+          prompt: |
+            Utilise le skill adapter-candidature (.claude/skills/adapter-candidature).
+            L'offre est l'entrée d'id ${{ inputs.offer_id }} dans data/offres.json. Lis son champ "lien" pour la description complète.
+            Le CV est cv-extended-master.claude.md.
+            Ce workflow n'est pas interactif : n'attends pas de validation après la critique, enchaîne toutes les étapes.
+            Écris les fichiers dans applications/.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: candidature-offre-${{ inputs.offer_id }}
+          path: applications/

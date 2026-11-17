@@ -1,0 +1,47 @@
+name: Mettre à jour les offres
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+  id-token: write
+concurrency:
+  group: update-offers
+jobs:
+  search:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Vérifier qui lance le workflow
+        if: github.actor != 'edouard-lopez'
+        run: |
+          echo "::error::Seul edouard-lopez peut lancer ce workflow. Connecte-toi avec ce compte, ou forke le dépôt pour lancer ta propre recherche."
+          exit 1
+      - uses: actions/checkout@v4
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_args: --allowedTools "WebSearch,WebFetch,Read,Write,Edit,Bash(python3 scripts/build.py)"
+          prompt: |
+            Tu mets à jour une liste d'offres d'emploi locales.
+            1. Lis SEARCH-CRITERIA.md : il définit le profil, les zones, les scores et les règles.
+            2. Lis data/offres-source.json : c'est la liste actuelle, avec son format.
+            3. Vérifie chaque offre existante. Retire celles qui sont expirées ou introuvables.
+            4. Cherche les nouvelles offres selon les critères et les sources. Ajoute-les au même format, avec lat/lon et geo_precision.
+            5. Mets à jour data/sources-mairies.md avec les sources consultées aujourd'hui.
+            6. Lance python3 scripts/build.py.
+            Respecte strictement les règles : rien d'inventé, un lien réel par offre.
+      - name: Committer les données
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet && echo "Aucun changement" && exit 0
+          git commit -m "Met à jour les offres ($(date +%F))"
+          git push
+  publish:
+    needs: search
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/pages.yml

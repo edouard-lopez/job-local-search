@@ -47,6 +47,7 @@ a{color:var(--acc)}
 <div class="filters">
 <label class="b">Type de contrat</label><div class="chips" id="fContrat"></div>
 <label class="b">Technos</label><div class="chips" id="fTech"></div>
+<a class="chip" id="btnUpdate" target="_blank" rel="noopener">↻ Mettre à jour les offres</a>
 <label class="b"><input type="checkbox" id="fZone"> Masquer la zone Lasseube/Pau</label>
 </div>
 <div class="count" id="count"></div>
@@ -55,6 +56,9 @@ a{color:var(--acc)}
 </main>
 <script>
 const OFFRES = /*__DATA__*/[];
+const REPO = location.hostname.endsWith("github.io")
+  ? `${location.hostname.split(".")[0]}/${location.pathname.split("/")[1]}` : "edouard-lopez/job-local-search";
+const WF = f => `https://github.com/${REPO}/actions/workflows/${f}`;
 const ORX = [43.6036, -1.3767];
 const cat = c => /CDI/i.test(c) ? "CDI" : /CDD/i.test(c) ? "CDD" : /intérim/i.test(c) ? "Intérim" :
   /fonction/i.test(c) ? "Fonction publique" : /freelance/i.test(c) ? "Freelance" : /altern|apprent/i.test(c) ? "Alternance" : "Autre";
@@ -92,10 +96,11 @@ function render(){
       <span>🚲 ~${o.velo_min} min</span><span>🚗 ~${o.voiture_min} min</span><span>${o.distance_km} km</span></div>
     <details><summary>Mission</summary><p>${esc(o.mission)}</p></details>
     <div class="tech">${o.technos.map(t=>`<span>${esc(t)}</span>`).join("")}</div>
-    <div class="meta" style="margin-top:6px"><a href="${o.lien}" target="_blank" rel="noopener">Voir l'annonce</a>
+    <div class="meta" style="margin-top:6px"><a href="${o.lien}" target="_blank" rel="noopener">Voir l'annonce</a> · <a href="${WF("generate-application.yml")}" target="_blank" rel="noopener" title="Lance « Run workflow » avec ce numéro">✉ Candidature (offre n° ${o.id})</a>
       ${o.email?` · ${esc(o.email)}`:""}${o.telephone?` · ${esc(o.telephone)}`:""} · publiée le ${esc(o.publie)}</div>
   </article>`).join("");
 }
+btnUpdate.href=WF("update-offers.yml");
 render();
 </script>
 </body>

@@ -44,3 +44,16 @@ Une case de la carte masque cette zone.
 
 - Surveiller emploi-territorial.fr (filtre informatique, Landes et Pyrénées-Atlantiques).
 - Candidatures spontanées vers des acteurs du libre locaux.
+
+## Publication sur GitHub
+
+- `pages.yml` publie la carte sur GitHub Pages à chaque push sur `main`.
+- `update-offers.yml` (bouton « ↻ Mettre à jour les offres ») : Claude relit `SEARCH-CRITERIA.md`, refait la recherche, committe et republie.
+- `generate-application.yml` (lien « ✉ Candidature » sur chaque offre) : lance « Run workflow » avec le numéro de l'offre. Claude applique le skill `adapter-candidature` et dépose CV + lettre en artefact du run.
+- Seul `edouard-lopez` peut lancer ces workflows. Les autres doivent se connecter avec ce compte ou forker le dépôt.
+
+Secrets à créer (Settings → Secrets and variables → Actions) :
+- `ANTHROPIC_API_KEY` : clé API Anthropic.
+- `CV_MASTER_MD` : contenu de `cv-extended-master.claude.md`. Il reste hors du dépôt public.
+
+Pages : Settings → Pages → Source : « GitHub Actions ».
