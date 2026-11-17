@@ -1,4 +1,4 @@
-# Sources consultées : mairies et collectivités (13/11/2026)
+# Sources consultées : mairies et collectivités (17/11/2026)
 
 Méthode : page « recrutement » du site de la mairie quand elle existe et répond. Sinon, offres de l'employeur sur emploi-territorial.fr (où publient presque toutes les collectivités).
 « Échec » signifie que le site a refusé la lecture automatique : à vérifier à la main.
@@ -35,3 +35,9 @@ Méthode : page « recrutement » du site de la mairie quand elle existe et rép
 - [Bayonne — emploi](https://www.bayonne.fr/information-transversale/emploi)
 - [CDG 40 — offres](https://www.cdg40.fr/emploi_les_emplois_offres.php)
 - Créer des alertes emploi-territorial (filtre « informatique », Landes et Pyrénées-Atlantiques).
+
+## Mise à jour du 17/11/2026
+
+- hellowork.com : 13 offres existantes revérifiées ; 8 expirées ou retirées (Bayonne mairie, Team.is, Only Networks, Capgemini Bayonne, Adaxis, Safran/Crit, Capgemini Pau x2) et supprimées.
+- choisirleservicepublic.gouv.fr : UPPA, IUT d'Anglet (ajoutée) ; Lannemezan (hors zone, titulaires uniquement) ; Urrugne (hors zone).
+- Recherches web (France Travail, Welcome to the Jungle) : aucune offre récente confirmée en zone MACS/Seignanx. Pages mairies non relues cette fois.
