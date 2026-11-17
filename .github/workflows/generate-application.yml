@@ -26,7 +26,7 @@ jobs:
       - uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          claude_args: --allowedTools "Skill,WebFetch,Read,Write,Edit,Glob"
+          claude_args: --max-turns 40 --allowedTools "Skill,WebFetch,Read,Write,Edit,Glob"
           prompt: |
             Utilise le skill adapter-candidature (.claude/skills/adapter-candidature).
             L'offre est l'entrée d'id ${{ inputs.offer_id }} dans data/offres.json. Lis son champ "lien" pour la description complète.
