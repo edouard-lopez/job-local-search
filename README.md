@@ -53,7 +53,7 @@ Une case de la carte masque cette zone.
 - Seul `edouard-lopez` peut lancer ces workflows. Les autres doivent se connecter avec ce compte ou forker le dépôt.
 
 Secrets à créer (Settings → Secrets and variables → Actions) :
-- `ANTHROPIC_API_KEY` : clé API Anthropic.
+- `CLAUDE_CODE_OAUTH_TOKEN` : jeton obtenu avec `claude setup-token` (abonnement Pro ou Max).
 - `CV_MASTER_MD` : contenu de `cv-extended-master.claude.md`. Il reste hors du dépôt public.
 
 Pages : Settings → Pages → Source : « GitHub Actions ».
