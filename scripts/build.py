@@ -3,7 +3,7 @@ import json, csv, math, pathlib
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 ORX = (43.6036, -1.3767)
 ROAD_FACTOR = 1.3      # distance routière ≈ vol d'oiseau × 1,3
-CAR_KMH, BIKE_KMH = 55, 16
+CAR_KMH, BIKE_KMH = 55, 20
 
 def haversine(a, b):
     r = 6371
@@ -33,6 +33,13 @@ with open(ROOT/"data/offres.csv", "w", newline="", encoding="utf-8") as f:
     for o in offres:
         w.writerow([", ".join(o[k]) if k == "technos" else o[k] for k, _ in cols])
 
-tpl = (ROOT/"scripts/template.html").read_text()
+import re
+crit = (ROOT/"SEARCH-CRITERIA.md").read_text()
+line = re.search(r"Technos maîtrisées\s*:\s*(.+)", crit).group(1)
+known = []
+for t in line.rstrip(".").split(","):
+    t = re.sub(r"\(.*?\)", "", t).strip()
+    known += [t] + [x.strip() for x in t.split("/") if "/" in t and t != "CI/CD"]
+tpl = (ROOT/"scripts/template.html").read_text().replace("/*__KNOWN__*/[]", json.dumps(known, ensure_ascii=False))
 (ROOT/"index.html").write_text(tpl.replace("/*__DATA__*/[]", json.dumps(offres, ensure_ascii=False)))
 print(f"{len(offres)} offres écrites")

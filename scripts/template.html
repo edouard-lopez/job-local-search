@@ -31,7 +31,20 @@ label.b{font-weight:600;font-size:12px;color:var(--mut);text-transform:uppercase
 details summary{cursor:pointer;color:var(--acc)}
 a{color:var(--acc)}
 .tech{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
-.tech span{background:var(--chip);border-radius:4px;padding:1px 6px;font-size:11.5px}
+.tech span{border-radius:4px;padding:1px 6px;font-size:11.5px}
+.known{background:var(--chip);border:1px solid var(--acc)}
+.unknown{background:transparent;border:1px dashed var(--mut);color:var(--mut)}
+.chip.unknown{border-style:dashed}
+.chip.known::before,.tech .known::before{content:"✓ ";color:var(--acc)}
+.chip[aria-pressed=true]::before{color:#fff}
+.card.dig{border-left:4px solid #2563eb}
+.card.out{opacity:.45;padding:6px 12px}
+.card.out details,.card.out .tech,.card.out .scores{display:none}
+.star{color:#2563eb}
+.tri{display:flex;gap:6px;margin-top:6px}
+.tri button{font-size:12px;border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:6px;padding:2px 8px;cursor:pointer}
+.tri button[aria-pressed=true]{background:var(--chip);border-color:var(--acc)}
+.legend{font-size:12px;color:var(--mut)}
 .wrap{overflow-x:auto}
 @media (max-width:760px){main{grid-template-columns:1fr;height:auto}#map{height:55vh}#side{border-left:0}}
 </style>
@@ -46,7 +59,7 @@ a{color:var(--acc)}
 <section id="side">
 <div class="filters">
 <label class="b">Type de contrat</label><div class="chips" id="fContrat"></div>
-<label class="b">Technos</label><div class="chips" id="fTech"></div>
+<label class="b">Technos</label><span class="legend">✓ plein = déjà utilisée · pointillés = inconnue</span><div class="chips" id="fTech"></div>
 <a class="chip" id="btnUpdate" target="_blank" rel="noopener">↻ Mettre à jour les offres</a>
 <label class="b"><input type="checkbox" id="fZone"> Masquer la zone Lasseube/Pau</label>
 </div>
@@ -56,6 +69,13 @@ a{color:var(--acc)}
 </main>
 <script>
 const OFFRES = /*__DATA__*/[];
+const KNOWN = new Set(/*__KNOWN__*/[].map(t=>t.toLowerCase()));
+const isKnown = t => KNOWN.has(t.toLowerCase()) || t.split("/").some(x=>KNOWN.has(x.trim().toLowerCase()));
+const kcls = t => isKnown(t) ? "known" : "unknown";
+let triage = {};
+try { triage = JSON.parse(localStorage.getItem("triage")||"{}"); } catch(e) {}
+function setTriage(lien, v){ triage[lien] = triage[lien]===v ? undefined : v;
+  try { localStorage.setItem("triage", JSON.stringify(triage)); } catch(e) {} render(); }
 const REPO = location.hostname.endsWith("github.io")
   ? `${location.hostname.split(".")[0]}/${location.pathname.split("/")[1]}` : "edouard-lopez/job-local-search";
 const WF = f => `https://github.com/${REPO}/actions/workflows/${f}`;
@@ -69,7 +89,7 @@ L.circleMarker(ORX,{radius:8,color:"#c0392b",fillOpacity:.9}).addTo(map).bindToo
 const markers = OFFRES.map(o => L.marker([o.lat,o.lon]).bindPopup(
   `<b>${o.poste}</b><br>${o.entite}<br>${o.commune} · ${o.contrat}<br>🚲 ~${o.velo_min} min · 🚗 ~${o.voiture_min} min<br><a href="${o.lien}" target="_blank" rel="noopener">Annonce</a>`));
 function chips(el, values, set, counts){
-  values.forEach(v=>{const b=document.createElement("button");b.className="chip";b.textContent=`${v} (${counts[v]})`;b.setAttribute("aria-pressed","false");
+  values.forEach(v=>{const b=document.createElement("button");b.className="chip"+(el.id==="fTech"?" "+kcls(v):"");b.textContent=`${v} (${counts[v]})`;b.setAttribute("aria-pressed","false");
     b.onclick=()=>{set.has(v)?set.delete(v):set.add(v);b.setAttribute("aria-pressed",set.has(v));render();};el.appendChild(b);});
 }
 const contratCount={};OFFRES.forEach(o=>{const c=cat(o.contrat);contratCount[c]=(contratCount[c]||0)+1;});
@@ -87,18 +107,20 @@ function render(){
     ok?markers[i].addTo(map):markers[i].remove();
     if(ok&&bounds.contains([o.lat,o.lon]))shown.push(o);
   });
-  shown.sort((a,b)=>(b.score_techno+b.score_libre)-(a.score_techno+a.score_libre));
+  shown.sort((a,b)=>String(b.publie||"").localeCompare(String(a.publie||"")));
   count.textContent=`${shown.length} offre(s) dans la zone visible`;
-  list.innerHTML=shown.map(o=>`<article class="card">
-    <h3>${esc(o.poste)}</h3>
+  list.innerHTML=shown.map((o,k)=>{const t=triage[o.lien];return `<article class="card${t?" "+t:""}">
+    <h3>${t==="dig"?'<span class="star">★</span> ':""}${esc(o.poste)}</h3>
     <div class="meta">${esc(o.entite)} · ${esc(o.commune)} · ${esc(o.secteur)} · <b>${esc(o.contrat)}</b></div>
     <div class="scores"><span>Techno <b>${o.score_techno}/5</b></span><span>Libre <b>${o.score_libre}/5</b></span>
       <span>🚲 ~${o.velo_min} min</span><span>🚗 ~${o.voiture_min} min</span><span>${o.distance_km} km</span></div>
     <details><summary>Mission</summary><p>${esc(o.mission)}</p></details>
-    <div class="tech">${o.technos.map(t=>`<span>${esc(t)}</span>`).join("")}</div>
+    <div class="tech">${o.technos.map(t=>`<span class="${kcls(t)}">${esc(t)}</span>`).join("")}</div>
     <div class="meta" style="margin-top:6px"><a href="${o.lien}" target="_blank" rel="noopener">Voir l'annonce</a> · <a href="${WF("generate-application.yml")}" target="_blank" rel="noopener" title="Lance « Run workflow » avec ce numéro">✉ Candidature (offre n° ${o.id})</a>
       ${o.email?` · ${esc(o.email)}`:""}${o.telephone?` · ${esc(o.telephone)}`:""} · publiée le ${esc(o.publie)}</div>
-  </article>`).join("");
+    <div class="tri"><button data-l="${esc(o.lien)}" data-v="dig" aria-pressed="${t==="dig"}">★ À creuser</button><button data-l="${esc(o.lien)}" data-v="out" aria-pressed="${t==="out"}">✕ À exclure</button></div>
+  </article>`}).join("");
+  list.querySelectorAll(".tri button").forEach(b=>b.onclick=()=>setTriage(b.dataset.l,b.dataset.v));
 }
 btnUpdate.href=WF("update-offers.yml");
 render();

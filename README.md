@@ -30,7 +30,7 @@ Une case de la carte masque cette zone.
 - Email et téléphone restent vides quand l'annonce ne les donne pas. Aucun contact n'est inventé.
 - **Score techno /5** : recouvrement avec le CV master (TypeScript/Node, CI/CD, Kubernetes, Docker, tests, Linux).
 - **Score logiciel libre /5** : 5 = contribue aux communs, 3 = usage affirmé du libre, 1-2 = libre présent sans engagement visible, 0 = rien.
-- **Distances : estimations.** Les services Nominatim et OSRM n'étaient pas joignables. Le script calcule la distance à vol d'oiseau × 1,3, puis 55 km/h en voiture et 16 km/h à vélo. Vérifie le trajet réel sur openstreetmap.org (itinéraire vélo).
+- **Distances : estimations.** Les services Nominatim et OSRM n'étaient pas joignables. Le script calcule la distance à vol d'oiseau × 1,3, puis 55 km/h en voiture et 20 km/h à vélo. Vérifie le trajet réel sur openstreetmap.org (itinéraire vélo).
 - Beaucoup d'annonces ne donnent que la commune. Le marqueur est alors au centre de la commune (champ `geo_precision`).
 
 ## Constats
