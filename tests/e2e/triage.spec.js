@@ -48,4 +48,20 @@ test.describe("Tri « À creuser » / « À exclure »", () => {
     await page.reload();
     await expect(card(page, nearOffer())).toHaveAccessibleName(/^À creuser\./);
   });
+
+  test("ordre : non traitées, puis À creuser, puis exclues, chaque groupe par date", async ({ page }) => {
+    const cards = page.getByRole("article");
+    const first = await cards.nth(0).getAttribute("data-id");
+    const second = await cards.nth(1).getAttribute("data-id");
+    await cards.nth(0).getByRole("button", { name: /^Marquer comme exclue/ }).click();
+    await page.locator(`article[data-id="${second}"]`).getByRole("button", { name: /Marquer .* À creuser/ }).click();
+    const ids = await cards.evaluateAll((els) => els.map((e) => e.dataset.id));
+    expect(ids.at(-1)).toBe(first);
+    expect(ids.at(-2)).toBe(second);
+    const names = await cards.evaluateAll((els) => els.map((e) => e.getAttribute("aria-label")));
+    const rank = (n) => (n.startsWith("Exclue.") ? 2 : n.startsWith("À creuser.") ? 1 : 0);
+    expect(names.map(rank)).toEqual([...names.map(rank)].sort());
+    const dates = await cards.evaluateAll((els) => els.filter((e) => !/^(Exclue|À creuser)\./.test(e.getAttribute("aria-label"))).map((e) => e.querySelector("time").textContent));
+    expect(dates).toEqual([...dates].sort().reverse());
+  });
 });

@@ -10,6 +10,11 @@ const offers = useOffersStore();
 const triage = useTriageStore();
 const route = useRouteStore();
 
+/** Untriaged first, then À creuser, then excluded; each group keeps the date order. */
+const RANK = { null: 0, dig: 1, out: 2 };
+const ordered = computed(() =>
+  [...offers.visible].sort((a, b) => RANK[triage.statusOf(a)] - RANK[triage.statusOf(b)]));
+
 const routeText = computed(() => {
   if (route.status === "loading") return t("route-loading");
   if (route.status === "failed") return t("route-failed");
@@ -24,7 +29,7 @@ const routeText = computed(() => {
   <div class="my-2 text-gray-500" role="status" aria-live="polite">{{ t("visible-count", offers.visible.length) }}</div>
   <h2 class="sr-only">{{ t("offers-heading") }}</h2>
   <ul class="flex flex-col gap-2.5">
-    <li v-for="offer in offers.visible" :key="offer.id">
+    <li v-for="offer in ordered" :key="offer.id">
       <OfferCard :offer="offer" :status="triage.statusOf(offer)" :focused="route.offerId === offer.id"
         :route-text="route.offerId === offer.id ? routeText : ''"
         @dig="triage.dig(offer)" @cross="triage.cross(offer)" @focus="route.focus(offer)" />
