@@ -34,8 +34,8 @@ function onKey(event) {
 
 <template>
   <article tabindex="0" :aria-label="label" :data-id="offer.id"
-    class="relative cursor-pointer rounded-lg px-3 py-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
-    :class="{ 'border-2 border-emerald-600 dark:border-emerald-500': dig, 'border border-gray-200 dark:border-gray-800': !dig, 'py-1.5 opacity-50': out, 'ring-2 ring-emerald-600': focused }"
+    class="relative cursor-pointer rounded-lg border border-gray-200 px-3 py-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 dark:border-gray-800"
+    :class="{ 'border-l-4 border-l-emerald-600 dark:border-l-emerald-500': dig, 'py-1.5 opacity-50': out, 'ring-2 ring-emerald-600': focused }"
     @click="onClick" @keydown.enter="onKey" @keydown.space="onKey">
     <div class="flex items-start gap-2">
       <div class="min-w-0 flex-1">

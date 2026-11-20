@@ -8,7 +8,7 @@ test.describe("Tri « À creuser » / « À exclure »", () => {
     const c = card(page, o);
     await c.getByRole("button", { name: /Marquer .* À creuser/ }).click();
     await expect(c).toHaveAccessibleName(/^À creuser\./);
-    await expect(c).toHaveCSS("border-top-color", "rgb(5, 150, 105)");
+    await expect(c).toHaveCSS("border-left-color", "rgb(5, 150, 105)");
     await expect(c.getByRole("button", { name: /Marquer .* À creuser/ })).toHaveCount(0);
     const cv = c.getByRole("link", { name: /Générer un CV personnalisé/ });
     await expect(cv).toHaveAttribute("href", /\/actions\/workflows\/generate-application\.yml$/);

@@ -14,11 +14,12 @@ test.describe("Itinéraire au clic", () => {
     expect(routeRequests.at(-1)).toContain("/routed-bike/");
   });
 
-  test("l'offre choisie a un marqueur d'arrivée rouge et un itinéraire bleu", async ({ page }) => {
-    const o = nearOffer();
+  test("l'offre choisie a un marqueur d'arrivée rouge et un itinéraire vert à vélo", async ({ page }) => {
+    const o = nearOffer((x) => x.distance_km < 20);
+    test.skip(!o, "aucune offre à moins de 20 km");
     await card(page, o).locator("time").click();
     await expect(page.locator(".arrival-marker path")).toHaveAttribute("fill", "#dc2626");
-    await expect(page.locator('#map path.leaflet-interactive[stroke="#2563eb"]')).toHaveCount(1);
+    await expect(page.locator('#map path.leaflet-interactive[stroke="#16a34a"]')).toHaveCount(1);
   });
 
   test("au-delà de 20 km : itinéraire voiture", async ({ page, routeRequests }) => {
