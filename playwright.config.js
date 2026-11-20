@@ -1,7 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
 // The same suite runs against every version of the map.
-// E2E_SERVER picks the command that serves it (static page today, Vite build later).
+// E2E_SERVER overrides the command that builds and serves it.
 const PORT = 4173;
 
 export default defineConfig({
@@ -11,7 +11,7 @@ export default defineConfig({
   reporter: process.env.CI ? "github" : "list",
   use: { baseURL: `http://127.0.0.1:${PORT}`, trace: "off", locale: "fr-FR" },
   webServer: {
-    command: process.env.E2E_SERVER ?? `python3 -m http.server ${PORT} --bind 127.0.0.1`,
+    command: process.env.E2E_SERVER ?? "npm run build && npm run preview",
     url: `http://127.0.0.1:${PORT}`,
     reuseExistingServer: !process.env.CI,
   },

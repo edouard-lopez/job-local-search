@@ -1,4 +1,4 @@
-"""Calcule les distances estimées depuis Orx, puis écrit offres.json, offres.csv et injecte les données dans index.html."""
+"""Calcule les distances estimées depuis Orx, puis écrit offres.json, offres.csv et known-technos.json pour l'application Vue."""
 import json, csv, math, pathlib
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 ORX = (43.6036, -1.3767)
@@ -40,6 +40,5 @@ known = []
 for t in line.rstrip(".").split(","):
     t = re.sub(r"\(.*?\)", "", t).strip()
     known += [t] + [x.strip() for x in t.split("/") if "/" in t and t != "CI/CD"]
-tpl = (ROOT/"scripts/template.html").read_text().replace("/*__KNOWN__*/[]", json.dumps(known, ensure_ascii=False))
-(ROOT/"index.html").write_text(tpl.replace("/*__DATA__*/[]", json.dumps(offres, ensure_ascii=False)))
+(ROOT/"data/known-technos.json").write_text(json.dumps(known, ensure_ascii=False, indent=2))
 print(f"{len(offres)} offres écrites")

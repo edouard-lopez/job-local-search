@@ -3,12 +3,26 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "vite",
     "build:data": "python3 scripts/build.py",
-    "serve": "python3 -m http.server 4173",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 4173 --strictPort",
+    "changelog": "node scripts/changelog.mjs",
     "test:e2e": "playwright test --trace off"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",
+    "@vitejs/plugin-vue": "6.0.11",
+    "autoprefixer": "10.7.0",
+    "postcss": "8.5.33",
+    "tailwindcss": "3.4.17",
+    "vite": "8.3.8"
+  },
+  "dependencies": {
+    "banana-i18n": "2.4.0",
+    "pinia": "4.1.0",
+    "vue": "3.5.46",
+    "vue-router": "5.5.1",
     "leaflet": "1.9.4"
   }
 }
