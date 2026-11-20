@@ -1,6 +1,12 @@
 [
   {
-    "hash": "32739fd",
+    "hash": "d8acaad",
+    "date": "2026-11-20",
+    "subject": "Liste ordonnée : non traitées, puis à creuser, puis exclues",
+    "body": ""
+  },
+  {
+    "hash": "b9a31d5",
     "date": "2026-11-20",
     "subject": "Tri partagé entre appareils : Yjs en P2P (WebRTC) et sauvegarde dans un Gist, indicateur de pairs",
     "body": ""
