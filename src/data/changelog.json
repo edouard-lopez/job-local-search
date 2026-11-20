@@ -1,6 +1,18 @@
 [
   {
-    "hash": "4250a32",
+    "hash": "32739fd",
+    "date": "2026-11-20",
+    "subject": "Tri partagé entre appareils : Yjs en P2P (WebRTC) et sauvegarde dans un Gist, indicateur de pairs",
+    "body": ""
+  },
+  {
+    "hash": "b676f60",
+    "date": "2026-11-21",
+    "subject": "Merge pull request #3 from edouard-lopez/feat/highlight-dig",
+    "body": "Bordure « à creuser », marqueur d'arrivée et couleurs du trajet"
+  },
+  {
+    "hash": "865f0c2",
     "date": "2026-11-20",
     "subject": "Actions GitHub mises à jour vers leurs dernières versions stables",
     "body": ""

@@ -43,5 +43,20 @@
   "nav-styleguide": "Styleguide",
   "nav-changelog": "Changelog",
   "styleguide-title": "Styleguide",
-  "changelog-title": "Changelog"
+  "changelog-title": "Changelog",
+  "peers-button": "$1 {{PLURAL:$1|pair connecté|pairs connectés}}. Afficher les appareils et la synchronisation",
+  "peers-title": "Appareils connectés",
+  "peers-self": "cet appareil",
+  "peers-none": "Aucun autre appareil ouvert en ce moment.",
+  "sync-title": "Synchronisation",
+  "sync-help": "Le tri est enregistré dans un Gist GitHub secret. Collez un jeton GitHub limité au droit « gist ». Laissez l'identifiant vide pour créer le Gist.",
+  "sync-token": "Jeton GitHub",
+  "sync-gist": "Identifiant du Gist",
+  "sync-connect": "Connecter",
+  "sync-disconnect": "Déconnecter cet appareil",
+  "sync-status-off": "Synchronisation désactivée",
+  "sync-status-syncing": "Synchronisation…",
+  "sync-status-ok": "Tri enregistré dans le Gist",
+  "sync-status-error": "Erreur de synchronisation : $1",
+  "sync-gist-hint": "Utilisez cet identifiant sur vos autres appareils."
 }
