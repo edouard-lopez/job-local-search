@@ -35,15 +35,24 @@ a{color:var(--acc)}
 .known{background:var(--chip);border:1px solid var(--acc)}
 .unknown{background:transparent;border:1px dashed var(--mut);color:var(--mut)}
 .chip.unknown{border-style:dashed}
-.chip.known::before,.tech .known::before{content:"✓ ";color:var(--acc)}
-.chip[aria-pressed=true]::before{color:#fff}
 .card.dig{border-left:4px solid #2563eb}
 .card.out{opacity:.45;padding:6px 12px}
 .card.out details,.card.out .tech,.card.out .scores{display:none}
 .star{color:#2563eb}
-.tri{display:flex;gap:6px;margin-top:6px}
-.tri button{font-size:12px;border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:6px;padding:2px 8px;cursor:pointer}
-.tri button[aria-pressed=true]{background:var(--chip);border-color:var(--acc)}
+.head{display:flex;gap:8px;align-items:flex-start}
+.titles{flex:1;min-width:0}
+.card h3 a{color:var(--fg);text-decoration:none}
+.card h3 a:hover{text-decoration:underline}
+.date{white-space:nowrap;font-weight:400;font-size:12.5px;color:var(--mut)}
+abbr{text-decoration:underline dotted;cursor:help}
+.acts{display:flex;gap:4px;flex-shrink:0}
+.ico{border:1px solid var(--line);background:var(--bg);border-radius:6px;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;text-decoration:none;opacity:.55}
+.ico:hover,.ico[aria-pressed=true]{opacity:1;border-color:var(--acc)}
+.ico[aria-pressed=true]{background:var(--chip)}
+.card{cursor:pointer}
+.card.focused{box-shadow:0 0 0 2px var(--acc)}
+.route{font-size:12.5px;color:var(--acc);margin-top:6px}
+.card.out .acts{opacity:1}
 .legend{font-size:12px;color:var(--mut)}
 .wrap{overflow-x:auto}
 @media (max-width:760px){main{grid-template-columns:1fr;height:auto}#map{height:55vh}#side{border-left:0}}
@@ -59,7 +68,7 @@ a{color:var(--acc)}
 <section id="side">
 <div class="filters">
 <label class="b">Type de contrat</label><div class="chips" id="fContrat"></div>
-<label class="b">Technos</label><span class="legend">✓ plein = déjà utilisée · pointillés = inconnue</span><div class="chips" id="fTech"></div>
+<label class="b">Technos</label><span class="legend">plein = déjà utilisée · pointillés = inconnue</span><div class="chips" id="fTech"></div>
 <a class="chip" id="btnUpdate" target="_blank" rel="noopener">↻ Mettre à jour les offres</a>
 <label class="b"><input type="checkbox" id="fZone"> Masquer la zone Lasseube/Pau</label>
 </div>
@@ -72,6 +81,28 @@ const OFFRES = /*__DATA__*/[];
 const KNOWN = new Set(/*__KNOWN__*/[].map(t=>t.toLowerCase()));
 const isKnown = t => KNOWN.has(t.toLowerCase()) || t.split("/").some(x=>KNOWN.has(x.trim().toLowerCase()));
 const kcls = t => isKnown(t) ? "known" : "unknown";
+const sortTech = a => [...a].sort((x,y)=>(isKnown(y)-isKnown(x))||x.localeCompare(y,"fr",{sensitivity:"base"}));
+let focused = null, routeLayer = null, routeInfo = "";
+function showRouteInfo(){ const el=list.querySelector(`.card[data-id="${focused}"] .route`); if(el){el.hidden=!routeInfo;el.textContent=routeInfo;} }
+async function focusOffer(id){
+  const o = OFFRES.find(x=>x.id===id); if(!o) return;
+  focused = id; routeInfo = "Calcul de l'itinéraire…";
+  const bike = o.distance_km < 20;
+  render();
+  if(routeLayer){ routeLayer.remove(); routeLayer=null; }
+  try{
+    const prof = bike ? "routed-bike" : "routed-car";
+    const r = await fetch(`https://routing.openstreetmap.de/${prof}/route/v1/driving/${ORX[1]},${ORX[0]};${o.lon},${o.lat}?overview=full&geometries=geojson`);
+    const j = await r.json(); const rt = j.routes[0];
+    routeLayer = L.geoJSON(rt.geometry,{style:{color:bike?"#16a34a":"#2563eb",weight:5,opacity:.8}}).addTo(map);
+    const km = rt.distance/1000, min = bike ? km/20*60 : rt.duration/60;
+    routeInfo = `${bike?"🚲 Vélo":"🚗 Voiture"} : ${km.toFixed(1)} km, ~${Math.round(min)} min (itinéraire OpenStreetMap${bike?", 20 km/h":""})`;
+    map.fitBounds(routeLayer.getBounds(),{padding:[30,30]});
+  }catch(e){
+    routeInfo = "Itinéraire indisponible : distances estimées affichées."; map.setView([o.lat,o.lon],13);
+  }
+  showRouteInfo();
+}
 let triage = {};
 try { triage = JSON.parse(localStorage.getItem("triage")||"{}"); } catch(e) {}
 function setTriage(lien, v){ triage[lien] = triage[lien]===v ? undefined : v;
@@ -95,7 +126,7 @@ function chips(el, values, set, counts){
 const contratCount={};OFFRES.forEach(o=>{const c=cat(o.contrat);contratCount[c]=(contratCount[c]||0)+1;});
 chips(fContrat,Object.keys(contratCount).sort(),state.contrat,contratCount);
 const techCount={};OFFRES.forEach(o=>o.technos.forEach(t=>techCount[t]=(techCount[t]||0)+1));
-chips(fTech,Object.keys(techCount).sort((a,b)=>techCount[b]-techCount[a]||a.localeCompare(b)),state.tech,techCount);
+chips(fTech,sortTech(Object.keys(techCount)),state.tech,techCount);
 fZone.onchange=render; map.on("moveend",render);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 function render(){
@@ -109,18 +140,26 @@ function render(){
   });
   shown.sort((a,b)=>String(b.publie||"").localeCompare(String(a.publie||"")));
   count.textContent=`${shown.length} offre(s) dans la zone visible`;
-  list.innerHTML=shown.map((o,k)=>{const t=triage[o.lien];return `<article class="card${t?" "+t:""}">
-    <h3>${t==="dig"?'<span class="star">★</span> ':""}${esc(o.poste)}</h3>
-    <div class="meta">${esc(o.entite)} · ${esc(o.commune)} · ${esc(o.secteur)} · <b>${esc(o.contrat)}</b></div>
+  list.innerHTML=shown.map(o=>{const t=triage[o.lien];const ent=o.entite.split(/\s+/);const short=ent.length>3?ent.slice(0,3).join(" ")+"…":o.entite;
+  return `<article class="card${t?" "+t:""}${o.id===focused?" focused":""}" data-id="${o.id}">
+    <div class="head"><div class="titles">
+    <h3>${t==="dig"?'<span class="star">★</span> ':""}<a href="${o.lien}" target="_blank" rel="noopener">${esc(o.poste)}</a> <span class="date">· ${esc(o.publie)}</span></h3>
+    <div class="meta">${ent.length>3?`<abbr title="${esc(o.entite)}">${esc(short)}</abbr>`:esc(o.entite)} · ${esc(o.commune)} · ${esc(o.secteur)} · <b>${esc(o.contrat)}</b></div></div>
+    <div class="acts">
+      <button class="ico" data-l="${esc(o.lien)}" data-v="dig" aria-pressed="${t==="dig"}" title="Marquer À creuser" aria-label="Marquer À creuser">⭐</button>
+      <button class="ico" data-l="${esc(o.lien)}" data-v="out" aria-pressed="${t==="out"}" title="Marquer comme exclue" aria-label="Marquer comme exclue">❌</button>
+      <a class="ico" href="${WF("generate-application.yml")}" target="_blank" rel="noopener" title="Générer un CV personnalisé (markdown) : offre n° ${o.id}" aria-label="Générer un CV personnalisé">📝</a>
+    </div></div>
     <div class="scores"><span>Techno <b>${o.score_techno}/5</b></span><span>Libre <b>${o.score_libre}/5</b></span>
       <span>🚲 ~${o.velo_min} min</span><span>🚗 ~${o.voiture_min} min</span><span>${o.distance_km} km</span></div>
     <details><summary>Mission</summary><p>${esc(o.mission)}</p></details>
-    <div class="tech">${o.technos.map(t=>`<span class="${kcls(t)}">${esc(t)}</span>`).join("")}</div>
-    <div class="meta" style="margin-top:6px"><a href="${o.lien}" target="_blank" rel="noopener">Voir l'annonce</a> · <a href="${WF("generate-application.yml")}" target="_blank" rel="noopener" title="Lance « Run workflow » avec ce numéro">✉ Candidature (offre n° ${o.id})</a>
-      ${o.email?` · ${esc(o.email)}`:""}${o.telephone?` · ${esc(o.telephone)}`:""} · publiée le ${esc(o.publie)}</div>
-    <div class="tri"><button data-l="${esc(o.lien)}" data-v="dig" aria-pressed="${t==="dig"}">★ À creuser</button><button data-l="${esc(o.lien)}" data-v="out" aria-pressed="${t==="out"}">✕ À exclure</button></div>
+    <div class="tech">${sortTech(o.technos).map(t=>`<span class="${kcls(t)}">${esc(t)}</span>`).join("")}</div>
+    ${o.email||o.telephone?`<div class="meta" style="margin-top:6px">${esc(o.email||"")}${o.email&&o.telephone?" · ":""}${esc(o.telephone||"")}</div>`:""}
+    <div class="route" hidden></div>
   </article>`}).join("");
-  list.querySelectorAll(".tri button").forEach(b=>b.onclick=()=>setTriage(b.dataset.l,b.dataset.v));
+  list.querySelectorAll("button.ico").forEach(b=>b.onclick=e=>{e.stopPropagation();setTriage(b.dataset.l,b.dataset.v);});
+  list.querySelectorAll(".card").forEach(c=>c.onclick=e=>{if(e.target.closest("a,button,summary"))return;focusOffer(+c.dataset.id);});
+  if(focused)showRouteInfo();
 }
 btnUpdate.href=WF("update-offers.yml");
 render();
