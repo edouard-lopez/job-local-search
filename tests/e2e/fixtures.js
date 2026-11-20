@@ -1,9 +1,5 @@
 import { test as base, expect } from "@playwright/test";
 import { readFileSync } from "node:fs";
-import { createRequire } from "node:module";
-
-const require = createRequire(import.meta.url);
-const leafletDir = require.resolve("leaflet/dist/leaflet.js").replace(/leaflet\.js$/, "");
 
 /** Offers as published: the page and the tests read the same file. */
 export const OFFERS = JSON.parse(readFileSync(new URL("../../data/offres.json", import.meta.url)));
@@ -31,15 +27,7 @@ export const ROUTE = { distance: 12345, duration: 900 };
 export const test = base.extend({
   routeRequests: async ({}, use) => use([]),
   page: async ({ page, routeRequests }, use) => {
-    // Offline and deterministic: serve CDN libraries locally, stub tiles and routing.
-    await page.route("https://cdnjs.cloudflare.com/ajax/libs/leaflet/**", (r) =>
-      r.fulfill({ path: leafletDir + r.request().url().split("/leaflet/1.9.4/")[1].replace(".min", "") }));
-    // Legacy page only: when the Tailwind CDN is unreachable, inject a prebuilt stylesheet.
-    if (process.env.E2E_TAILWIND_CSS) {
-      const css = JSON.stringify(readFileSync(process.env.E2E_TAILWIND_CSS, "utf8"));
-      await page.route("https://cdn.tailwindcss.com/**", (r) => r.fulfill({ contentType: "text/javascript",
-        body: `window.tailwind={};document.head.insertAdjacentHTML("beforeend","<style>"+${css}+"</style>");` }));
-    }
+    // Offline and deterministic: no map tiles, fake routing service.
     await page.route(/tile\.openstreetmap\.org/, (r) => r.abort());
     await page.route("https://routing.openstreetmap.de/**", (r) => {
       routeRequests.push(r.request().url());

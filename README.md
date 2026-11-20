@@ -4,14 +4,21 @@ Carte et tableau des offres informatiques (ingénieur, DevOps, sysadmin, dévelo
 
 ## Contenu
 
-- `index.html` : carte OpenStreetMap (Leaflet). La liste suit la zone visible. Filtres par type de contrat et par technos. Compatible mobile.
-- `data/offres.csv` : le tableau demandé, une offre par ligne.
-- `data/offres.json` : les mêmes données, avec coordonnées et distances.
-- `data/offres-source.json` : la saisie manuelle. Modifie ce fichier, puis relance le build.
-- `scripts/build.py` : calcule les distances et régénère CSV, JSON et `index.html`.
+- Application Vue 3 (Vite, Pinia, banana-i18n, Tailwind, Leaflet) dans `src/` :
+  - `components/atoms`, `molecules`, `organisms` et `views` (atomic design) ;
+  - `stores/` : offres et filtres, tri « À creuser / exclue », itinéraire ;
+  - `domain/` : règles métier sans Vue (technos connues, contrats, itinéraire) ;
+  - `i18n/fr.json` : tous les textes de l'interface.
+- `#/styleguide` montre chaque composant ; `#/changelog` montre l'historique des commits.
+- `data/offres-source.json` : la saisie. `scripts/build.py` en tire `offres.json`, `offres.csv` et `known-technos.json`.
+- `tests/e2e/` : tests Playwright qui garantissent les fonctionnalités entre deux versions.
 
 ```sh
-python3 scripts/build.py   # puis ouvrir index.html dans un navigateur
+npm ci
+python3 scripts/build.py   # recalcule les données
+npm run dev                # développement
+npm run test:e2e           # build + tests end-to-end
+npm run changelog          # régénère le changelog (voir .claude/skills/commit)
 ```
 
 ## Zones couvertes
