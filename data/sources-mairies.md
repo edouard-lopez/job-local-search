@@ -41,3 +41,9 @@ Méthode : page « recrutement » du site de la mairie quand elle existe et rép
 - hellowork.com : 13 offres existantes revérifiées ; 8 expirées ou retirées (Bayonne mairie, Team.is, Only Networks, Capgemini Bayonne, Adaxis, Safran/Crit, Capgemini Pau x2) et supprimées.
 - choisirleservicepublic.gouv.fr : UPPA, IUT d'Anglet (ajoutée) ; Lannemezan (hors zone, titulaires uniquement) ; Urrugne (hors zone).
 - Recherches web (France Travail, Welcome to the Jungle) : aucune offre récente confirmée en zone MACS/Seignanx. Pages mairies non relues cette fois.
+
+## Mise à jour du 20/11/2026
+
+- 13 offres revérifiées. Retirée : Capgemini Architecte Cloud DevOps (hellowork 84261072), la page indique « n'est plus disponible ». Les 5 pages hellowork en HTTP 410 sans texte (Team.is, Only Networks, Capgemini Software Engineer, Adaxis, Safran/Crit, Capgemini Java) sont conservées : aucune mention explicite d'expiration. À vérifier à la main.
+- Offres ouvertes confirmées : Éditeur mobilité (x2), SCC, Epsyl, FEBUS, UPPA/IUT.
+- Recherches web (France Travail, Welcome to the Jungle, choisirleservicepublic) : aucune nouvelle offre datée et vérifiée en zone. Bayonne (administrateur fonctionnel SIRH) vu mais hors profil technique ; Urrugne et Saint-Pierre-du-Mont hors zone. Pages des mairies non relues.
