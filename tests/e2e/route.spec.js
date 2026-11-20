@@ -14,6 +14,13 @@ test.describe("Itinéraire au clic", () => {
     expect(routeRequests.at(-1)).toContain("/routed-bike/");
   });
 
+  test("l'offre choisie a un marqueur d'arrivée rouge et un itinéraire bleu", async ({ page }) => {
+    const o = nearOffer();
+    await card(page, o).locator("time").click();
+    await expect(page.locator(".arrival-marker path")).toHaveAttribute("fill", "#dc2626");
+    await expect(page.locator('#map path.leaflet-interactive[stroke="#2563eb"]')).toHaveCount(1);
+  });
+
   test("au-delà de 20 km : itinéraire voiture", async ({ page, routeRequests }) => {
     const o = nearOffer((x) => x.distance_km >= 20);
     test.skip(!o, "aucune offre à plus de 20 km près d'Orx");

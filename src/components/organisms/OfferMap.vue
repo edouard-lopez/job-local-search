@@ -14,7 +14,15 @@ L.Icon.Default.mergeOptions({ iconUrl: markerIcon, iconRetinaUrl: markerIcon2x, 
 
 const offers = useOffersStore();
 const route = useRouteStore();
-let map, markers, routeLayer;
+let map, markers, routeLayer, arrival;
+
+/** Red pin marking the selected offer (the route's arrival). */
+const ARRIVAL_ICON = L.divIcon({
+  className: "arrival-marker",
+  html: '<svg width="28" height="40" viewBox="0 0 28 40" aria-hidden="true"><path d="M14 0C6.3 0 0 6.3 0 14c0 10.5 14 26 14 26s14-15.5 14-26C28 6.3 21.7 0 14 0z" fill="#dc2626" stroke="#7f1d1d" stroke-width="1.5"/><circle cx="14" cy="14" r="5" fill="#fff"/></svg>',
+  iconSize: [28, 40],
+  iconAnchor: [14, 40],
+});
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 const popup = (o) => `<b>${esc(o.poste)}</b><br>${esc(o.entite)}<br>${esc(o.commune)} · ${esc(o.contrat)}<br><a href="${esc(o.lien)}" target="_blank" rel="noopener">Annonce</a>`;
@@ -31,11 +39,12 @@ function drawMarkers() {
 
 function drawRoute() {
   routeLayer?.remove();
-  routeLayer = null;
+  arrival?.remove();
+  routeLayer = arrival = null;
   const offer = offers.offers.find((o) => o.id === route.offerId);
+  if (offer) arrival = L.marker([offer.lat, offer.lon], { icon: ARRIVAL_ICON, zIndexOffset: 1000, title: offer.poste }).addTo(map);
   if (route.status === "ready") {
-    const bike = route.route.mode === "bike";
-    routeLayer = L.geoJSON(route.route.geometry, { style: { color: bike ? "#16a34a" : "#2563eb", weight: 5, opacity: 0.8 } }).addTo(map);
+    routeLayer = L.geoJSON(route.route.geometry, { style: { color: "#2563eb", weight: 5, opacity: 0.8 } }).addTo(map);
     map.fitBounds(routeLayer.getBounds(), { padding: [30, 30] });
   } else if (route.status === "failed" && offer) {
     map.setView([offer.lat, offer.lon], 13);
