@@ -18,7 +18,7 @@ jobs:
         run: |
           echo "::error::Seul edouard-lopez peut lancer ce workflow. Connecte-toi avec ce compte, ou forke le dépôt pour lancer ta propre recherche."
           exit 1
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Préparer le CV master (secret, jamais committé)
         env:
           CV: ${{ secrets.CV_MASTER_MD }}
@@ -33,7 +33,7 @@ jobs:
             Le CV est cv-extended-master.claude.md.
             Ce workflow n'est pas interactif : n'attends pas de validation après la critique, enchaîne toutes les étapes.
             Écris les fichiers dans applications/.
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: candidature-offre-${{ inputs.offer_id }}
           path: applications/
