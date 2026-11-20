@@ -6,75 +6,45 @@
 <title>Offres locales autour d'Orx</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<style>
-:root{--bg:#fff;--fg:#1d2329;--mut:#5b6670;--line:#dde2e6;--acc:#1f6f5c;--chip:#eef3f1}
-@media (prefers-color-scheme:dark){:root{--bg:#15191c;--fg:#e6eaed;--mut:#9aa6b0;--line:#2c3439;--acc:#5cc3a6;--chip:#1f2a27}}
-*{box-sizing:border-box}
-body{margin:0;font:14px/1.45 system-ui,sans-serif;background:var(--bg);color:var(--fg)}
-header{padding:12px 16px;border-bottom:1px solid var(--line)}
-h1{font-size:18px;margin:0 0 4px}
-header p{margin:0;color:var(--mut);font-size:13px}
-main{display:grid;grid-template-columns:minmax(320px,42%) 1fr;height:calc(100vh - 64px)}
-#map{height:100%;min-height:320px}
-#side{overflow:auto;padding:12px 16px;border-left:1px solid var(--line)}
-.filters{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
-.chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{border:1px solid var(--line);background:var(--chip);color:var(--fg);border-radius:999px;padding:3px 10px;cursor:pointer;font-size:12px}
-.chip[aria-pressed=true]{background:var(--acc);color:#fff;border-color:var(--acc)}
-label.b{font-weight:600;font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
-.count{color:var(--mut);margin:6px 0}
-.card{border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:10px}
-.card h3{margin:0 0 2px;font-size:15px}
-.meta{color:var(--mut);font-size:12.5px}
-.scores{display:flex;gap:10px;margin:6px 0;font-size:12.5px}
-.scores b{color:var(--acc)}
-details summary{cursor:pointer;color:var(--acc)}
-a{color:var(--acc)}
-.tech{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
-.tech span{border-radius:4px;padding:1px 6px;font-size:11.5px}
-.known{background:var(--chip);border:1px solid var(--acc)}
-.unknown{background:transparent;border:1px dashed var(--mut);color:var(--mut)}
-.chip.unknown{border-style:dashed}
-.card.dig{border-left:4px solid #2563eb}
-.card.out{opacity:.45;padding:6px 12px}
-.card.out details,.card.out .tech,.card.out .scores{display:none}
-.star{color:#2563eb}
-.head{display:flex;gap:8px;align-items:flex-start}
-.titles{flex:1;min-width:0}
-.card h3 a{color:var(--fg);text-decoration:none}
-.card h3 a:hover{text-decoration:underline}
-.date{white-space:nowrap;font-weight:400;font-size:12.5px;color:var(--mut)}
-abbr{text-decoration:underline dotted;cursor:help}
-.acts{display:flex;gap:4px;flex-shrink:0}
-.ico{border:1px solid var(--line);background:var(--bg);border-radius:6px;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;text-decoration:none;opacity:.55}
-.ico:hover,.ico[aria-pressed=true]{opacity:1;border-color:var(--acc)}
-.ico[aria-pressed=true]{background:var(--chip)}
-.card{cursor:pointer}
-.card.focused{box-shadow:0 0 0 2px var(--acc)}
-.route{font-size:12.5px;color:var(--acc);margin-top:6px}
-.card.out .acts{opacity:1}
-.legend{font-size:12px;color:var(--mut)}
-.wrap{overflow-x:auto}
-@media (max-width:760px){main{grid-template-columns:1fr;height:auto}#map{height:55vh}#side{border-left:0}}
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>tailwind.config = { darkMode: "media" };</script>
+<style type="text/tailwindcss">
+  @layer components {
+    .chip { @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs ring-1 ring-inset cursor-pointer select-none; }
+    .tag  { @apply inline-flex items-center rounded px-1.5 py-px text-[11.5px] ring-1 ring-inset; }
+    .known   { @apply bg-emerald-50 text-emerald-900 ring-emerald-600/40 dark:bg-emerald-950 dark:text-emerald-100 dark:ring-emerald-400/40; }
+    .unknown { @apply bg-gray-100 text-gray-700 ring-gray-400/40 opacity-80 dark:bg-gray-800 dark:text-gray-300; }
+    .chip[aria-pressed="true"] { @apply bg-emerald-700 text-white ring-emerald-700 opacity-100; }
+    .ico { @apply inline-flex h-8 w-8 items-center justify-center rounded-md text-gray-500 ring-1 ring-inset ring-gray-300 bg-white hover:text-gray-900 hover:ring-gray-500 dark:bg-gray-900 dark:ring-gray-700 dark:text-gray-400 dark:hover:text-gray-100; }
+    .ico[aria-pressed="true"] { @apply text-gray-900 ring-gray-600 bg-gray-100 dark:text-white dark:bg-gray-800; }
+    .ico svg { @apply h-4 w-4; }
+  }
 </style>
 </head>
-<body>
-<header>
-<h1>Offres informatique autour d'Orx</h1>
-<p>La liste suit la zone visible de la carte. Distances et durées sont des estimations (voir README).</p>
+<body class="bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100 text-sm">
+<header class="flex items-center justify-between gap-4 border-b border-gray-200 dark:border-gray-800 px-4 py-3">
+  <div class="min-w-0">
+    <h1 class="text-lg font-semibold">Offres informatique autour d'Orx</h1>
+    <p class="text-xs text-gray-500">La liste suit la zone visible de la carte. Cliquez une offre pour voir l'itinéraire.</p>
+  </div>
+  <a id="btnUpdate" target="_blank" rel="noopener" class="shrink-0 inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm ring-1 ring-inset ring-gray-300 hover:ring-gray-500 dark:ring-gray-700" title="Lance le workflow de mise à jour sur GitHub">
+    <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
+    <span class="hidden sm:inline">Mettre à jour les offres</span>
+  </a>
 </header>
-<main>
-<div id="map"></div>
-<section id="side">
-<div class="filters">
-<label class="b">Type de contrat</label><div class="chips" id="fContrat"></div>
-<label class="b">Technos</label><span class="legend">plein = déjà utilisée · pointillés = inconnue</span><div class="chips" id="fTech"></div>
-<a class="chip" id="btnUpdate" target="_blank" rel="noopener">↻ Mettre à jour les offres</a>
-<label class="b"><input type="checkbox" id="fZone"> Masquer la zone Lasseube/Pau</label>
-</div>
-<div class="count" id="count"></div>
-<div id="list"></div>
-</section>
+<main class="grid md:grid-cols-[minmax(320px,42%)_1fr] md:h-[calc(100vh-66px)]">
+  <div id="map" class="h-[55vh] md:h-full"></div>
+  <section class="overflow-auto px-4 py-3 md:border-l border-gray-200 dark:border-gray-800">
+    <div class="flex flex-col gap-2 mb-3">
+      <h2 class="text-xs font-semibold uppercase tracking-wide text-gray-500">Type de contrat</h2>
+      <div class="flex flex-wrap gap-1.5" id="fContrat"></div>
+      <h2 class="text-xs font-semibold uppercase tracking-wide text-gray-500 mt-1">Technos</h2>
+      <div class="flex flex-wrap gap-1.5" id="fTech"></div>
+      <label class="mt-1 text-xs font-semibold uppercase tracking-wide text-gray-500"><input type="checkbox" id="fZone"> Masquer la zone Lasseube/Pau</label>
+    </div>
+    <div class="text-gray-500 my-2" id="count"></div>
+    <div id="list" class="flex flex-col gap-2.5"></div>
+  </section>
 </main>
 <script>
 const OFFRES = /*__DATA__*/[];
@@ -82,8 +52,14 @@ const KNOWN = new Set(/*__KNOWN__*/[].map(t=>t.toLowerCase()));
 const isKnown = t => KNOWN.has(t.toLowerCase()) || t.split("/").some(x=>KNOWN.has(x.trim().toLowerCase()));
 const kcls = t => isKnown(t) ? "known" : "unknown";
 const sortTech = a => [...a].sort((x,y)=>(isKnown(y)-isKnown(x))||x.localeCompare(y,"fr",{sensitivity:"base"}));
+const svg = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const ICON = {
+  star: svg('<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>'),
+  x:    svg('<path d="M18 6 6 18M6 6l12 12"/>'),
+  pen:  svg('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>'),
+};
 let focused = null, routeLayer = null, routeInfo = "";
-function showRouteInfo(){ const el=list.querySelector(`.card[data-id="${focused}"] .route`); if(el){el.hidden=!routeInfo;el.textContent=routeInfo;} }
+function showRouteInfo(){ const el=list.querySelector(`[data-id="${focused}"] .route`); if(el){el.hidden=!routeInfo;el.textContent=routeInfo;} }
 async function focusOffer(id){
   const o = OFFRES.find(x=>x.id===id); if(!o) return;
   focused = id; routeInfo = "Calcul de l'itinéraire…";
@@ -96,7 +72,7 @@ async function focusOffer(id){
     const j = await r.json(); const rt = j.routes[0];
     routeLayer = L.geoJSON(rt.geometry,{style:{color:bike?"#16a34a":"#2563eb",weight:5,opacity:.8}}).addTo(map);
     const km = rt.distance/1000, min = bike ? km/20*60 : rt.duration/60;
-    routeInfo = `${bike?"🚲 Vélo":"🚗 Voiture"} : ${km.toFixed(1)} km, ~${Math.round(min)} min (itinéraire OpenStreetMap${bike?", 20 km/h":""})`;
+    routeInfo = `${bike?"Vélo":"Voiture"} : ${km.toFixed(1)} km, ~${Math.round(min)} min (itinéraire OpenStreetMap${bike?", 20 km/h":""})`;
     map.fitBounds(routeLayer.getBounds(),{padding:[30,30]});
   }catch(e){
     routeInfo = "Itinéraire indisponible : distances estimées affichées."; map.setView([o.lat,o.lon],13);
@@ -117,18 +93,48 @@ const state = {contrat:new Set(), tech:new Set()};
 const map = L.map("map").setView([43.5,-1.3], 9);
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© contributeurs OpenStreetMap"}).addTo(map);
 L.circleMarker(ORX,{radius:8,color:"#c0392b",fillOpacity:.9}).addTo(map).bindTooltip("Orx (domicile)");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const markers = OFFRES.map(o => L.marker([o.lat,o.lon]).bindPopup(
-  `<b>${o.poste}</b><br>${o.entite}<br>${o.commune} · ${o.contrat}<br>🚲 ~${o.velo_min} min · 🚗 ~${o.voiture_min} min<br><a href="${o.lien}" target="_blank" rel="noopener">Annonce</a>`));
-function chips(el, values, set, counts){
-  values.forEach(v=>{const b=document.createElement("button");b.className="chip"+(el.id==="fTech"?" "+kcls(v):"");b.textContent=`${v} (${counts[v]})`;b.setAttribute("aria-pressed","false");
+  `<b>${esc(o.poste)}</b><br>${esc(o.entite)}<br>${esc(o.commune)} · ${esc(o.contrat)}<br><a href="${o.lien}" target="_blank" rel="noopener">Annonce</a>`));
+function chips(el, values, set, counts, tech){
+  values.forEach(v=>{const b=document.createElement("button");
+    b.className="chip "+(tech?kcls(v):"known");b.textContent=`${v} (${counts[v]})`;b.setAttribute("aria-pressed","false");
     b.onclick=()=>{set.has(v)?set.delete(v):set.add(v);b.setAttribute("aria-pressed",set.has(v));render();};el.appendChild(b);});
 }
 const contratCount={};OFFRES.forEach(o=>{const c=cat(o.contrat);contratCount[c]=(contratCount[c]||0)+1;});
-chips(fContrat,Object.keys(contratCount).sort(),state.contrat,contratCount);
+chips(fContrat,Object.keys(contratCount).sort(),state.contrat,contratCount,false);
 const techCount={};OFFRES.forEach(o=>o.technos.forEach(t=>techCount[t]=(techCount[t]||0)+1));
-chips(fTech,sortTech(Object.keys(techCount)),state.tech,techCount);
+chips(fTech,sortTech(Object.keys(techCount)),state.tech,techCount,true);
 fZone.onchange=render; map.on("moveend",render);
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function card(o){
+  const t=triage[o.lien], dig=t==="dig", out=t==="out";
+  const ent=o.entite.split(/\s+/), short=ent.length>3?ent.slice(0,3).join(" ")+"…":o.entite;
+  const L_=esc(o.lien);
+  const topBtn = dig
+    ? `<a class="ico" href="${WF("generate-application.yml")}" target="_blank" rel="noopener" title="Générer un CV personnalisé (markdown) : offre n° ${o.id}" aria-label="Générer un CV personnalisé">${ICON.pen}</a>`
+    : `<button class="ico" data-l="${L_}" data-v="dig" title="Marquer À creuser" aria-label="Marquer À creuser">${ICON.star}</button>`;
+  return `<article data-id="${o.id}" class="relative cursor-pointer rounded-lg border border-gray-200 dark:border-gray-800 px-3 py-2.5
+      ${dig?"border-l-4 border-l-blue-600":""} ${out?"opacity-50 py-1.5":""} ${o.id===focused?"ring-2 ring-emerald-600":""}">
+    <div class="flex items-start gap-2">
+      <div class="flex-1 min-w-0 ${out?"":"pr-1"}">
+        <h3 class="text-[15px] font-semibold leading-snug">
+          ${dig?`<button class="text-blue-600" data-l="${L_}" data-v="dig" title="Retirer de À creuser" aria-label="Retirer de À creuser">★</button> `:""}<a class="hover:underline" href="${o.lien}" target="_blank" rel="noopener">${esc(o.poste)}</a>
+          <span class="whitespace-nowrap text-xs font-normal text-gray-500">· ${esc(o.publie)}</span>
+        </h3>
+        <div class="text-[12.5px] text-gray-500">${ent.length>3?`<abbr class="cursor-help" title="${esc(o.entite)}">${esc(short)}</abbr>`:esc(o.entite)} · ${esc(o.commune)} · ${esc(o.secteur)} · <b class="text-gray-700 dark:text-gray-300">${esc(o.contrat)}</b></div>
+      </div>
+      ${out?"":`<div class="shrink-0">${topBtn}</div>`}
+    </div>
+    ${out?"":`
+    <div class="flex flex-wrap gap-x-3 my-1.5 text-[12.5px]"><span>Techno <b class="text-emerald-700 dark:text-emerald-400">${o.score_techno}/5</b></span><span>Libre <b class="text-emerald-700 dark:text-emerald-400">${o.score_libre}/5</b></span>
+      <span>Vélo ~${o.velo_min} min</span><span>Voiture ~${o.voiture_min} min</span><span>${o.distance_km} km</span></div>
+    <details><summary class="cursor-pointer text-emerald-700 dark:text-emerald-400">Mission</summary><p class="mt-1">${esc(o.mission)}</p></details>
+    <div class="flex flex-wrap gap-1 mt-1.5 pr-10">${sortTech(o.technos).map(t=>`<span class="tag ${kcls(t)}">${esc(t)}</span>`).join("")}</div>
+    ${o.email||o.telephone?`<div class="text-[12.5px] text-gray-500 mt-1.5">${esc(o.email||"")}${o.email&&o.telephone?" · ":""}${esc(o.telephone||"")}</div>`:""}
+    <div class="route text-[12.5px] text-emerald-700 dark:text-emerald-400 mt-1.5 pr-10" hidden></div>`}
+    <button class="ico absolute bottom-2 right-2" data-l="${L_}" data-v="out" aria-pressed="${out}" title="${out?"Retirer l'exclusion":"Marquer comme exclue"}" aria-label="${out?"Retirer l'exclusion":"Marquer comme exclue"}">${ICON.x}</button>
+  </article>`;
+}
 function render(){
   const bounds=map.getBounds(); const shown=[];
   OFFRES.forEach((o,i)=>{
@@ -140,25 +146,9 @@ function render(){
   });
   shown.sort((a,b)=>String(b.publie||"").localeCompare(String(a.publie||"")));
   count.textContent=`${shown.length} offre(s) dans la zone visible`;
-  list.innerHTML=shown.map(o=>{const t=triage[o.lien];const ent=o.entite.split(/\s+/);const short=ent.length>3?ent.slice(0,3).join(" ")+"…":o.entite;
-  return `<article class="card${t?" "+t:""}${o.id===focused?" focused":""}" data-id="${o.id}">
-    <div class="head"><div class="titles">
-    <h3>${t==="dig"?'<span class="star">★</span> ':""}<a href="${o.lien}" target="_blank" rel="noopener">${esc(o.poste)}</a> <span class="date">· ${esc(o.publie)}</span></h3>
-    <div class="meta">${ent.length>3?`<abbr title="${esc(o.entite)}">${esc(short)}</abbr>`:esc(o.entite)} · ${esc(o.commune)} · ${esc(o.secteur)} · <b>${esc(o.contrat)}</b></div></div>
-    <div class="acts">
-      <button class="ico" data-l="${esc(o.lien)}" data-v="dig" aria-pressed="${t==="dig"}" title="Marquer À creuser" aria-label="Marquer À creuser">⭐</button>
-      <button class="ico" data-l="${esc(o.lien)}" data-v="out" aria-pressed="${t==="out"}" title="Marquer comme exclue" aria-label="Marquer comme exclue">❌</button>
-      <a class="ico" href="${WF("generate-application.yml")}" target="_blank" rel="noopener" title="Générer un CV personnalisé (markdown) : offre n° ${o.id}" aria-label="Générer un CV personnalisé">📝</a>
-    </div></div>
-    <div class="scores"><span>Techno <b>${o.score_techno}/5</b></span><span>Libre <b>${o.score_libre}/5</b></span>
-      <span>🚲 ~${o.velo_min} min</span><span>🚗 ~${o.voiture_min} min</span><span>${o.distance_km} km</span></div>
-    <details><summary>Mission</summary><p>${esc(o.mission)}</p></details>
-    <div class="tech">${sortTech(o.technos).map(t=>`<span class="${kcls(t)}">${esc(t)}</span>`).join("")}</div>
-    ${o.email||o.telephone?`<div class="meta" style="margin-top:6px">${esc(o.email||"")}${o.email&&o.telephone?" · ":""}${esc(o.telephone||"")}</div>`:""}
-    <div class="route" hidden></div>
-  </article>`}).join("");
-  list.querySelectorAll("button.ico").forEach(b=>b.onclick=e=>{e.stopPropagation();setTriage(b.dataset.l,b.dataset.v);});
-  list.querySelectorAll(".card").forEach(c=>c.onclick=e=>{if(e.target.closest("a,button,summary"))return;focusOffer(+c.dataset.id);});
+  list.innerHTML=shown.map(card).join("");
+  list.querySelectorAll("button[data-v]").forEach(b=>b.onclick=e=>{e.stopPropagation();setTriage(b.dataset.l,b.dataset.v);});
+  list.querySelectorAll("article").forEach(c=>c.onclick=e=>{if(e.target.closest("a,button,summary,abbr"))return;focusOffer(+c.dataset.id);});
   if(focused)showRouteInfo();
 }
 btnUpdate.href=WF("update-offers.yml");

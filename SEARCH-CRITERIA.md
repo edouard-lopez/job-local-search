@@ -5,8 +5,8 @@ Ce fichier pilote le workflow « Mettre à jour les offres ». Modifie-le, puis 
 ## Profil
 
 - Poste visé : ingénieur logiciel, DevOps, SRE, qualité/tests, sysadmin. Profil Staff Engineer DevEx & Quality.
-- Technos maîtrisées : TypeScript, Node.js, JavaScript, React, Vue.js, Python, Bash, Docker, Kubernetes, GitLab CI, GitHub Actions, CI/CD, Pact (contract testing), Cypress, Jest, Linux, AWS, Terraform/CDKTF, Datadog, Backstage, Kotlin, Go, PHP, Java, Git, Helm, Puppeteer, Testkube.
-  Cette liste colore aussi les technos sur la carte (connue = pleine, inconnue = pointillés).
+- Technos maîtrisées : TypeScript, Node.js, JavaScript, React, Vue.js, Python, Bash, Docker, Kubernetes, GitLab CI, GitHub Actions, CI/CD, Pact (contract testing), Cypress, Jest, Linux, AWS, Terraform/CDKTF, Datadog, Backstage, SQL, API REST, Tests automatisés, Kotlin, Go, PHP, Java, Git, Helm, Puppeteer, Testkube.
+  Cette liste colore aussi les technos sur la carte (connue = verte, inconnue = grise).
 - Mainteneur open source (Pure, LessPass).
 
 ## Priorités (scores)

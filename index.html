@@ -6,84 +6,60 @@
 <title>Offres locales autour d'Orx</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<style>
-:root{--bg:#fff;--fg:#1d2329;--mut:#5b6670;--line:#dde2e6;--acc:#1f6f5c;--chip:#eef3f1}
-@media (prefers-color-scheme:dark){:root{--bg:#15191c;--fg:#e6eaed;--mut:#9aa6b0;--line:#2c3439;--acc:#5cc3a6;--chip:#1f2a27}}
-*{box-sizing:border-box}
-body{margin:0;font:14px/1.45 system-ui,sans-serif;background:var(--bg);color:var(--fg)}
-header{padding:12px 16px;border-bottom:1px solid var(--line)}
-h1{font-size:18px;margin:0 0 4px}
-header p{margin:0;color:var(--mut);font-size:13px}
-main{display:grid;grid-template-columns:minmax(320px,42%) 1fr;height:calc(100vh - 64px)}
-#map{height:100%;min-height:320px}
-#side{overflow:auto;padding:12px 16px;border-left:1px solid var(--line)}
-.filters{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
-.chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{border:1px solid var(--line);background:var(--chip);color:var(--fg);border-radius:999px;padding:3px 10px;cursor:pointer;font-size:12px}
-.chip[aria-pressed=true]{background:var(--acc);color:#fff;border-color:var(--acc)}
-label.b{font-weight:600;font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
-.count{color:var(--mut);margin:6px 0}
-.card{border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:10px}
-.card h3{margin:0 0 2px;font-size:15px}
-.meta{color:var(--mut);font-size:12.5px}
-.scores{display:flex;gap:10px;margin:6px 0;font-size:12.5px}
-.scores b{color:var(--acc)}
-details summary{cursor:pointer;color:var(--acc)}
-a{color:var(--acc)}
-.tech{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
-.tech span{border-radius:4px;padding:1px 6px;font-size:11.5px}
-.known{background:var(--chip);border:1px solid var(--acc)}
-.unknown{background:transparent;border:1px dashed var(--mut);color:var(--mut)}
-.chip.unknown{border-style:dashed}
-.card.dig{border-left:4px solid #2563eb}
-.card.out{opacity:.45;padding:6px 12px}
-.card.out details,.card.out .tech,.card.out .scores{display:none}
-.star{color:#2563eb}
-.head{display:flex;gap:8px;align-items:flex-start}
-.titles{flex:1;min-width:0}
-.card h3 a{color:var(--fg);text-decoration:none}
-.card h3 a:hover{text-decoration:underline}
-.date{white-space:nowrap;font-weight:400;font-size:12.5px;color:var(--mut)}
-abbr{text-decoration:underline dotted;cursor:help}
-.acts{display:flex;gap:4px;flex-shrink:0}
-.ico{border:1px solid var(--line);background:var(--bg);border-radius:6px;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;text-decoration:none;opacity:.55}
-.ico:hover,.ico[aria-pressed=true]{opacity:1;border-color:var(--acc)}
-.ico[aria-pressed=true]{background:var(--chip)}
-.card{cursor:pointer}
-.card.focused{box-shadow:0 0 0 2px var(--acc)}
-.route{font-size:12.5px;color:var(--acc);margin-top:6px}
-.card.out .acts{opacity:1}
-.legend{font-size:12px;color:var(--mut)}
-.wrap{overflow-x:auto}
-@media (max-width:760px){main{grid-template-columns:1fr;height:auto}#map{height:55vh}#side{border-left:0}}
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>tailwind.config = { darkMode: "media" };</script>
+<style type="text/tailwindcss">
+  @layer components {
+    .chip { @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs ring-1 ring-inset cursor-pointer select-none; }
+    .tag  { @apply inline-flex items-center rounded px-1.5 py-px text-[11.5px] ring-1 ring-inset; }
+    .known   { @apply bg-emerald-50 text-emerald-900 ring-emerald-600/40 dark:bg-emerald-950 dark:text-emerald-100 dark:ring-emerald-400/40; }
+    .unknown { @apply bg-gray-100 text-gray-700 ring-gray-400/40 opacity-80 dark:bg-gray-800 dark:text-gray-300; }
+    .chip[aria-pressed="true"] { @apply bg-emerald-700 text-white ring-emerald-700 opacity-100; }
+    .ico { @apply inline-flex h-8 w-8 items-center justify-center rounded-md text-gray-500 ring-1 ring-inset ring-gray-300 bg-white hover:text-gray-900 hover:ring-gray-500 dark:bg-gray-900 dark:ring-gray-700 dark:text-gray-400 dark:hover:text-gray-100; }
+    .ico[aria-pressed="true"] { @apply text-gray-900 ring-gray-600 bg-gray-100 dark:text-white dark:bg-gray-800; }
+    .ico svg { @apply h-4 w-4; }
+  }
 </style>
 </head>
-<body>
-<header>
-<h1>Offres informatique autour d'Orx</h1>
-<p>La liste suit la zone visible de la carte. Distances et durées sont des estimations (voir README).</p>
+<body class="bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100 text-sm">
+<header class="flex items-center justify-between gap-4 border-b border-gray-200 dark:border-gray-800 px-4 py-3">
+  <div class="min-w-0">
+    <h1 class="text-lg font-semibold">Offres informatique autour d'Orx</h1>
+    <p class="text-xs text-gray-500">La liste suit la zone visible de la carte. Cliquez une offre pour voir l'itinéraire.</p>
+  </div>
+  <a id="btnUpdate" target="_blank" rel="noopener" class="shrink-0 inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm ring-1 ring-inset ring-gray-300 hover:ring-gray-500 dark:ring-gray-700" title="Lance le workflow de mise à jour sur GitHub">
+    <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>
+    <span class="hidden sm:inline">Mettre à jour les offres</span>
+  </a>
 </header>
-<main>
-<div id="map"></div>
-<section id="side">
-<div class="filters">
-<label class="b">Type de contrat</label><div class="chips" id="fContrat"></div>
-<label class="b">Technos</label><span class="legend">plein = déjà utilisée · pointillés = inconnue</span><div class="chips" id="fTech"></div>
-<a class="chip" id="btnUpdate" target="_blank" rel="noopener">↻ Mettre à jour les offres</a>
-<label class="b"><input type="checkbox" id="fZone"> Masquer la zone Lasseube/Pau</label>
-</div>
-<div class="count" id="count"></div>
-<div id="list"></div>
-</section>
+<main class="grid md:grid-cols-[minmax(320px,42%)_1fr] md:h-[calc(100vh-66px)]">
+  <div id="map" class="h-[55vh] md:h-full"></div>
+  <section class="overflow-auto px-4 py-3 md:border-l border-gray-200 dark:border-gray-800">
+    <div class="flex flex-col gap-2 mb-3">
+      <h2 class="text-xs font-semibold uppercase tracking-wide text-gray-500">Type de contrat</h2>
+      <div class="flex flex-wrap gap-1.5" id="fContrat"></div>
+      <h2 class="text-xs font-semibold uppercase tracking-wide text-gray-500 mt-1">Technos</h2>
+      <div class="flex flex-wrap gap-1.5" id="fTech"></div>
+      <label class="mt-1 text-xs font-semibold uppercase tracking-wide text-gray-500"><input type="checkbox" id="fZone"> Masquer la zone Lasseube/Pau</label>
+    </div>
+    <div class="text-gray-500 my-2" id="count"></div>
+    <div id="list" class="flex flex-col gap-2.5"></div>
+  </section>
 </main>
 <script>
 const OFFRES = [{"zone": "Bayonne", "commune": "Bayonne (ou Dax)", "entite": "Éditeur anonyme (mobilité intelligente, territoires) via cabinet", "secteur": "privé", "poste": "Développeur fullstack Java / JS senior", "contrat": "CDI", "score_techno": 3, "score_libre": 2, "mission": "Éditeur de logiciels pour la mobilité intelligente et la digitalisation des territoires, filiale d'un groupe. Rattaché au lead developer, le poste conçoit, développe, teste et maintient des applications métier, back et front. Il rédige la documentation technique et les tests unitaires et fonctionnels. Il fait du mentorat : revues de code, pair programming, accompagnement des juniors. Il participe aux décisions d'architecture, de sécurité et de performance. 2 jours de télétravail par semaine. 45-50 k€.", "technos": ["Java", "Spring Boot", "Angular", "React", "Vue.js", "Git", "Jenkins", "Docker", "Kubernetes", "PostgreSQL", "Keycloak", "Linux"], "lien": "https://www.hellowork.com/fr-fr/emplois/83683044.html", "email": "", "telephone": "", "adresse": "Bayonne ou Dax, adresse non précisée", "lat": 43.49, "lon": -1.48, "geo_precision": "centre de Bayonne (site réel inconnu)", "publie": "2026-10-24", "id": 1, "distance_km": 19.7, "velo_min": 59, "voiture_min": 21}, {"zone": "Bayonne", "commune": "Bayonne (ou Dax)", "entite": "Éditeur anonyme (mobilité intelligente, territoires) via cabinet", "secteur": "privé", "poste": "Développeur fullstack Java / JS", "contrat": "CDI", "score_techno": 3, "score_libre": 2, "mission": "Même éditeur que l'offre senior, pour un profil 3 à 5 ans d'expérience. Le poste développe de nouvelles fonctionnalités back et front sur des applications métier complexes. Il écrit tests et documentation. Il aide à la montée en compétences des juniors et participe aux décisions techniques, avec un développeur référent à ses côtés. 2 jours de télétravail par semaine. 35-42 k€.", "technos": ["Java", "Spring Boot", "Angular", "React", "Vue.js", "Git", "Jenkins", "Docker", "Kubernetes", "PostgreSQL", "Keycloak", "Linux"], "lien": "https://www.hellowork.com/fr-fr/emplois/83683036.html", "email": "", "telephone": "", "adresse": "Bayonne ou Dax, adresse non précisée", "lat": 43.4895, "lon": -1.4815, "geo_precision": "centre de Bayonne (site réel inconnu)", "publie": "2026-09-23", "id": 2, "distance_km": 19.8, "velo_min": 59, "voiture_min": 22}, {"zone": "Seignanx", "commune": "Tarnos", "entite": "SCC (ESN)", "secteur": "privé", "poste": "Technicien intégration et support, référent de site N2-N3", "contrat": "CDI", "score_techno": 1, "score_libre": 0, "mission": "Support de proximité N2-N3 sur un site industriel. Le poste intègre localement logiciels et postes. Il traite les incidents dans les délais convenus. Il maintient les équipements mobiles et sans fil. Il tient à jour la documentation et les dossiers d'exploitation. Il est l'interlocuteur informatique des équipes opérationnelles et respecte les procédures de sécurité du site. Anglais B2.", "technos": ["Windows", "Active Directory"], "lien": "https://www.hellowork.com/fr-fr/emplois/83432237.html", "email": "", "telephone": "", "adresse": "Tarnos (40220), adresse non précisée", "lat": 43.541, "lon": -1.461, "geo_precision": "centre de la commune", "publie": "2026-10-17", "id": 3, "distance_km": 12.6, "velo_min": 38, "voiture_min": 14}, {"zone": "Lasseube (hors limite de trajet)", "commune": "Pau", "entite": "Epsyl (groupe ALCEN)", "secteur": "privé", "poste": "Ingénieur tests logiciels embarqués", "contrat": "CDI", "score_techno": 2, "score_libre": 1, "mission": "Projets avec un grand industriel de la région de Pau. Le poste vérifie un logiciel embarqué critique par tests unitaires (DO-178B DAL A). Il rédige plans, procédures et rapports de tests, et vérifie la couverture des exigences. Il développe aussi du logiciel critique en Ada ou C : spécification, conception, modélisation, tests sur simulateur ou cible, intégration sur calculateur. Il participe à l'intégration système et rédige les procès-verbaux d'essais.", "technos": ["C", "Python", "Ada", "VectorCAST", "RTRT", "SCADE", "DOORS"], "lien": "https://www.hellowork.com/fr-fr/emplois/78538397.html", "email": "", "telephone": "", "adresse": "Pau (64000), adresse non précisée", "lat": 43.302, "lon": -0.378, "geo_precision": "centre de la commune", "publie": "2026-08-31", "id": 4, "distance_km": 113.5, "velo_min": 341, "voiture_min": 124}, {"zone": "Lasseube (hors limite de trajet)", "commune": "Pau", "entite": "FEBUS Optics", "secteur": "privé", "poste": "Développeur back-end (Linux embarqué)", "contrat": "CDI", "score_techno": 2, "score_libre": 2, "mission": "Équipe R&D logicielle de FEBUS Optics, spécialiste des capteurs à fibre optique répartis (surveillance de canalisations, géothermie, sismique, risques naturels). Le poste conçoit le back-end embarqué qui pilote les interrogateurs DAS : acquisition, contrôle, configuration, supervision. Il développe sur Linux embarqué (NVIDIA Jetson) et contribue aux chaînes de compilation. Il définit les API REST et la messagerie ZMQ. Il implémente du traitement du signal temps réel (FFT, filtrage), met en place les protocoles de test et participe aux revues de code. Bac+5, 5 ans d'expérience.", "technos": ["Linux", "C/C++", "API REST", "ZMQ", "NVIDIA Jetson", "CUDA", "TCP/IP"], "lien": "https://www.hellowork.com/fr-fr/emplois/83950643.html", "email": "", "telephone": "", "adresse": "4 rue des Frères d'Orbigny, 64000 Pau", "lat": 43.3185, "lon": -0.362, "geo_precision": "adresse (géocodage approximatif)", "publie": "2026-09-30", "id": 5, "distance_km": 114.2, "velo_min": 342, "voiture_min": 125}, {"zone": "Bayonne", "commune": "Anglet", "entite": "Université de Pau et des Pays de l'Adour (IUT de Bayonne Pays Basque)", "secteur": "public", "poste": "Ingénieur d'étude en informatique système et réseaux", "contrat": "CDD 1 an (contractuel)", "score_techno": 2, "score_libre": 2, "mission": "Au sein de l'IUT, sur les sites d'Anglet et de Bayonne, le poste administre les réseaux filaire et Wi-Fi (dont Eduroam) en lien avec la Direction du Numérique. Il administre les systèmes : serveurs Unix (DNS, proxy, mail, web), serveurs pédagogiques, contrôleurs de domaine Active Directory et hyperviseurs (Citrix, Hyper-V, Proxmox). Il gère la baie de stockage, la réplication et un PRA minimal, ainsi que la supervision, la métrologie et les journaux d'événements. Il tient l'annuaire de l'IUT, élabore la politique informatique et rédige les cahiers des charges. Expérience en administration réseau/système, sécurité et pare-feu, et en administration Linux. Bac+3 à Bac+5. Poste vacant à partir du 01/10/2026 ; date limite non indiquée sur l'annonce.", "technos": ["Linux", "Active Directory", "Proxmox", "Hyper-V", "Citrix", "Wi-Fi", "pare-feu"], "lien": "https://choisirleservicepublic.gouv.fr/offre-emploi/ingenieur-d-etude-en-informatique-systeme-et-reseaux-reference-2026-2361950/", "email": "", "telephone": "", "adresse": "IUT, allée du Parc Montaury, 64600 Anglet", "lat": 43.4846, "lon": -1.5123, "geo_precision": "adresse de l'IUT (approximatif)", "publie": "2026-07-24", "id": 6, "distance_km": 22.3, "velo_min": 67, "voiture_min": 24}, {"zone": "Côte basque (hors zone stricte)", "commune": "Bidart", "entite": "Team.is", "secteur": "privé", "poste": "Développeur DevOps", "contrat": "CDI", "score_techno": 5, "score_libre": 1, "mission": "Team.is édite une plateforme internationale d'inscription aux événements sportifs de masse (centaines de milliers de participants). Le poste développe les services backend Node.js et les interfaces Angular. Il déploie, exploite et optimise une plateforme Kubernetes en production. Il automatise les pipelines CI/CD pour sécuriser les mises en production. Il assure la scalabilité face aux pics de charge et administre MongoDB et Elasticsearch. Il applique les bonnes pratiques DevSecOps, fait de la veille et propose des évolutions d'architecture. Équipe internationale, anglais courant demandé. Salaire affiché 45-55 k€.", "technos": ["Node.js", "Angular", "Kubernetes", "CI/CD", "GCP", "AWS", "MongoDB", "Elasticsearch", "DevSecOps"], "lien": "https://www.hellowork.com/fr-fr/emplois/81689390.html", "email": "", "telephone": "", "adresse": "Bidart (64210), adresse non précisée", "lat": 43.4378, "lon": -1.5908, "geo_precision": "centre de la commune", "publie": "2026-08-25", "id": 7, "distance_km": 32.8, "velo_min": 99, "voiture_min": 36}, {"zone": "Bayonne", "commune": "Anglet", "entite": "Only Networks (ESN)", "secteur": "privé", "poste": "Administrateur réseau et systèmes", "contrat": "CDI", "score_techno": 1, "score_libre": 1, "mission": "ESN au service de PME et ETI. Rattaché au responsable technique, le poste administre et maintient les infrastructures de plusieurs clients. Réseau : LAN, WAN, Wi-Fi, VLAN, QoS, routage, pare-feu UTM (VPN, SD-WAN). Systèmes : serveurs Windows, Active Directory, virtualisation, sauvegardes. Téléphonie IP : plateformes 3CX (trunks SIP, SBC). Support N1/N2 sur site ou à distance et documentation technique. 3 ans d'expérience minimum, 30-42 k€.", "technos": ["Windows Server", "Active Directory", "Proxmox", "3CX", "SIP", "VLAN", "Pare-feu UTM"], "lien": "https://www.hellowork.com/fr-fr/emplois/83331249.html", "email": "", "telephone": "", "adresse": "Anglet (64600), adresse non précisée", "lat": 43.485, "lon": -1.518, "geo_precision": "centre de la commune", "publie": "2026-09-14", "id": 8, "distance_km": 22.7, "velo_min": 68, "voiture_min": 25}, {"zone": "Bayonne", "commune": "Bayonne", "entite": "Capgemini", "secteur": "privé", "poste": "Software Engineer Fullstack", "contrat": "CDI", "score_techno": 2, "score_libre": 1, "mission": "Le poste réalise des développements complexes en Java dans une équipe pluridisciplinaire. Il anticipe les besoins et propose des solutions techniques. Il mène les revues de code et veille à la bonne mise en œuvre. Une part importante porte sur la conception et la transformation de projets en microservices. Mentorat d'une équipe de développeurs apprécié. Méthodes agiles et cycle en V. Usage responsable de l'IA générative pour la conception et la revue de code. Poste possiblement chez un client.", "technos": ["Java", "Spring", "Hibernate", "Oracle", "Microservices", "IA générative"], "lien": "https://www.hellowork.com/fr-fr/emplois/83400834.html", "email": "", "telephone": "", "adresse": "Bayonne (64100), adresse non précisée", "lat": 43.4929, "lon": -1.4748, "geo_precision": "centre de la commune", "publie": "2026-09-15", "id": 9, "distance_km": 19.0, "velo_min": 57, "voiture_min": 21}, {"zone": "Bayonne", "commune": "Bayonne", "entite": "Adaxis", "secteur": "privé", "poste": "Développeur full stack C++ (Manufacturing)", "contrat": "CDI", "score_techno": 2, "score_libre": 1, "mission": "Adaxis édite AdaOne, logiciel de robotique industrielle. Le poste développe la couche qui relie AdaOne aux robots. Il implémente des protocoles de communication et les échanges temps réel avec les systèmes robotiques. Il travaille sur la géométrie 3D. Il conçoit, refactorise et maintient des modules pour robots et capteurs, et résout des bogues complexes. Pas d'expertise robotique requise. Git, CI/CD et tests automatisés sont un plus. Équipe internationale deep-tech.", "technos": ["C++", "Git", "CI/CD", "Tests automatisés", "Temps réel", "Vision par ordinateur"], "lien": "https://www.hellowork.com/fr-fr/emplois/83530477.html", "email": "", "telephone": "", "adresse": "Bayonne (64100), adresse non précisée", "lat": 43.496, "lon": -1.47, "geo_precision": "centre de la commune", "publie": "2026-10-19", "id": 10, "distance_km": 18.4, "velo_min": 55, "voiture_min": 20}, {"zone": "Seignanx", "commune": "Tarnos", "entite": "Safran Helicopter Engines (mission via Crit)", "secteur": "privé", "poste": "Développeur application Business Intelligence MCO", "contrat": "Intérim (3 mois)", "score_techno": 3, "score_libre": 2, "mission": "Projet de transformation numérique de l'unité maintenance-réparation (MCO) de Safran HE. Le poste fait évoluer une application web interne qui centralise les outils BI et les données. Il développe front et back, les interfaces en NiceGUI et les API REST en FastAPI. Il construit le socle de données commun, intègre plusieurs sources et automatise les pipelines. Il crée tableaux de bord et outils de prévision avec les métiers (flotte, stocks, logistique, planification). CI/CD apprécié. Débutants acceptés.", "technos": ["Python", "FastAPI", "NiceGUI", "SQL", "CI/CD", "BI"], "lien": "https://www.hellowork.com/fr-fr/emplois/83842972.html", "email": "", "telephone": "", "adresse": "Safran HE, Tarnos (40220)", "lat": 43.542, "lon": -1.47, "geo_precision": "approximative (Tarnos)", "publie": "2026-09-28", "id": 11, "distance_km": 13.2, "velo_min": 40, "voiture_min": 14}, {"zone": "Lasseube (hors limite de trajet)", "commune": "Pau", "entite": "Capgemini", "secteur": "privé", "poste": "Développeur Java full stack confirmé", "contrat": "CDI", "score_techno": 2, "score_libre": 1, "mission": "Le poste rejoint une équipe transverse sur des projets agiles. Il aide au choix des technologies, code, met en place plateformes d'intégration et tests. Il anime les daily et les démos client. Il rédige les spécifications techniques et les tests unitaires. Il participe aux revues de projet pour améliorer les processus. Intérêt pour le cloud et le DevOps attendu, anglais courant.", "technos": ["Java", "Spring", "Angular", "React", "Vue.js", "DevOps"], "lien": "https://www.hellowork.com/fr-fr/emplois/84228084.html", "email": "", "telephone": "", "adresse": "Pau (64000), adresse non précisée", "lat": 43.299, "lon": -0.365, "geo_precision": "centre de la commune", "publie": "2026-10-08", "id": 12, "distance_km": 114.9, "velo_min": 345, "voiture_min": 125}];
-const KNOWN = new Set(["TypeScript", "Node.js", "JavaScript", "React", "Vue.js", "Python", "Bash", "Docker", "Kubernetes", "GitLab CI", "GitHub Actions", "CI/CD", "Pact", "Cypress", "Jest", "Linux", "AWS", "Terraform/CDKTF", "Terraform", "CDKTF", "Datadog", "Backstage", "Kotlin", "Go", "PHP", "Java", "Git", "Helm", "Puppeteer", "Testkube"].map(t=>t.toLowerCase()));
+const KNOWN = new Set(["TypeScript", "Node.js", "JavaScript", "React", "Vue.js", "Python", "Bash", "Docker", "Kubernetes", "GitLab CI", "GitHub Actions", "CI/CD", "Pact", "Cypress", "Jest", "Linux", "AWS", "Terraform/CDKTF", "Terraform", "CDKTF", "Datadog", "Backstage", "SQL", "API REST", "Tests automatisés", "Kotlin", "Go", "PHP", "Java", "Git", "Helm", "Puppeteer", "Testkube"].map(t=>t.toLowerCase()));
 const isKnown = t => KNOWN.has(t.toLowerCase()) || t.split("/").some(x=>KNOWN.has(x.trim().toLowerCase()));
 const kcls = t => isKnown(t) ? "known" : "unknown";
 const sortTech = a => [...a].sort((x,y)=>(isKnown(y)-isKnown(x))||x.localeCompare(y,"fr",{sensitivity:"base"}));
+const svg = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const ICON = {
+  star: svg('<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>'),
+  x:    svg('<path d="M18 6 6 18M6 6l12 12"/>'),
+  pen:  svg('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>'),
+};
 let focused = null, routeLayer = null, routeInfo = "";
-function showRouteInfo(){ const el=list.querySelector(`.card[data-id="${focused}"] .route`); if(el){el.hidden=!routeInfo;el.textContent=routeInfo;} }
+function showRouteInfo(){ const el=list.querySelector(`[data-id="${focused}"] .route`); if(el){el.hidden=!routeInfo;el.textContent=routeInfo;} }
 async function focusOffer(id){
   const o = OFFRES.find(x=>x.id===id); if(!o) return;
   focused = id; routeInfo = "Calcul de l'itinéraire…";
@@ -96,7 +72,7 @@ async function focusOffer(id){
     const j = await r.json(); const rt = j.routes[0];
     routeLayer = L.geoJSON(rt.geometry,{style:{color:bike?"#16a34a":"#2563eb",weight:5,opacity:.8}}).addTo(map);
     const km = rt.distance/1000, min = bike ? km/20*60 : rt.duration/60;
-    routeInfo = `${bike?"🚲 Vélo":"🚗 Voiture"} : ${km.toFixed(1)} km, ~${Math.round(min)} min (itinéraire OpenStreetMap${bike?", 20 km/h":""})`;
+    routeInfo = `${bike?"Vélo":"Voiture"} : ${km.toFixed(1)} km, ~${Math.round(min)} min (itinéraire OpenStreetMap${bike?", 20 km/h":""})`;
     map.fitBounds(routeLayer.getBounds(),{padding:[30,30]});
   }catch(e){
     routeInfo = "Itinéraire indisponible : distances estimées affichées."; map.setView([o.lat,o.lon],13);
@@ -117,18 +93,48 @@ const state = {contrat:new Set(), tech:new Set()};
 const map = L.map("map").setView([43.5,-1.3], 9);
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© contributeurs OpenStreetMap"}).addTo(map);
 L.circleMarker(ORX,{radius:8,color:"#c0392b",fillOpacity:.9}).addTo(map).bindTooltip("Orx (domicile)");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const markers = OFFRES.map(o => L.marker([o.lat,o.lon]).bindPopup(
-  `<b>${o.poste}</b><br>${o.entite}<br>${o.commune} · ${o.contrat}<br>🚲 ~${o.velo_min} min · 🚗 ~${o.voiture_min} min<br><a href="${o.lien}" target="_blank" rel="noopener">Annonce</a>`));
-function chips(el, values, set, counts){
-  values.forEach(v=>{const b=document.createElement("button");b.className="chip"+(el.id==="fTech"?" "+kcls(v):"");b.textContent=`${v} (${counts[v]})`;b.setAttribute("aria-pressed","false");
+  `<b>${esc(o.poste)}</b><br>${esc(o.entite)}<br>${esc(o.commune)} · ${esc(o.contrat)}<br><a href="${o.lien}" target="_blank" rel="noopener">Annonce</a>`));
+function chips(el, values, set, counts, tech){
+  values.forEach(v=>{const b=document.createElement("button");
+    b.className="chip "+(tech?kcls(v):"known");b.textContent=`${v} (${counts[v]})`;b.setAttribute("aria-pressed","false");
     b.onclick=()=>{set.has(v)?set.delete(v):set.add(v);b.setAttribute("aria-pressed",set.has(v));render();};el.appendChild(b);});
 }
 const contratCount={};OFFRES.forEach(o=>{const c=cat(o.contrat);contratCount[c]=(contratCount[c]||0)+1;});
-chips(fContrat,Object.keys(contratCount).sort(),state.contrat,contratCount);
+chips(fContrat,Object.keys(contratCount).sort(),state.contrat,contratCount,false);
 const techCount={};OFFRES.forEach(o=>o.technos.forEach(t=>techCount[t]=(techCount[t]||0)+1));
-chips(fTech,sortTech(Object.keys(techCount)),state.tech,techCount);
+chips(fTech,sortTech(Object.keys(techCount)),state.tech,techCount,true);
 fZone.onchange=render; map.on("moveend",render);
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function card(o){
+  const t=triage[o.lien], dig=t==="dig", out=t==="out";
+  const ent=o.entite.split(/\s+/), short=ent.length>3?ent.slice(0,3).join(" ")+"…":o.entite;
+  const L_=esc(o.lien);
+  const topBtn = dig
+    ? `<a class="ico" href="${WF("generate-application.yml")}" target="_blank" rel="noopener" title="Générer un CV personnalisé (markdown) : offre n° ${o.id}" aria-label="Générer un CV personnalisé">${ICON.pen}</a>`
+    : `<button class="ico" data-l="${L_}" data-v="dig" title="Marquer À creuser" aria-label="Marquer À creuser">${ICON.star}</button>`;
+  return `<article data-id="${o.id}" class="relative cursor-pointer rounded-lg border border-gray-200 dark:border-gray-800 px-3 py-2.5
+      ${dig?"border-l-4 border-l-blue-600":""} ${out?"opacity-50 py-1.5":""} ${o.id===focused?"ring-2 ring-emerald-600":""}">
+    <div class="flex items-start gap-2">
+      <div class="flex-1 min-w-0 ${out?"":"pr-1"}">
+        <h3 class="text-[15px] font-semibold leading-snug">
+          ${dig?`<button class="text-blue-600" data-l="${L_}" data-v="dig" title="Retirer de À creuser" aria-label="Retirer de À creuser">★</button> `:""}<a class="hover:underline" href="${o.lien}" target="_blank" rel="noopener">${esc(o.poste)}</a>
+          <span class="whitespace-nowrap text-xs font-normal text-gray-500">· ${esc(o.publie)}</span>
+        </h3>
+        <div class="text-[12.5px] text-gray-500">${ent.length>3?`<abbr class="cursor-help" title="${esc(o.entite)}">${esc(short)}</abbr>`:esc(o.entite)} · ${esc(o.commune)} · ${esc(o.secteur)} · <b class="text-gray-700 dark:text-gray-300">${esc(o.contrat)}</b></div>
+      </div>
+      ${out?"":`<div class="shrink-0">${topBtn}</div>`}
+    </div>
+    ${out?"":`
+    <div class="flex flex-wrap gap-x-3 my-1.5 text-[12.5px]"><span>Techno <b class="text-emerald-700 dark:text-emerald-400">${o.score_techno}/5</b></span><span>Libre <b class="text-emerald-700 dark:text-emerald-400">${o.score_libre}/5</b></span>
+      <span>Vélo ~${o.velo_min} min</span><span>Voiture ~${o.voiture_min} min</span><span>${o.distance_km} km</span></div>
+    <details><summary class="cursor-pointer text-emerald-700 dark:text-emerald-400">Mission</summary><p class="mt-1">${esc(o.mission)}</p></details>
+    <div class="flex flex-wrap gap-1 mt-1.5 pr-10">${sortTech(o.technos).map(t=>`<span class="tag ${kcls(t)}">${esc(t)}</span>`).join("")}</div>
+    ${o.email||o.telephone?`<div class="text-[12.5px] text-gray-500 mt-1.5">${esc(o.email||"")}${o.email&&o.telephone?" · ":""}${esc(o.telephone||"")}</div>`:""}
+    <div class="route text-[12.5px] text-emerald-700 dark:text-emerald-400 mt-1.5 pr-10" hidden></div>`}
+    <button class="ico absolute bottom-2 right-2" data-l="${L_}" data-v="out" aria-pressed="${out}" title="${out?"Retirer l'exclusion":"Marquer comme exclue"}" aria-label="${out?"Retirer l'exclusion":"Marquer comme exclue"}">${ICON.x}</button>
+  </article>`;
+}
 function render(){
   const bounds=map.getBounds(); const shown=[];
   OFFRES.forEach((o,i)=>{
@@ -140,25 +146,9 @@ function render(){
   });
   shown.sort((a,b)=>String(b.publie||"").localeCompare(String(a.publie||"")));
   count.textContent=`${shown.length} offre(s) dans la zone visible`;
-  list.innerHTML=shown.map(o=>{const t=triage[o.lien];const ent=o.entite.split(/\s+/);const short=ent.length>3?ent.slice(0,3).join(" ")+"…":o.entite;
-  return `<article class="card${t?" "+t:""}${o.id===focused?" focused":""}" data-id="${o.id}">
-    <div class="head"><div class="titles">
-    <h3>${t==="dig"?'<span class="star">★</span> ':""}<a href="${o.lien}" target="_blank" rel="noopener">${esc(o.poste)}</a> <span class="date">· ${esc(o.publie)}</span></h3>
-    <div class="meta">${ent.length>3?`<abbr title="${esc(o.entite)}">${esc(short)}</abbr>`:esc(o.entite)} · ${esc(o.commune)} · ${esc(o.secteur)} · <b>${esc(o.contrat)}</b></div></div>
-    <div class="acts">
-      <button class="ico" data-l="${esc(o.lien)}" data-v="dig" aria-pressed="${t==="dig"}" title="Marquer À creuser" aria-label="Marquer À creuser">⭐</button>
-      <button class="ico" data-l="${esc(o.lien)}" data-v="out" aria-pressed="${t==="out"}" title="Marquer comme exclue" aria-label="Marquer comme exclue">❌</button>
-      <a class="ico" href="${WF("generate-application.yml")}" target="_blank" rel="noopener" title="Générer un CV personnalisé (markdown) : offre n° ${o.id}" aria-label="Générer un CV personnalisé">📝</a>
-    </div></div>
-    <div class="scores"><span>Techno <b>${o.score_techno}/5</b></span><span>Libre <b>${o.score_libre}/5</b></span>
-      <span>🚲 ~${o.velo_min} min</span><span>🚗 ~${o.voiture_min} min</span><span>${o.distance_km} km</span></div>
-    <details><summary>Mission</summary><p>${esc(o.mission)}</p></details>
-    <div class="tech">${sortTech(o.technos).map(t=>`<span class="${kcls(t)}">${esc(t)}</span>`).join("")}</div>
-    ${o.email||o.telephone?`<div class="meta" style="margin-top:6px">${esc(o.email||"")}${o.email&&o.telephone?" · ":""}${esc(o.telephone||"")}</div>`:""}
-    <div class="route" hidden></div>
-  </article>`}).join("");
-  list.querySelectorAll("button.ico").forEach(b=>b.onclick=e=>{e.stopPropagation();setTriage(b.dataset.l,b.dataset.v);});
-  list.querySelectorAll(".card").forEach(c=>c.onclick=e=>{if(e.target.closest("a,button,summary"))return;focusOffer(+c.dataset.id);});
+  list.innerHTML=shown.map(card).join("");
+  list.querySelectorAll("button[data-v]").forEach(b=>b.onclick=e=>{e.stopPropagation();setTriage(b.dataset.l,b.dataset.v);});
+  list.querySelectorAll("article").forEach(c=>c.onclick=e=>{if(e.target.closest("a,button,summary,abbr"))return;focusOffer(+c.dataset.id);});
   if(focused)showRouteInfo();
 }
 btnUpdate.href=WF("update-offers.yml");
