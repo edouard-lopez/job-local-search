@@ -1,2 +1,5 @@
 cv-extended-master.claude.md
 applications/
+node_modules/
+test-results/
+playwright-report/
