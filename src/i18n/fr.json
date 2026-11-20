@@ -61,5 +61,6 @@
   "sync-gist-hint": "Utilisez cet identifiant sur vos autres appareils.",
   "group-todo": "Non traitées",
   "group-dig": "À creuser",
-  "group-out": "Exclues"
+  "group-out": "Exclues",
+  "filter-hide-groups": "Masquer"
 }

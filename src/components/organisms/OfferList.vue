@@ -38,7 +38,7 @@ const routeText = computed(() => {
   <div class="my-2 text-gray-500" role="status" aria-live="polite">{{ t("visible-count", offers.visible.length) }}</div>
   <h2 class="sr-only">{{ t("offers-heading") }}</h2>
   <section v-for="g in groups" :key="g.key" :aria-labelledby="g.key" class="mb-3">
-    <h3 :id="g.key" class="mx-auto my-2 flex w-[90%] items-center gap-2 text-xs uppercase tracking-wide text-gray-400">
+    <h3 :id="g.key" class="my-2 flex w-full items-center gap-2 text-xs uppercase tracking-wide text-gray-400">
       <span class="h-px flex-1 bg-gray-200 dark:bg-gray-800" aria-hidden="true" />
       {{ t(g.key) }} ({{ g.offers.length }})
       <span class="h-px flex-1 bg-gray-200 dark:bg-gray-800" aria-hidden="true" />
