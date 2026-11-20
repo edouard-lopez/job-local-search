@@ -1,0 +1,52 @@
+<script setup>
+import { ref } from "vue";
+import AppIcon from "../atoms/AppIcon.vue";
+import PeerList from "../molecules/PeerList.vue";
+import { useSyncStore } from "../../stores/sync.js";
+import { t } from "../../i18n/index.js";
+
+/** Top-bar button: number of other open devices; opens their list and the Gist settings. */
+const sync = useSyncStore();
+const open = ref(false);
+const token = ref("");
+const gistId = ref(sync.settings.gistId);
+
+async function submit() {
+  await sync.configure(token.value, gistId.value);
+  gistId.value = sync.settings.gistId;
+  token.value = "";
+}
+</script>
+
+<template>
+  <div class="relative">
+    <button type="button" :aria-expanded="open" aria-controls="sync-menu" :aria-label="t('peers-button', sync.peerCount)"
+      :title="t('peers-title')" data-testid="peers"
+      class="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm ring-1 ring-inset ring-gray-300 hover:ring-gray-500 dark:ring-gray-700"
+      :class="{ 'text-emerald-700 dark:text-emerald-400': sync.peerCount > 0 }" @click="open = !open">
+      <AppIcon name="users" /><span aria-hidden="true">{{ sync.peerCount }}</span>
+    </button>
+    <div v-if="open" id="sync-menu" role="dialog" :aria-label="t('peers-title')"
+      class="absolute right-0 z-[1000] mt-2 w-80 max-w-[calc(100vw-2rem)] space-y-3 rounded-lg border border-gray-200 bg-white p-3 shadow-lg dark:border-gray-800 dark:bg-gray-900"
+      @keydown.esc="open = false">
+      <h2 class="text-sm font-semibold">{{ t("peers-title") }}</h2>
+      <PeerList :peers="sync.peers" />
+      <h2 class="text-sm font-semibold">{{ t("sync-title") }}</h2>
+      <p class="text-xs" role="status">{{ t(`sync-status-${sync.status}`, sync.error) }}</p>
+      <template v-if="sync.enabled">
+        <p class="text-xs text-gray-500">{{ t("sync-gist-hint") }} <code class="select-all break-all">{{ sync.settings.gistId }}</code></p>
+        <button type="button" class="text-xs text-red-700 underline dark:text-red-400" @click="sync.disconnect()">{{ t("sync-disconnect") }}</button>
+      </template>
+      <form v-else class="space-y-2 text-sm" @submit.prevent="submit">
+        <p class="text-xs text-gray-500">{{ t("sync-help") }}</p>
+        <label class="block">{{ t("sync-token") }}
+          <input v-model="token" type="password" required autocomplete="off" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1 dark:border-gray-700 dark:bg-gray-950" />
+        </label>
+        <label class="block">{{ t("sync-gist") }}
+          <input v-model="gistId" type="text" autocomplete="off" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1 dark:border-gray-700 dark:bg-gray-950" />
+        </label>
+        <button type="submit" class="rounded-md bg-emerald-700 px-3 py-1 text-white hover:bg-emerald-600">{{ t("sync-connect") }}</button>
+      </form>
+    </div>
+  </div>
+</template>

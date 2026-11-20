@@ -8,6 +8,8 @@ import TechTag from "../components/atoms/TechTag.vue";
 import FilterGroup from "../components/molecules/FilterGroup.vue";
 import OfferMetrics from "../components/molecules/OfferMetrics.vue";
 import TechList from "../components/molecules/TechList.vue";
+import PeerList from "../components/molecules/PeerList.vue";
+import SyncMenu from "../components/organisms/SyncMenu.vue";
 import OfferCard from "../components/organisms/OfferCard.vue";
 import { ICONS } from "../components/atoms/icons.js";
 import { isKnown } from "../domain/technos.js";
@@ -53,6 +55,12 @@ const toggle = (v) => (selected.value = selected.value.includes(v) ? selected.va
         :order="['Docker', 'Kubernetes', 'Rust']" :selected="selected" :is-known="isKnown" @toggle="toggle" />
       <OfferMetrics :offer="sample" />
       <TechList :technos="sample.technos" />
+      <PeerList :peers="[{ id: 1, device: 'Linux · Firefox', self: true }, { id: 2, device: 'Android · Firefox' }, { id: 3, device: 'macOS · Safari' }]" />
+    </section>
+
+    <section class="space-y-3">
+      <h3 class="font-semibold">Organismes : menu des pairs</h3>
+      <div class="flex justify-end"><SyncMenu /></div>
     </section>
 
     <section class="space-y-3">
