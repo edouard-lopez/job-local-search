@@ -3,7 +3,7 @@ import json, csv, math, pathlib
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 ORX = (43.6036, -1.3767)
 ROAD_FACTOR = 1.3      # distance routière ≈ vol d'oiseau × 1,3
-CAR_KMH, BIKE_KMH = 55, 20
+CAR_KMH, BIKE_KMH = 45, 20
 
 def haversine(a, b):
     r = 6371

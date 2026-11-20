@@ -34,7 +34,7 @@
     "id": 1,
     "distance_km": 19.7,
     "velo_min": 59,
-    "voiture_min": 21
+    "voiture_min": 26
   },
   {
     "zone": "Bayonne",
@@ -71,7 +71,7 @@
     "id": 2,
     "distance_km": 19.8,
     "velo_min": 59,
-    "voiture_min": 22
+    "voiture_min": 26
   },
   {
     "zone": "Seignanx",
@@ -98,7 +98,7 @@
     "id": 3,
     "distance_km": 12.6,
     "velo_min": 38,
-    "voiture_min": 14
+    "voiture_min": 17
   },
   {
     "zone": "Lasseube (hors limite de trajet)",
@@ -130,7 +130,7 @@
     "id": 4,
     "distance_km": 113.5,
     "velo_min": 341,
-    "voiture_min": 124
+    "voiture_min": 151
   },
   {
     "zone": "Lasseube (hors limite de trajet)",
@@ -162,7 +162,7 @@
     "id": 5,
     "distance_km": 114.2,
     "velo_min": 342,
-    "voiture_min": 125
+    "voiture_min": 152
   },
   {
     "zone": "Bayonne",
@@ -194,7 +194,7 @@
     "id": 6,
     "distance_km": 22.3,
     "velo_min": 67,
-    "voiture_min": 24
+    "voiture_min": 30
   },
   {
     "zone": "Côte basque (hors zone stricte)",
@@ -228,7 +228,7 @@
     "id": 7,
     "distance_km": 32.8,
     "velo_min": 99,
-    "voiture_min": 36
+    "voiture_min": 44
   },
   {
     "zone": "Bayonne",
@@ -260,7 +260,7 @@
     "id": 8,
     "distance_km": 22.7,
     "velo_min": 68,
-    "voiture_min": 25
+    "voiture_min": 30
   },
   {
     "zone": "Bayonne",
@@ -291,7 +291,7 @@
     "id": 9,
     "distance_km": 19.0,
     "velo_min": 57,
-    "voiture_min": 21
+    "voiture_min": 25
   },
   {
     "zone": "Bayonne",
@@ -322,7 +322,7 @@
     "id": 10,
     "distance_km": 18.4,
     "velo_min": 55,
-    "voiture_min": 20
+    "voiture_min": 24
   },
   {
     "zone": "Seignanx",
@@ -353,7 +353,7 @@
     "id": 11,
     "distance_km": 13.2,
     "velo_min": 40,
-    "voiture_min": 14
+    "voiture_min": 18
   },
   {
     "zone": "Lasseube (hors limite de trajet)",
@@ -384,6 +384,6 @@
     "id": 12,
     "distance_km": 114.9,
     "velo_min": 345,
-    "voiture_min": 125
+    "voiture_min": 153
   }
 ]
