@@ -13,7 +13,7 @@
     .chip { @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs ring-1 ring-inset cursor-pointer select-none; }
     .tag  { @apply inline-flex items-center rounded px-1.5 py-px text-[11.5px] ring-1 ring-inset; }
     .known   { @apply bg-emerald-50 text-emerald-900 ring-emerald-600/40 dark:bg-emerald-950 dark:text-emerald-100 dark:ring-emerald-400/40; }
-    .unknown { @apply bg-gray-100 text-gray-700 ring-gray-400/40 dark:bg-gray-800 dark:text-gray-300; }
+    .unknown { @apply bg-gray-200 text-gray-800 ring-gray-500/50 dark:bg-gray-800 dark:text-gray-300; }
     .chip[aria-pressed="true"] { @apply bg-emerald-700 text-white ring-emerald-700 opacity-100; }
     .ico { @apply inline-flex h-8 w-8 items-center justify-center rounded-md text-gray-500 ring-1 ring-inset ring-gray-300 bg-white hover:text-gray-900 hover:ring-gray-500 dark:bg-gray-900 dark:ring-gray-700 dark:text-gray-400 dark:hover:text-gray-100; }
     .ico[aria-pressed="true"] { @apply text-gray-900 ring-gray-600 bg-gray-100 dark:text-white dark:bg-gray-800; }
@@ -58,6 +58,8 @@ const ICON = {
   star: svg('<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>'),
   x:    svg('<path d="M18 6 6 18M6 6l12 12"/>'),
   pen:  svg('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/>'),
+  code: svg('<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>'),
+  fork: svg('<circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v2c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V9"/><path d="M12 12v3"/>'),
   bike: svg('<circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"/>'),
   car:  svg('<path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9L18 10l-2.7-3.6A2 2 0 0 0 13.7 6H7.6a2 2 0 0 0-1.7 1L4 10l-1.6.6A2 2 0 0 0 1 12.5V16c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/>'),
   ruler:svg('<path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2M11.5 9.5l2-2M8.5 6.5l2-2M17.5 15.5l2-2"/>'),
@@ -128,7 +130,7 @@ function card(o){
     <div class="flex items-start gap-2">
       <div class="flex-1 min-w-0">
         <h3 class="text-[15px] font-semibold leading-snug">
-          ${dig?`<span class="text-blue-600" aria-hidden="true">★</span><span class="sr-only">À creuser : </span> `:""}${out?`<span class="sr-only">Exclue : </span>`:""}<a class="hover:underline" href="${o.lien}" target="_blank" rel="noopener">${name}<span class="sr-only"> (annonce, nouvel onglet)</span></a>
+          ${dig?`<span class="text-blue-600" aria-hidden="true">★</span><span class="sr-only">À creuser : </span> `:""}${out?`<span class="sr-only">Exclue : </span>`:""}<a class="text-emerald-800 underline decoration-emerald-600/60 decoration-2 underline-offset-2 hover:text-emerald-600 hover:decoration-emerald-600 dark:text-emerald-300" href="${o.lien}" target="_blank" rel="noopener">${name}<span class="sr-only"> (annonce, nouvel onglet)</span></a>
           <span class="whitespace-nowrap text-xs font-normal text-gray-500"><span aria-hidden="true">· </span><span class="sr-only">publiée le </span><time datetime="${esc(o.publie)}">${esc(o.publie)}</time></span>
         </h3>
         <div class="text-[12.5px] text-gray-500">${ent.length>3?`<abbr class="cursor-help" title="${esc(o.entite)}" aria-hidden="true">${esc(short)}</abbr><span class="sr-only">${esc(o.entite)}</span>`:esc(o.entite)} · ${esc(o.commune)} · ${esc(o.secteur)} · <b class="text-gray-700 dark:text-gray-300">${esc(o.contrat)}</b></div>
@@ -137,11 +139,11 @@ function card(o){
     </div>
     ${out?"":`
     <ul class="flex flex-wrap items-center gap-x-3 my-1.5 text-[12.5px]">
-      <li>Techno <b class="text-emerald-700 dark:text-emerald-400">${o.score_techno}/5</b></li>
-      <li>Libre <b class="text-emerald-700 dark:text-emerald-400">${o.score_libre}/5</b></li>
-      <li class="inline-flex items-center gap-1"><span class="[&>svg]:h-4 [&>svg]:w-4">${ICON.bike}</span><span class="sr-only">Vélo :</span> ~${o.velo_min} min</li>
-      <li class="inline-flex items-center gap-1"><span class="[&>svg]:h-4 [&>svg]:w-4">${ICON.car}</span><span class="sr-only">Voiture :</span> ~${o.voiture_min} min</li>
-      <li class="inline-flex items-center gap-1"><span class="[&>svg]:h-4 [&>svg]:w-4">${ICON.ruler}</span><span class="sr-only">Distance :</span> ${o.distance_km} km</li>
+      <li class="inline-flex items-center gap-1" title="Score techno"><span class="[&>svg]:h-4 [&>svg]:w-4">${ICON.code}</span><span class="sr-only">Score techno :</span> <b class="text-emerald-700 dark:text-emerald-400">${o.score_techno}/5</b></li>
+      <li class="inline-flex items-center gap-1" title="Score logiciel libre"><span class="[&>svg]:h-4 [&>svg]:w-4">${ICON.fork}</span><span class="sr-only">Score logiciel libre :</span> <b class="text-emerald-700 dark:text-emerald-400">${o.score_libre}/5</b></li>
+      <li class="inline-flex items-center gap-1" title="Vélo"><span class="[&>svg]:h-4 [&>svg]:w-4">${ICON.bike}</span><span class="sr-only">Vélo :</span> ~${o.velo_min} min</li>
+      <li class="inline-flex items-center gap-1" title="Voiture"><span class="[&>svg]:h-4 [&>svg]:w-4">${ICON.car}</span><span class="sr-only">Voiture :</span> ~${o.voiture_min} min</li>
+      <li class="inline-flex items-center gap-1" title="Distance"><span class="[&>svg]:h-4 [&>svg]:w-4">${ICON.ruler}</span><span class="sr-only">Distance :</span> ${o.distance_km} km</li>
     </ul>
     <details><summary class="cursor-pointer text-emerald-700 dark:text-emerald-400">Mission</summary><p class="mt-1">${esc(o.mission)}</p></details>
     <h4 class="sr-only">Technos</h4>
