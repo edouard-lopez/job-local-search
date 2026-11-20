@@ -1,6 +1,36 @@
 [
   {
-    "hash": "364240b",
+    "hash": "4250a32",
+    "date": "2026-11-20",
+    "subject": "Actions GitHub mises à jour vers leurs dernières versions stables",
+    "body": ""
+  },
+  {
+    "hash": "ac907fd",
+    "date": "2026-11-20",
+    "subject": "Bordure verte à gauche et trajet vert à vélo, bleu en voiture",
+    "body": ""
+  },
+  {
+    "hash": "a952a80",
+    "date": "2026-11-20",
+    "subject": "Bordure verte « à creuser », marqueur d'arrivée rouge et itinéraire bleu",
+    "body": ""
+  },
+  {
+    "hash": "028e33c",
+    "date": "2026-11-21",
+    "subject": "Merge pull request #2 from edouard-lopez/feat/vue3-migration",
+    "body": "Porte la carte en Vue 3 (Vite, Pinia, banana-i18n, Tailwind)"
+  },
+  {
+    "hash": "9df8821",
+    "date": "2026-11-20",
+    "subject": "Merge pull request #1 from edouard-lopez/test/e2e-playwright",
+    "body": "Ajoute des tests end-to-end Playwright"
+  },
+  {
+    "hash": "c655cbb",
     "date": "2026-11-20",
     "subject": "Porte la carte en Vue 3 (Vite, Pinia, banana-i18n, Tailwind)",
     "body": "- composants en atomes, molécules, organismes et vues ; mise en page barre, corps, pied\n- logique métier isolée dans src/domain, état dans des stores Pinia\n- textes dans src/i18n/fr.json\n- pages styleguide et changelog, skill commit qui régénère le changelog\n- les 26 tests end-to-end passent sur la nouvelle version, plus 1 test des pages\n- publication Pages : build Vite"
