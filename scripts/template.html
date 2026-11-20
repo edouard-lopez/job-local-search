@@ -115,7 +115,7 @@ chips(fContrat,Object.keys(contratCount).sort(),state.contrat,contratCount,false
 const techCount={};OFFRES.forEach(o=>o.technos.forEach(t=>techCount[t]=(techCount[t]||0)+1));
 chips(fTech,sortTech(Object.keys(techCount)),state.tech,techCount,true);
 fZone.onchange=render; map.on("moveend",render);
-const good = ok => ok ? "font-semibold text-emerald-700 dark:text-emerald-400" : "";
+const hl = (ok, v) => ok ? `<strong class="font-semibold text-emerald-700 dark:text-emerald-400">${v}</strong>` : v;
 function card(o){
   const t=triage[o.lien], dig=t==="dig", out=t==="out";
   const ent=o.entite.split(/\s+/), short=ent.length>3?ent.slice(0,3).join(" ")+"…":o.entite;
@@ -140,10 +140,10 @@ function card(o){
     </div>
     ${out?"":`
     <ul class="flex flex-wrap items-center gap-x-3 my-1.5 text-[12.5px]">
-      <li class="inline-flex items-center gap-1" title="Score techno"><span class="[&>svg]:h-4 [&>svg]:w-4">${ICON.code}</span><span class="sr-only">Score techno :</span> <span class="${good(o.score_techno>=3)}">${o.score_techno}/5</span></li>
-      <li class="inline-flex items-center gap-1" title="Score logiciel libre"><span class="[&>svg]:h-4 [&>svg]:w-4">${ICON.fork}</span><span class="sr-only">Score logiciel libre :</span> <span class="${good(o.score_libre>=3)}">${o.score_libre}/5</span></li>
-      <li class="inline-flex items-center gap-1" title="Vélo"><span class="[&>svg]:h-4 [&>svg]:w-4">${ICON.bike}</span><span class="sr-only">Vélo :</span> <span class="${good(o.velo_min<30)}">~${o.velo_min} min</span></li>
-      <li class="inline-flex items-center gap-1" title="Voiture"><span class="[&>svg]:h-4 [&>svg]:w-4">${ICON.car}</span><span class="sr-only">Voiture :</span> <span class="${good(o.voiture_min<30)}">~${o.voiture_min} min</span></li>
+      <li class="inline-flex items-center gap-1" title="Score techno"><span class="[&>svg]:h-4 [&>svg]:w-4">${ICON.code}</span><span class="sr-only">Score techno :</span> ${hl(o.score_techno>=3, `${o.score_techno}/5`)}</li>
+      <li class="inline-flex items-center gap-1" title="Score logiciel libre"><span class="[&>svg]:h-4 [&>svg]:w-4">${ICON.fork}</span><span class="sr-only">Score logiciel libre :</span> ${hl(o.score_libre>=3, `${o.score_libre}/5`)}</li>
+      <li class="inline-flex items-center gap-1" title="Vélo"><span class="[&>svg]:h-4 [&>svg]:w-4">${ICON.bike}</span><span class="sr-only">Vélo :</span> ${hl(o.velo_min<30, `~${o.velo_min} min`)}</li>
+      <li class="inline-flex items-center gap-1" title="Voiture"><span class="[&>svg]:h-4 [&>svg]:w-4">${ICON.car}</span><span class="sr-only">Voiture :</span> ${hl(o.voiture_min<30, `~${o.voiture_min} min`)}</li>
       <li class="inline-flex items-center gap-1" title="Distance"><span class="[&>svg]:h-4 [&>svg]:w-4">${ICON.ruler}</span><span class="sr-only">Distance :</span> ${o.distance_km} km</li>
     </ul>
     <details><summary class="cursor-pointer text-emerald-700 dark:text-emerald-400">Mission</summary><p class="mt-1">${esc(o.mission)}</p></details>
