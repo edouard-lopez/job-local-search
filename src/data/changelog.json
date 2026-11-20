@@ -1,6 +1,24 @@
 [
   {
-    "hash": "d8acaad",
+    "hash": "4e796fe",
+    "date": "2026-11-20",
+    "subject": "Séparateurs nommés avant chaque groupe d'offres",
+    "body": ""
+  },
+  {
+    "hash": "e488e0a",
+    "date": "2026-11-21",
+    "subject": "Merge pull request #5 from edouard-lopez/feat/order-by-triage",
+    "body": "Liste groupée par état : non traitées, à creuser, exclues"
+  },
+  {
+    "hash": "fc3db9f",
+    "date": "2026-11-21",
+    "subject": "Merge pull request #4 from edouard-lopez/feat/sync-yjs-gist",
+    "body": "Tri partagé entre appareils (Yjs + Gist) et indicateur de pairs"
+  },
+  {
+    "hash": "2a86626",
     "date": "2026-11-20",
     "subject": "Liste ordonnée : non traitées, puis à creuser, puis exclues",
     "body": ""
