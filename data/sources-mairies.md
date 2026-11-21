@@ -53,3 +53,10 @@ Méthode : page « recrutement » du site de la mairie quand elle existe et rép
 - 12 offres revérifiées (hellowork, choisirleservicepublic) : aucune mention explicite d'expiration, toutes conservées. Les 6 pages hellowork en HTTP 410 (Team.is, Only Networks, Capgemini Software Engineer, Adaxis, Safran/Crit, Capgemini Java) restent à vérifier à la main.
 - Ajoutée : Hoist Group, Ingénieur DevOps à Pau (hellowork 58494005, publiée le 31/10/2026, zone Lasseube/Pau). Salaire non indiqué par l'annonce (estimation Hellowork ignorée).
 - Recherche web : Capgemini DevOps-Cloud Pau (hellowork 82018264) déjà « n'est plus disponible » ; France Travail Bayonne (5761920) introuvable (404). Autres offres Pau/Anglet vues dans les résultats mais non lues : non ajoutées. Pages des mairies non relues.
+
+## Mise à jour du 21/11/2026
+
+- 13 offres revérifiées. Retirées (page : « n'est plus disponible ») : SCC technicien N2-N3 (hellowork 83432237) et développeur back-end Linux embarqué (hellowork 83950643).
+- Salaires ajoutés (écrits dans l'annonce, brut non précisé) : Éditeur mobilité senior 45-50 k€, Éditeur mobilité 35-42 k€, Epsyl 35-47 k€. L'estimation Hellowork de l'offre DevOps 58494005 n'est pas un salaire de l'annonce : omise.
+- Pages en HTTP 410 sans texte (Team.is, Only Networks, Capgemini, Adaxis, Safran/Crit, etc.) conservées : pas de mention explicite d'expiration.
+- Recherches web (France Travail, Welcome to the Jungle, choisirleservicepublic, emploi-collectivites) : pistes vues (Akkodis et ISAGRI à Pau, DevOps Cloud à Anglet, CD Landes technicien informatique) non lues directement, donc non ajoutées. Pages des mairies non relues.

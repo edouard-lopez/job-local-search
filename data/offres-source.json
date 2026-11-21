@@ -30,7 +30,12 @@
     "lat": 43.49,
     "lon": -1.48,
     "geo_precision": "centre de Bayonne (site réel inconnu)",
-    "publie": "2026-10-24"
+    "publie": "2026-10-24",
+    "salaire": {
+      "min": 45,
+      "max": 50,
+      "brut": false
+    }
   },
   {
     "zone": "Bayonne",
@@ -63,30 +68,12 @@
     "lat": 43.4895,
     "lon": -1.4815,
     "geo_precision": "centre de Bayonne (site réel inconnu)",
-    "publie": "2026-09-23"
-  },
-  {
-    "zone": "Seignanx",
-    "commune": "Tarnos",
-    "entite": "SCC (ESN)",
-    "secteur": "privé",
-    "poste": "Technicien intégration et support, référent de site N2-N3",
-    "contrat": "CDI",
-    "score_techno": 1,
-    "score_libre": 0,
-    "mission": "Support de proximité N2-N3 sur un site industriel. Le poste intègre localement logiciels et postes. Il traite les incidents dans les délais convenus. Il maintient les équipements mobiles et sans fil. Il tient à jour la documentation et les dossiers d'exploitation. Il est l'interlocuteur informatique des équipes opérationnelles et respecte les procédures de sécurité du site. Anglais B2.",
-    "technos": [
-      "Windows",
-      "Active Directory"
-    ],
-    "lien": "https://www.hellowork.com/fr-fr/emplois/83432237.html",
-    "email": "",
-    "telephone": "",
-    "adresse": "Tarnos (40220), adresse non précisée",
-    "lat": 43.541,
-    "lon": -1.461,
-    "geo_precision": "centre de la commune",
-    "publie": "2026-10-17"
+    "publie": "2026-09-23",
+    "salaire": {
+      "min": 35,
+      "max": 42,
+      "brut": false
+    }
   },
   {
     "zone": "Lasseube (hors limite de trajet)",
@@ -114,35 +101,12 @@
     "lat": 43.302,
     "lon": -0.378,
     "geo_precision": "centre de la commune",
-    "publie": "2026-08-31"
-  },
-  {
-    "zone": "Lasseube (hors limite de trajet)",
-    "commune": "Pau",
-    "entite": "FEBUS Optics",
-    "secteur": "privé",
-    "poste": "Développeur back-end (Linux embarqué)",
-    "contrat": "CDI",
-    "score_techno": 2,
-    "score_libre": 2,
-    "mission": "Équipe R&D logicielle de FEBUS Optics, spécialiste des capteurs à fibre optique répartis (surveillance de canalisations, géothermie, sismique, risques naturels). Le poste conçoit le back-end embarqué qui pilote les interrogateurs DAS : acquisition, contrôle, configuration, supervision. Il développe sur Linux embarqué (NVIDIA Jetson) et contribue aux chaînes de compilation. Il définit les API REST et la messagerie ZMQ. Il implémente du traitement du signal temps réel (FFT, filtrage), met en place les protocoles de test et participe aux revues de code. Bac+5, 5 ans d'expérience.",
-    "technos": [
-      "Linux",
-      "C/C++",
-      "API REST",
-      "ZMQ",
-      "NVIDIA Jetson",
-      "CUDA",
-      "TCP/IP"
-    ],
-    "lien": "https://www.hellowork.com/fr-fr/emplois/83950643.html",
-    "email": "",
-    "telephone": "",
-    "adresse": "4 rue des Frères d'Orbigny, 64000 Pau",
-    "lat": 43.3185,
-    "lon": -0.362,
-    "geo_precision": "adresse (géocodage approximatif)",
-    "publie": "2026-09-30"
+    "publie": "2026-08-31",
+    "salaire": {
+      "min": 35,
+      "max": 47,
+      "brut": false
+    }
   },
   {
     "zone": "Bayonne",
