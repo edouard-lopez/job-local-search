@@ -64,4 +64,28 @@ test.describe("Tri « À creuser » / « À exclure »", () => {
     const dates = await cards.evaluateAll((els) => els.filter((e) => !/^(Exclue|À creuser)\./.test(e.getAttribute("aria-label"))).map((e) => e.querySelector("time").textContent));
     expect(dates).toEqual([...dates].sort().reverse());
   });
+
+  test("un séparateur nommé précède chaque groupe non vide", async ({ page }) => {
+    const headings = page.locator("section[aria-labelledby] > h3");
+    await expect(headings).toHaveText([/Non traitées/]);
+    const cards = page.getByRole("article");
+    await cards.nth(0).getByRole("button", { name: /^Marquer comme exclue/ }).click();
+    await cards.nth(0).getByRole("button", { name: /Marquer .* À creuser/ }).click();
+    await expect(headings).toHaveText([/Non traitées/, /À creuser \(1\)/, /Exclues \(1\)/]);
+    await expect(page.getByRole("region", { name: /^Exclues/ }).getByRole("article")).toHaveCount(1);
+  });
+
+  test("masquer un groupe retire ses offres de la liste", async ({ page }) => {
+    const cards = page.getByRole("article");
+    const total = await cards.count();
+    await cards.nth(0).getByRole("button", { name: /^Marquer comme exclue/ }).click();
+    const hide = page.getByRole("group", { name: "Masquer" });
+    await hide.getByLabel("Exclues").check();
+    await expect(cards).toHaveCount(total - 1);
+    await expect(page.getByRole("region", { name: /^Exclues/ })).toHaveCount(0);
+    await hide.getByLabel("Non traitées").check();
+    await expect(cards).toHaveCount(0);
+    await hide.getByLabel("Exclues").uncheck();
+    await expect(cards).toHaveCount(1);
+  });
 });
