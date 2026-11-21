@@ -82,5 +82,7 @@
   "sync-turn-credential": "Mot de passe TURN",
   "diag-turn-on": "Serveur TURN configuré",
   "diag-turn-off": "Aucun serveur TURN : la 4G/5G peut bloquer les liens directs",
-  "diag-error": "Dernière erreur : $1"
+  "diag-error": "Dernière erreur : $1",
+  "nav-repo": "Code source",
+  "update-offers-confirm": "Lancer la mise à jour des offres ? Le workflow GitHub consomme des crédits Claude."
 }

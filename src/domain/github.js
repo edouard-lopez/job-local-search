@@ -4,4 +4,6 @@ const repo = () =>
     ? `${location.hostname.split(".")[0]}/${location.pathname.split("/")[1]}`
     : "edouard-lopez/job-local-search";
 
+export const repoUrl = () => `https://github.com/${repo()}`;
+
 export const workflowUrl = (file) => `https://github.com/${repo()}/actions/workflows/${file}`;

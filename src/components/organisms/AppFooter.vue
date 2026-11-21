@@ -1,4 +1,5 @@
 <script setup>
+import { repoUrl } from "../../domain/github.js";
 import { t } from "../../i18n/index.js";
 </script>
 
@@ -9,6 +10,7 @@ import { t } from "../../i18n/index.js";
       <RouterLink to="/" class="hover:underline">{{ t("nav-home") }}</RouterLink>
       <RouterLink to="/styleguide" class="hover:underline">{{ t("nav-styleguide") }}</RouterLink>
       <RouterLink to="/changelog" class="hover:underline">{{ t("nav-changelog") }}</RouterLink>
+      <a :href="repoUrl()" target="_blank" rel="noopener" class="hover:underline">{{ t("nav-repo") }}<span class="sr-only">{{ t("opens-github") }}</span></a>
     </nav>
   </footer>
 </template>
