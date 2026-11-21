@@ -44,8 +44,9 @@ function drawRoute() {
   const offer = offers.offers.find((o) => o.id === route.offerId);
   if (offer) arrival = L.marker([offer.lat, offer.lon], { icon: ARRIVAL_ICON, zIndexOffset: 1000, title: offer.poste }).addTo(map);
   if (route.status === "ready") {
-    const bike = route.route.mode === "bike";
-    routeLayer = L.geoJSON(route.route.geometry, { style: { color: bike ? "#16a34a" : "#2563eb", weight: 5, opacity: 0.8 } }).addTo(map);
+    // Bike in green, car in blue; both drawn so they can be compared.
+    routeLayer = L.featureGroup(route.routes.map((r) =>
+      L.geoJSON(r.geometry, { style: { color: r.mode === "bike" ? "#16a34a" : "#2563eb", weight: 5, opacity: 0.75 } }))).addTo(map);
     map.fitBounds(routeLayer.getBounds(), { padding: [30, 30] });
   } else if (route.status === "failed" && offer) {
     map.setView([offer.lat, offer.lon], 13);

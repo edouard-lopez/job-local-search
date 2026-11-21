@@ -66,7 +66,7 @@ const toggle = (v) => (selected.value = selected.value.includes(v) ? selected.va
     <section class="space-y-3">
       <h3 class="font-semibold">Organismes : carte d'offre</h3>
       <OfferCard :offer="sample" />
-      <OfferCard :offer="sample" status="dig" route-text="Vélo : 18.4 km, ~55 min (itinéraire OpenStreetMap, 20 km/h)" focused />
+      <OfferCard :offer="sample" status="dig" route-text="Vélo : 18.4 km, ~55 min (20 km/h) · Voiture : 19.1 km, ~24 min" focused />
       <OfferCard :offer="sample" status="out" />
     </section>
   </div>

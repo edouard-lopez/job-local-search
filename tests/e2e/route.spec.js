@@ -5,29 +5,28 @@ const km = (ROUTE.distance / 1000).toFixed(1);
 test.describe("Itinéraire au clic", () => {
   test.beforeEach(async ({ page }) => { await page.goto("/"); });
 
-  test("à moins de 20 km : itinéraire vélo à 20 km/h", async ({ page, routeRequests }) => {
-    const o = nearOffer((x) => x.distance_km < 20);
-    test.skip(!o, "aucune offre à moins de 20 km");
-    const c = card(page, o);
-    await c.locator("time").click();
-    await expect(card(page, o).getByRole("status")).toHaveText(new RegExp(`Vélo : ${km} km, ~${Math.round(ROUTE.distance / 1000 / 20 * 60)} min`));
-    expect(routeRequests.at(-1)).toContain("/routed-bike/");
+  test("la sélection calcule les itinéraires vélo (20 km/h) et voiture", async ({ page, routeRequests }) => {
+    const o = nearOffer();
+    await card(page, o).locator("time").click();
+    const bike = `Vélo : ${km} km, ~${Math.round(ROUTE.distance / 1000 / 20 * 60)} min \\(20 km/h\\)`;
+    const car = `Voiture : ${km} km, ~${Math.round(ROUTE.duration / 60)} min`;
+    await expect(card(page, o).getByRole("status")).toHaveText(new RegExp(`^${bike} · ${car}$`));
+    expect(routeRequests.some((u) => u.includes("/routed-bike/"))).toBe(true);
+    expect(routeRequests.some((u) => u.includes("/routed-car/"))).toBe(true);
   });
 
-  test("l'offre choisie a un marqueur d'arrivée rouge et un itinéraire vert à vélo", async ({ page }) => {
-    const o = nearOffer((x) => x.distance_km < 20);
-    test.skip(!o, "aucune offre à moins de 20 km");
-    await card(page, o).locator("time").click();
+  test("carte : marqueur d'arrivée rouge, trajet vélo vert et trajet voiture bleu", async ({ page }) => {
+    await card(page, nearOffer()).locator("time").click();
     await expect(page.locator(".arrival-marker path")).toHaveAttribute("fill", "#dc2626");
     await expect(page.locator('#map path.leaflet-interactive[stroke="#16a34a"]')).toHaveCount(1);
+    await expect(page.locator('#map path.leaflet-interactive[stroke="#2563eb"]')).toHaveCount(1);
   });
 
-  test("au-delà de 20 km : itinéraire voiture", async ({ page, routeRequests }) => {
-    const o = nearOffer((x) => x.distance_km >= 20);
-    test.skip(!o, "aucune offre à plus de 20 km près d'Orx");
+  test("si un seul service répond, son itinéraire reste affiché", async ({ page }) => {
+    await page.route("https://routing.openstreetmap.de/routed-car/**", (r) => r.abort());
+    const o = nearOffer();
     await card(page, o).locator("time").click();
-    await expect(card(page, o).getByRole("status")).toHaveText(new RegExp(`Voiture : ${km} km, ~${Math.round(ROUTE.duration / 60)} min`));
-    expect(routeRequests.at(-1)).toContain("/routed-car/");
+    await expect(card(page, o).getByRole("status")).toHaveText(/^Vélo : [^·]+$/);
   });
 
   test("clavier : Entrée sur une offre calcule l'itinéraire", async ({ page, routeRequests }) => {
@@ -36,7 +35,7 @@ test.describe("Itinéraire au clic", () => {
     await c.focus();
     await page.keyboard.press("Enter");
     await expect.poll(() => routeRequests.length).toBeGreaterThan(0);
-    await expect(card(page, o).getByRole("status")).toHaveText(/^(Vélo|Voiture) :/);
+    await expect(card(page, o).getByRole("status")).toHaveText(/^Vélo : .* · Voiture :/);
   });
 
   test("si le service d'itinéraire échoue, un message le dit", async ({ page }) => {
