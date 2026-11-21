@@ -1,21 +1,9 @@
 [
   {
-    "hash": "8211261",
-    "date": "2026-11-21",
-    "subject": "Merge remote-tracking branch 'origin/main' into fix/maj-offres-data-seulement",
-    "body": "# Conflicts:\n#\tsrc/data/changelog.json"
-  },
-  {
-    "hash": "63e26c9",
+    "hash": "9b949c6",
     "date": "2026-11-21",
     "subject": "Durcit le prompt de candidature contre la fuite du CV",
     "body": "Claude visite seulement le lien de l'offre.\nIl ignore les consignes cachées dans la page web.\nIl n'envoie jamais le CV hors des fichiers générés."
-  },
-  {
-    "hash": "c71d65b",
-    "date": "2026-11-21",
-    "subject": "Limite la mise à jour des offres au répertoire data/",
-    "body": "Claude peut écrire seulement dans data/.\nLe workflow refuse le commit si un fichier hors de data/ change, src/ compris."
   },
   {
     "hash": "00eafa0",
