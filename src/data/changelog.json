@@ -1,8 +1,32 @@
 [
   {
-    "hash": "dfe47df",
+    "hash": "5dcbd0f",
+    "date": "2026-11-21",
+    "subject": "Fusion de main",
+    "body": "# Conflicts:\n#\tsrc/data/changelog.json"
+  },
+  {
+    "hash": "df92727",
+    "date": "2026-11-21",
+    "subject": "Merge pull request #6 from edouard-lopez/feat/group-separators",
+    "body": "Séparateurs de groupes et option pour masquer un groupe"
+  },
+  {
+    "hash": "2cb64f6",
     "date": "2026-11-21",
     "subject": "Sélection d'une offre : itinéraires vélo et voiture affichés ensemble",
+    "body": ""
+  },
+  {
+    "hash": "a9ea941",
+    "date": "2026-11-20",
+    "subject": "Séparateur pleine largeur et option pour masquer un groupe d'offres",
+    "body": ""
+  },
+  {
+    "hash": "b67a95d",
+    "date": "2026-11-20",
+    "subject": "Séparateurs nommés avant chaque groupe d'offres",
     "body": ""
   },
   {

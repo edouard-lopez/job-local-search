@@ -19,5 +19,11 @@ const technoOrder = computed(() => sortTechnos(Object.keys(store.technoCounts)))
     <label class="mt-1 text-xs font-semibold uppercase tracking-wide text-gray-500">
       <input v-model="store.hideLasseube" type="checkbox"> {{ t("filter-hide-lasseube") }}
     </label>
+    <fieldset class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
+      <legend class="float-left mr-2 font-semibold uppercase tracking-wide">{{ t("filter-hide-groups") }}</legend>
+      <label v-for="g in ['todo', 'dig', 'out']" :key="g">
+        <input type="checkbox" :checked="store.hiddenGroups.includes(g)" @change="store.toggleGroup(g)"> {{ t(`group-${g}`) }}
+      </label>
+    </fieldset>
   </div>
 </template>
