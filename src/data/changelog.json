@@ -1,6 +1,18 @@
 [
   {
-    "hash": "0362433",
+    "hash": "b026aee",
+    "date": "2026-11-21",
+    "subject": "Confirmation avant la mise à jour des offres et lien vers le dépôt en pied de page",
+    "body": ""
+  },
+  {
+    "hash": "e64a310",
+    "date": "2026-11-21",
+    "subject": "Merge pull request #10 from edouard-lopez/feat/turn-server",
+    "body": "Synchro en 4G : serveur TURN configurable et relecture du Gist"
+  },
+  {
+    "hash": "9de7ff1",
     "date": "2026-11-21",
     "subject": "TURN : import de JSON iceServers multi-entrées, textes harmonisés sans fournisseur imposé",
     "body": ""
