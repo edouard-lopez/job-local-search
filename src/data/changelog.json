@@ -1,21 +1,15 @@
 [
   {
-    "hash": "4a0dca8",
+    "hash": "ae33d4b",
     "date": "2026-11-21",
-    "subject": "Coche d'état sur chaque section du menu 👥 (synchronisation, diagnostic, réseau)",
-    "body": ""
+    "subject": "N'ouvre que les liens d'offre en https",
+    "body": "Un lien javascript: ou http ne devient plus cliquable, sur la carte et dans la liste."
   },
   {
-    "hash": "3d33544",
+    "hash": "00eafa0",
     "date": "2026-11-21",
-    "subject": "Menu 👥 simplifié en sections repliables ; TURN configuré par collage validé de l'extrait iceServers",
-    "body": ""
-  },
-  {
-    "hash": "c297fdb",
-    "date": "2026-11-21",
-    "subject": "TURN : accepte l'extrait JavaScript iceServers fourni par Metered",
-    "body": ""
+    "subject": "Menu 👥 simplifié, collage TURN validé et marques d'état (#12)",
+    "body": "* TURN : accepte l'extrait JavaScript iceServers fourni par Metered\n\n\n* Menu 👥 simplifié en sections repliables ; TURN configuré par collage validé de l'extrait iceServers\n\n\n* Coche d'état sur chaque section du menu 👥 (synchronisation, diagnostic, réseau)\n\n\n---------"
   },
   {
     "hash": "6877f34",
