@@ -1,6 +1,18 @@
 [
   {
-    "hash": "b026aee",
+    "hash": "da9821b",
+    "date": "2026-11-21",
+    "subject": "TURN : accepte l'extrait JavaScript iceServers fourni par Metered",
+    "body": ""
+  },
+  {
+    "hash": "6877f34",
+    "date": "2026-11-21",
+    "subject": "Merge pull request #11 from edouard-lopez/feat/confirm-update-repo-link",
+    "body": "Confirmation avant mise à jour des offres et lien vers le dépôt"
+  },
+  {
+    "hash": "4803efc",
     "date": "2026-11-21",
     "subject": "Confirmation avant la mise à jour des offres et lien vers le dépôt en pied de page",
     "body": ""

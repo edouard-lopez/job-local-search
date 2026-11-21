@@ -147,6 +147,23 @@ test.describe("P2P réel avec un relais Nostr local", () => {
     expect(saved).toEqual({ urls: "turn:turn.exemple.org:443", username: "moi", credential: "secret" });
   });
 
+  test("coller l'extrait JavaScript de Metered remplit les champs TURN", async ({ browser }) => {
+    const page = await device(browser);
+    await page.getByTestId("peers").click();
+    const snippet = `var pc = new RTCPeerConnection({
+  iceServers: [
+    { urls: "stun:stun.relay.metered.ca:80", },
+    { urls: "turn:eu.relay.metered.ca:80", username: "u1", credential: "c/1", },
+    { urls: "turn:eu.relay.metered.ca:80?transport=tcp", username: "u1", credential: "c/1", },
+    { urls: "turns:eu.relay.metered.ca:443?transport=tcp", username: "u1", credential: "c/1", },
+  ],
+});`;
+    await page.getByLabel(/^Adresse TURN/).fill(snippet);
+    await expect(page.getByLabel(/^Adresse TURN/)).toHaveValue("turn:eu.relay.metered.ca:80 turn:eu.relay.metered.ca:80?transport=tcp turns:eu.relay.metered.ca:443?transport=tcp");
+    await expect(page.getByLabel("Identifiant TURN")).toHaveValue("u1");
+    await expect(page.getByLabel("Mot de passe TURN")).toHaveValue("c/1");
+  });
+
   test("coller le JSON iceServers du fournisseur remplit les champs TURN", async ({ browser }) => {
     const page = await device(browser);
     await page.getByTestId("peers").click();
