@@ -1,6 +1,6 @@
 [
   {
-    "hash": "2cdfb3b",
+    "hash": "1eb7dfd",
     "date": "2026-11-21",
     "subject": "Ajoute une politique de sécurité du contenu (CSP)",
     "body": "La page charge seulement ses scripts, l'API GitHub, les tuiles et itinéraires OSM, et les relais Nostr."
