@@ -51,3 +51,25 @@ test.describe("Carte d'une offre", () => {
     await expect(c.getByText(o.mission.slice(0, 40))).toBeVisible();
   });
 });
+
+test("le salaire suit le score libre, avec brut / an en infobulle, en emphase si le haut atteint 50 k€", async ({ page }) => {
+  await page.goto("/#/styleguide");
+  const items = page.locator("ul", { has: page.locator('li[title^="Salaire indiqué"]') }).last().locator("> li");
+  const titles = await items.evaluateAll((els) => els.map((e) => e.title));
+  expect(titles.slice(1, 3)).toEqual(["Score logiciel libre", "Salaire indiqué dans l'annonce"]);
+  const salary = items.nth(2);
+  await expect(salary.locator("strong abbr")).toHaveText("45-55 k€");
+  await expect(salary.locator("abbr")).toHaveAttribute("title", "brut / an");
+  await expect(salary.locator("svg")).toHaveCount(1);
+});
+
+test("un salaire non brut garde sa place, porte une alerte et n'est pas en emphase", async ({ page }) => {
+  await page.goto("/#/styleguide");
+  const items = page.getByTestId("metrics-net").locator("> li");
+  expect((await items.evaluateAll((els) => els.map((e) => e.title))).slice(1, 3)).toEqual(["Score logiciel libre", "Salaire indiqué dans l'annonce"]);
+  const salary = items.nth(2);
+  await expect(salary.locator("abbr")).toHaveText("52-60 k€");
+  await expect(salary.locator("abbr")).toHaveAttribute("title", /pas en brut/);
+  await expect(salary.locator("strong")).toHaveCount(0);
+  await expect(salary.locator("svg")).toHaveCount(2);
+});
