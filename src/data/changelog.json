@@ -1,6 +1,18 @@
 [
   {
-    "hash": "8cf34b8",
+    "hash": "bec4bc0",
+    "date": "2026-11-21",
+    "subject": "Diagnostic P2P et serveurs de mise en relation configurables",
+    "body": ""
+  },
+  {
+    "hash": "df92727",
+    "date": "2026-11-21",
+    "subject": "Merge pull request #6 from edouard-lopez/feat/group-separators",
+    "body": "Séparateurs de groupes et option pour masquer un groupe"
+  },
+  {
+    "hash": "a9ea941",
     "date": "2026-11-20",
     "subject": "Séparateur pleine largeur et option pour masquer un groupe d'offres",
     "body": ""

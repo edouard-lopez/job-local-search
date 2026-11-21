@@ -9,6 +9,7 @@ import FilterGroup from "../components/molecules/FilterGroup.vue";
 import OfferMetrics from "../components/molecules/OfferMetrics.vue";
 import TechList from "../components/molecules/TechList.vue";
 import PeerList from "../components/molecules/PeerList.vue";
+import SyncDiagnostic from "../components/molecules/SyncDiagnostic.vue";
 import SyncMenu from "../components/organisms/SyncMenu.vue";
 import OfferCard from "../components/organisms/OfferCard.vue";
 import { ICONS } from "../components/atoms/icons.js";
@@ -56,6 +57,7 @@ const toggle = (v) => (selected.value = selected.value.includes(v) ? selected.va
       <OfferMetrics :offer="sample" />
       <TechList :technos="sample.technos" />
       <PeerList :peers="[{ id: 1, device: 'Linux · Firefox', self: true }, { id: 2, device: 'Android · Firefox' }, { id: 3, device: 'macOS · Safari' }]" />
+      <SyncDiagnostic :diag="{ webrtc: true, servers: [{ url: 'wss://signaling.exemple.org', ok: true }, { url: 'wss://signaling.yjs.dev', ok: false }], room: true, links: 1 }" />
     </section>
 
     <section class="space-y-3">

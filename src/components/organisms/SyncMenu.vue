@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import AppIcon from "../atoms/AppIcon.vue";
 import PeerList from "../molecules/PeerList.vue";
+import SyncDiagnostic from "../molecules/SyncDiagnostic.vue";
 import { useSyncStore } from "../../stores/sync.js";
 import { t } from "../../i18n/index.js";
 
@@ -10,6 +11,8 @@ const sync = useSyncStore();
 const open = ref(false);
 const token = ref("");
 const gistId = ref(sync.settings.gistId);
+const servers = ref(sync.signaling.join("\n"));
+const saveServers = () => sync.setSignaling(servers.value.split(/\s+/));
 
 async function submit() {
   await sync.configure(token.value, gistId.value);
@@ -35,6 +38,8 @@ async function submit() {
       <p class="text-xs" role="status">{{ t(`sync-status-${sync.status}`, sync.error) }}</p>
       <template v-if="sync.enabled">
         <p class="text-xs text-gray-500">{{ t("sync-gist-hint") }} <code class="select-all break-all">{{ sync.settings.gistId }}</code></p>
+        <h2 class="text-sm font-semibold">{{ t("diag-title") }}</h2>
+        <SyncDiagnostic :diag="sync.diag" />
         <button type="button" class="text-xs text-red-700 underline dark:text-red-400" @click="sync.disconnect()">{{ t("sync-disconnect") }}</button>
       </template>
       <form v-else class="space-y-2 text-sm" @submit.prevent="submit">
@@ -46,6 +51,13 @@ async function submit() {
           <input v-model="gistId" type="text" autocomplete="off" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1 dark:border-gray-700 dark:bg-gray-950" />
         </label>
         <button type="submit" class="rounded-md bg-emerald-700 px-3 py-1 text-white hover:bg-emerald-600">{{ t("sync-connect") }}</button>
+      </form>
+      <form class="space-y-1 text-xs" @submit.prevent="saveServers">
+        <label class="block">{{ t("sync-signaling") }}
+          <textarea v-model="servers" rows="2" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1 font-mono dark:border-gray-700 dark:bg-gray-950" />
+        </label>
+        <p class="text-gray-500">{{ t("sync-signaling-help") }}</p>
+        <button type="submit" class="rounded-md px-2 py-0.5 ring-1 ring-inset ring-gray-300 hover:ring-gray-500 dark:ring-gray-700">{{ t("sync-signaling-save") }}</button>
       </form>
     </div>
   </div>

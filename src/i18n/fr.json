@@ -62,5 +62,16 @@
   "group-todo": "Non traitées",
   "group-dig": "À creuser",
   "group-out": "Exclues",
-  "filter-hide-groups": "Masquer"
+  "filter-hide-groups": "Masquer",
+  "diag-title": "Diagnostic P2P",
+  "diag-webrtc-ok": "WebRTC disponible",
+  "diag-webrtc-ko": "WebRTC indisponible dans ce navigateur",
+  "diag-server-ok": "Serveur joignable : $1",
+  "diag-server-ko": "Serveur injoignable : $1",
+  "diag-room-ok": "Salle rejointe",
+  "diag-room-ko": "Salle pas encore rejointe",
+  "diag-links": "$1 {{PLURAL:$1|lien direct|liens directs}} WebRTC",
+  "sync-signaling": "Serveurs de mise en relation",
+  "sync-signaling-help": "Une adresse wss:// par ligne. Tous les appareils doivent en partager au moins une.",
+  "sync-signaling-save": "Enregistrer les serveurs"
 }
