@@ -24,8 +24,9 @@ jobs:
           prompt: |
             Tu mets à jour une liste d'offres d'emploi locales.
             1. Lis SEARCH-CRITERIA.md : il définit le profil, les zones, les scores et les règles.
-            2. Lis data/offres-source.json : c'est la liste actuelle, avec son format.
+            2. Lis data/offres-source.json : c'est la liste actuelle. Les champs optionnels décrits dans SEARCH-CRITERIA.md (comme `salaire`) peuvent y manquer.
             3. Vérifie chaque offre existante. Retire une offre seulement si sa page dit explicitement qu'elle est expirée ou close. Si la page ne se charge pas, garde l'offre.
+               Pour chaque offre gardée, complète les champs de SEARCH-CRITERIA.md qui manquent encore, en particulier `salaire` s'il est écrit dans l'annonce.
             4. Cherche les nouvelles offres selon les critères et les sources. Ajoute-les au même format, avec lat/lon et geo_precision.
             5. Mets à jour data/sources-mairies.md avec les sources consultées aujourd'hui.
             6. Lance python3 scripts/build.py.
