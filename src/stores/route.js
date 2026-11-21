@@ -1,17 +1,17 @@
 import { defineStore } from "pinia";
-import { fetchRoute } from "../domain/geo.js";
+import { fetchRoutes } from "../domain/geo.js";
 
-/** The offer the user clicked, and the route drawn to it. */
+/** The offer the user clicked, and the bike and car routes drawn to it. */
 export const useRouteStore = defineStore("route", {
-  state: () => ({ offerId: null, status: "idle", route: null }),
+  state: () => ({ offerId: null, status: "idle", routes: [] }),
   actions: {
     async focus(offer) {
       this.offerId = offer.id;
       this.status = "loading";
-      this.route = null;
+      this.routes = [];
       try {
-        const route = await fetchRoute(offer);
-        if (this.offerId === offer.id) Object.assign(this, { route, status: "ready" });
+        const routes = await fetchRoutes(offer);
+        if (this.offerId === offer.id) Object.assign(this, { routes, status: routes.length ? "ready" : "failed" });
       } catch {
         if (this.offerId === offer.id) this.status = "failed";
       }
