@@ -76,7 +76,7 @@
   "sync-relays-save": "Enregistrer le réseau",
   "map-popup-ad": "Annonce",
   "sync-turn": "Serveur TURN (optionnel)",
-  "sync-turn-help": "Nécessaire quand un appareil est en 4G/5G : il relaie le trafic chiffré si la connexion directe échoue. Collez la réponse JSON de Cloudflare dans « Adresse TURN » pour remplir les trois champs.",
+  "sync-turn-help": "Nécessaire quand un appareil est en 4G/5G : il relaie le trafic chiffré si la connexion directe échoue. Vous pouvez coller le JSON « iceServers » de votre fournisseur (ex. Metered) dans « Adresse TURN » pour remplir les trois champs.",
   "sync-turn-urls": "Adresse TURN (une ou plusieurs, séparées par des espaces)",
   "sync-turn-username": "Identifiant TURN",
   "sync-turn-credential": "Mot de passe TURN",

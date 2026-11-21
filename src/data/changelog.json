@@ -1,14 +1,20 @@
 [
   {
-    "hash": "7151d00",
+    "hash": "0362433",
+    "date": "2026-11-21",
+    "subject": "TURN : import de JSON iceServers multi-entrées, textes harmonisés sans fournisseur imposé",
+    "body": ""
+  },
+  {
+    "hash": "f08c6d4",
     "date": "2026-11-21",
     "subject": "Relecture du Gist toutes les 30 s et au retour sur l'onglet (synchro sans lien direct)",
     "body": ""
   },
   {
-    "hash": "5587151",
+    "hash": "7e93398",
     "date": "2026-11-21",
-    "subject": "TURN : plusieurs adresses et import direct de la réponse JSON de Cloudflare",
+    "subject": "TURN : plusieurs adresses et import direct d’un JSON iceServers",
     "body": ""
   },
   {

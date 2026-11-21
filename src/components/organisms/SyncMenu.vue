@@ -14,7 +14,7 @@ const token = ref("");
 const gistId = ref(sync.settings.gistId);
 const relays = ref(sync.relays.join("\n"));
 const turn = ref({ ...sync.turn });
-// Pasting Cloudflare's JSON answer into the address field fills the three fields.
+// Pasting the provider's iceServers JSON into the address field fills the three fields.
 watch(() => turn.value.urls, (text) => { const parsed = parseTurnJson(text); if (parsed) turn.value = parsed; });
 const saveNetwork = () => sync.setNetwork({ relays: relays.value.split(/\s+/), turn: { ...turn.value } });
 
