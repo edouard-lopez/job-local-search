@@ -1,6 +1,6 @@
 [
   {
-    "hash": "ae33d4b",
+    "hash": "758d86a",
     "date": "2026-11-21",
     "subject": "N'ouvre que les liens d'offre en https",
     "body": "Un lien javascript: ou http ne devient plus cliquable, sur la carte et dans la liste."
