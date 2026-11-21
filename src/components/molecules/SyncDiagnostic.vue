@@ -1,7 +1,7 @@
 <script setup>
 import { t } from "../../i18n/index.js";
 
-/** Peer-to-peer health: WebRTC support, each signalling server, the room and direct links. */
+/** Peer-to-peer health: WebRTC support, each relay, direct links, TURN and the last connection error. */
 defineProps({ diag: { type: Object, required: true } });
 </script>
 
@@ -17,5 +17,7 @@ defineProps({ diag: { type: Object, required: true } });
       {{ diag.room ? "✓" : "…" }} {{ t(diag.room ? "diag-room-ok" : "diag-room-ko") }}
     </li>
     <li class="text-gray-500">{{ t("diag-links", diag.links) }}</li>
+    <li class="text-gray-500">{{ t(diag.turn ? "diag-turn-on" : "diag-turn-off") }}</li>
+    <li v-if="diag.error" class="break-words text-red-700 dark:text-red-400">{{ t("diag-error", diag.error) }}</li>
   </ul>
 </template>

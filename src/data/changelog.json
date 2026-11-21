@@ -1,6 +1,48 @@
 [
   {
-    "hash": "c9f2b27",
+    "hash": "0362433",
+    "date": "2026-11-21",
+    "subject": "TURN : import de JSON iceServers multi-entrées, textes harmonisés sans fournisseur imposé",
+    "body": ""
+  },
+  {
+    "hash": "f08c6d4",
+    "date": "2026-11-21",
+    "subject": "Relecture du Gist toutes les 30 s et au retour sur l'onglet (synchro sans lien direct)",
+    "body": ""
+  },
+  {
+    "hash": "7e93398",
+    "date": "2026-11-21",
+    "subject": "TURN : plusieurs adresses et import direct d’un JSON iceServers",
+    "body": ""
+  },
+  {
+    "hash": "1baa9a5",
+    "date": "2026-11-21",
+    "subject": "Serveur TURN configurable et erreurs de connexion dans le diagnostic P2P",
+    "body": ""
+  },
+  {
+    "hash": "9e20454",
+    "date": "2026-11-21",
+    "subject": "Merge pull request #9 from edouard-lopez/refactor/clean-code",
+    "body": "Nettoyage clean-code : groupes de tri, constantes, store de synchro"
+  },
+  {
+    "hash": "ac73317",
+    "date": "2026-11-21",
+    "subject": "Fusion de main",
+    "body": ""
+  },
+  {
+    "hash": "c800a94",
+    "date": "2026-11-21",
+    "subject": "Merge pull request #8 from edouard-lopez/feat/sync-diagnostic",
+    "body": "P2P via relais Nostr et diagnostic de synchronisation"
+  },
+  {
+    "hash": "54ea553",
     "date": "2026-11-21",
     "subject": "Nettoyage : groupes de tri centralisés, constantes regroupées, store de synchro simplifié",
     "body": ""

@@ -9,6 +9,8 @@ const STATE_KEY = "triage-yjs";
 const LEGACY_KEY = "triage";
 const SAVE_DELAY_MS = 2000;
 const DIAG_EVERY_MS = 2000;
+/** Re-read the Gist this often while the page is visible: syncs devices that cannot link directly (4G). */
+const PULL_EVERY_MS = 30000;
 
 const read = (key) => { try { return localStorage.getItem(key); } catch { return null; } };
 const write = (key, value) => { try { value == null ? localStorage.removeItem(key) : localStorage.setItem(key, value); } catch { /* storage unavailable */ } };
@@ -30,6 +32,7 @@ function restoreLocal() {
 let peers = null;
 let saveTimer = null;
 let diagTimer = null;
+let pullTimer = null;
 
 const NO_SETTINGS = { token: "", gistId: "" };
 const loadSettings = () => { try { return JSON.parse(read(SETTINGS_KEY)) ?? NO_SETTINGS; } catch { return NO_SETTINGS; } };
@@ -43,13 +46,14 @@ export const useSyncStore = defineStore("sync", {
     status: "off", // off | syncing | ok | error
     error: "",
     /** Peer-to-peer health, refreshed while connected. */
-    diag: { webrtc: typeof RTCPeerConnection !== "undefined", servers: [], room: false, links: 0 },
+    diag: { webrtc: typeof RTCPeerConnection !== "undefined", servers: [], room: false, links: 0, turn: false, error: "" },
   }),
   getters: {
     enabled: (s) => Boolean(s.settings.token && s.settings.gistId),
     selfPeer: (s) => ({ id: "self", device: s.device, self: true }),
     peerCount: (s) => s.peers.filter((p) => !p.self).length,
     relays: (s) => s.settings.relays ?? [],
+    turn: (s) => s.settings.turn ?? { urls: "", username: "", credential: "" },
   },
   actions: {
     init() {
@@ -73,9 +77,9 @@ export const useSyncStore = defineStore("sync", {
         this.fail(e);
       }
     },
-    /** Replace the Nostr relays (empty: Trystero's public list) and restart peer-to-peer. */
-    async setRelays(urls) {
-      this.settings = { ...this.settings, relays: urls.map((u) => u.trim()).filter(Boolean) };
+    /** Replace the Nostr relays (empty: Trystero's public list) and the TURN server, then restart peer-to-peer. */
+    async setNetwork({ relays, turn }) {
+      this.settings = { ...this.settings, relays: relays.map((u) => u.trim()).filter(Boolean), turn };
       write(SETTINGS_KEY, JSON.stringify(this.settings));
       this.stopPeers();
       if (this.enabled) await this.startPeers();
@@ -84,7 +88,7 @@ export const useSyncStore = defineStore("sync", {
       peers?.stop();
       peers = null;
       clearInterval(diagTimer);
-      this.diag = { ...this.diag, servers: [], room: false, links: 0 };
+      this.diag = { ...this.diag, servers: [], room: false, links: 0, error: "" };
       this.peers = [this.selfPeer];
     },
     disconnect() {
@@ -96,18 +100,29 @@ export const useSyncStore = defineStore("sync", {
     async connect() {
       this.status = "syncing";
       try {
-        const remote = await readGist(this.settings.token, this.settings.gistId);
-        if (remote) Y.applyUpdate(doc, remote, "gist");
+        await this.pull();
         await this.save();
       } catch (e) {
         this.fail(e);
       }
+      this.watchGist();
       await this.startPeers();
+    },
+    /** Merge the Gist into the local document; Yjs ignores what is already known. */
+    async pull() {
+      const remote = await readGist(this.settings.token, this.settings.gistId);
+      if (remote) Y.applyUpdate(doc, remote, "gist");
+    },
+    watchGist() {
+      if (pullTimer) return;
+      const pullIfVisible = () => { if (this.enabled && !document.hidden) this.pull().catch((e) => this.fail(e)); };
+      pullTimer = setInterval(pullIfVisible, PULL_EVERY_MS);
+      document.addEventListener("visibilitychange", pullIfVisible);
     },
     async startPeers() {
       if (peers || !this.diag.webrtc) return;
       peers = await joinPeers({
-        gistId: this.settings.gistId, relays: this.relays, device: this.device, doc,
+        gistId: this.settings.gistId, relays: this.relays, turn: this.turn, device: this.device, doc,
         onPeers: (others) => { this.peers = [this.selfPeer, ...others]; },
       });
       diagTimer = setInterval(() => this.refreshDiag(), DIAG_EVERY_MS);

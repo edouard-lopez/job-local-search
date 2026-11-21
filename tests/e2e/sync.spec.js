@@ -61,6 +61,19 @@ test.describe("Synchronisation entre appareils", () => {
     expect(doc.getMap("triage").toJSON()).toEqual({ [remote.lien]: "dig", [local.lien]: "dig" });
   });
 
+  test("revenir sur l'onglet relit le Gist : un ⭐ posé ailleurs apparaît", async ({ page }) => {
+    const o = nearOffer();
+    let content = "";
+    await page.route("https://api.github.com/gists**", (r) =>
+      r.fulfill({ json: { id: GIST, files: { [FILE]: { content } } } }));
+    await page.addInitScript((gist) => localStorage.setItem("sync", JSON.stringify({ token: "ghp_test", gistId: gist })), GIST);
+    await page.goto("/");
+    await expect(card(page, o)).not.toHaveAccessibleName(/^À creuser\./);
+    content = remoteUpdate(o);
+    await page.evaluate(() => document.dispatchEvent(new Event("visibilitychange")));
+    await expect(card(page, o)).toHaveAccessibleName(/^À creuser\./);
+  });
+
   test("un jeton seul crée un Gist secret", async ({ page }) => {
     const saves = await fakeGist(page, "");
     await page.goto("/");
@@ -118,5 +131,32 @@ test.describe("P2P réel avec un relais Nostr local", () => {
     await page.goto("/");
     await page.getByTestId("peers").click();
     await expect(page.getByRole("list", { name: "Diagnostic P2P" })).toContainText("Relais injoignable : ws://127.0.0.1:1", { timeout: 5000 });
+  });
+
+  test("un serveur TURN saisi est enregistré et signalé dans le diagnostic", async ({ browser }) => {
+    const page = await device(browser);
+    await page.getByTestId("peers").click();
+    const diag = page.getByRole("list", { name: "Diagnostic P2P" });
+    await expect(diag).toContainText("Aucun serveur TURN");
+    await page.getByLabel(/^Adresse TURN/).fill("turn:turn.exemple.org:443");
+    await page.getByLabel("Identifiant TURN").fill("moi");
+    await page.getByLabel("Mot de passe TURN").fill("secret");
+    await page.getByRole("button", { name: "Enregistrer le réseau" }).click();
+    await expect(diag).toContainText("Serveur TURN configuré");
+    const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("sync")).turn);
+    expect(saved).toEqual({ urls: "turn:turn.exemple.org:443", username: "moi", credential: "secret" });
+  });
+
+  test("coller le JSON iceServers du fournisseur remplit les champs TURN", async ({ browser }) => {
+    const page = await device(browser);
+    await page.getByTestId("peers").click();
+    const creds = { username: "u1", credential: "c1" };
+    const answer = [{ urls: "stun:stun.relay.metered.ca:80" },
+      { urls: "turn:global.relay.metered.ca:80", ...creds },
+      { urls: "turns:global.relay.metered.ca:443?transport=tcp", ...creds }];
+    await page.getByLabel(/^Adresse TURN/).fill(JSON.stringify(answer));
+    await expect(page.getByLabel(/^Adresse TURN/)).toHaveValue("turn:global.relay.metered.ca:80 turns:global.relay.metered.ca:443?transport=tcp");
+    await expect(page.getByLabel("Identifiant TURN")).toHaveValue("u1");
+    await expect(page.getByLabel("Mot de passe TURN")).toHaveValue("c1");
   });
 });

@@ -7,7 +7,7 @@ export const toBase64 = (bytes) => btoa(String.fromCharCode(...bytes));
 export const fromBase64 = (text) => Uint8Array.from(atob(text), (c) => c.charCodeAt(0));
 
 async function call(url, token, init = {}) {
-  const res = await fetch(url, { ...init, headers: { ...headers(token), ...init.headers } });
+  const res = await fetch(url, { cache: "no-store", ...init, headers: { ...headers(token), ...init.headers } });
   if (!res.ok) throw new Error(`GitHub ${res.status}`);
   return res.json();
 }
