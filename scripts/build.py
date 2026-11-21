@@ -27,11 +27,17 @@ cols = [("commune","Commune"),("entite","Entité"),("secteur","Secteur"),("poste
         ("telephone","Téléphone contact"),("distance_km","Distance route estimée (km)"),
         ("velo_min","Vélo depuis Orx (min, estimé)"),("voiture_min","Voiture depuis Orx (min, estimé)"),
         ("zone","Zone"),("adresse","Adresse"),("publie","Publiée le")]
+def fmt(o, k):
+    v = o.get(k, "")
+    if k == "technos": return ", ".join(v)
+    if k == "salaire" and v: return f'{v["min"]}-{v["max"]} k€ {"brut" if v.get("brut") else "non brut"}/an'
+    return v
+
 with open(ROOT/"data/offres.csv", "w", newline="", encoding="utf-8") as f:
     w = csv.writer(f)
     w.writerow([c[1] for c in cols])
     for o in offres:
-        w.writerow([", ".join(o[k]) if k == "technos" else o.get(k, "") for k, _ in cols])
+        w.writerow([fmt(o, k) for k, _ in cols])
 
 import re
 crit = (ROOT/"SEARCH-CRITERIA.md").read_text()

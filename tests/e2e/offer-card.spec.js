@@ -52,12 +52,21 @@ test.describe("Carte d'une offre", () => {
   });
 });
 
-test("le salaire s'affiche après le score libre, seulement s'il est indiqué", async ({ page }) => {
+test("le salaire suit le score libre, avec brut / an en infobulle, en emphase dès 50 k€", async ({ page }) => {
   await page.goto("/#/styleguide");
-  const items = page.locator("ul", { has: page.locator('li[title^="Salaire"]') }).last().locator("> li");
+  const items = page.locator("ul", { has: page.locator('li[title^="Salaire indiqué"]') }).last().locator("> li");
   const titles = await items.evaluateAll((els) => els.map((e) => e.title));
   expect(titles.slice(1, 3)).toEqual(["Score logiciel libre", "Salaire indiqué dans l'annonce"]);
-  await expect(items.nth(2)).toContainText("38-45 k€ brut/an");
-  await page.goto("/");
-  await expect(page.locator('li[title="Salaire indiqué dans l\'annonce"]')).toHaveCount(OFFERS.filter((o) => o.salaire).length);
+  const salary = items.nth(2);
+  await expect(salary.locator("strong abbr")).toHaveText("50-58 k€");
+  await expect(salary.locator("abbr")).toHaveAttribute("title", "brut / an");
+  await expect(salary.locator("svg")).toHaveCount(1);
+});
+
+test("un salaire non brut porte une alerte et n'est pas en emphase", async ({ page }) => {
+  await page.goto("/#/styleguide");
+  const salary = page.locator('li[title="Salaire"]');
+  await expect(salary.locator("abbr")).toHaveAttribute("title", /pas en brut/);
+  await expect(salary.locator("strong")).toHaveCount(0);
+  await expect(salary.locator("svg")).toHaveCount(2);
 });

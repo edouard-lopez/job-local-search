@@ -26,6 +26,8 @@
   "score-tech": "Score techno",
   "score-libre": "Score logiciel libre",
   "salary": "Salaire indiqué dans l'annonce",
+  "salary-gross": "brut / an",
+  "salary-not-gross": "par an, pas en brut (net ou non précisé)",
   "travel-bike": "Vélo",
   "travel-car": "Voiture",
   "travel-distance": "Distance",

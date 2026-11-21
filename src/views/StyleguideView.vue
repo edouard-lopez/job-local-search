@@ -20,7 +20,7 @@ import { t } from "../i18n/index.js";
 // Sample data: one offer shown in every state, so each component is visible here.
 const sample = {
   id: 0, poste: "Ingénieur DevOps", entite: "Exemple de Société Coopérative du Numérique", commune: "Bayonne",
-  secteur: "privé", contrat: "CDI", publie: "2026-11-20", lien: "#", score_techno: 4, score_libre: 2, salaire: "38-45 k€ brut/an",
+  secteur: "privé", contrat: "CDI", publie: "2026-11-20", lien: "#", score_techno: 4, score_libre: 2, salaire: { min: 50, max: 58, brut: true },
   velo_min: 25, voiture_min: 31, distance_km: 18.4, technos: ["Kubernetes", "Ansible", "Docker", "Rust"],
   mission: "Exemple de mission, pour montrer le texte déplié.", email: "", telephone: "",
 };
@@ -49,7 +49,7 @@ const toggle = (v) => (selected.value = selected.value.includes(v) ? selected.va
         <IconButton icon="x" title="Marquer comme exclue" label="Exemple : exclure" />
       </div>
       <p class="text-sm">Synchronisation<StatusMark state="ok" /> · Diagnostic<StatusMark state="ko" /> · Réseau<StatusMark /></p>
-      <ul class="flex gap-3"><MetricItem icon="braces" label="Score techno" value="4/5" good /><MetricItem icon="car" label="Voiture" value="~31 min" /></ul>
+      <ul class="flex gap-3"><MetricItem icon="braces" label="Score techno" value="4/5" good /><MetricItem icon="car" label="Voiture" value="~31 min" /><MetricItem icon="coins" label="Salaire" value="35 k€" abbr="par an, pas en brut (net ou non précisé)"><AppIcon name="message-square-exclamation-point" class="text-amber-600" /></MetricItem></ul>
     </section>
 
     <section class="space-y-3">
