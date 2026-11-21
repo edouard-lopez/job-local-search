@@ -3,6 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Limite ce que la page charge : nos scripts, GitHub, OSM et les relais Nostr (wss). ws://127.0.0.1 sert aux tests. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.tile.openstreetmap.org; connect-src 'self' https://api.github.com https://routing.openstreetmap.de wss: ws://127.0.0.1:*; object-src 'none'; base-uri 'self'; form-action 'none'">
     <title>Offres locales autour d'Orx</title>
   </head>
   <body class="bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100 text-sm">

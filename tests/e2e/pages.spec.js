@@ -12,3 +12,12 @@ test("le pied de page mène au styleguide et au changelog", async ({ page }) => 
   await footer.getByRole("link", { name: "Carte" }).click();
   await expect(page.getByRole("region", { name: /Carte des offres/ })).toBeVisible();
 });
+
+test("la page déclare une CSP et ne la viole pas", async ({ page }) => {
+  const violations = [];
+  page.on("console", (m) => { if (/Content Security Policy/i.test(m.text())) violations.push(m.text()); });
+  await page.goto("/");
+  await expect(page.locator('meta[http-equiv="Content-Security-Policy"]')).toHaveAttribute("content", /script-src 'self'/);
+  await expect(page.getByRole("article").first()).toBeVisible();
+  expect(violations).toEqual([]);
+});
