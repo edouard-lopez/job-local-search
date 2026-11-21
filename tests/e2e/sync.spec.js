@@ -80,6 +80,7 @@ test.describe("Synchronisation entre appareils", () => {
     await page.getByTestId("peers").click();
     await page.getByLabel("Jeton GitHub").fill("ghp_test");
     await page.getByRole("button", { name: "Connecter" }).click();
+    await page.locator("summary", { hasText: "Synchronisation" }).click();
     await expect(page.getByText(GIST)).toBeVisible();
     expect(saves[0].public).toBe(false);
   });
@@ -115,6 +116,9 @@ test.describe("P2P réel avec un relais Nostr local", () => {
     const [a, b] = [await device(browser), await device(browser)];
     await expect(a.getByTestId("peers")).toHaveText("1", { timeout: 15000 });
     await a.getByTestId("peers").click();
+    await expect(a.locator("summary", { hasText: "Diagnostic P2P" }).locator("[data-state]")).toHaveAttribute("data-state", "ok");
+    await expect(a.locator("summary", { hasText: "Synchronisation" }).locator("[data-state]")).toHaveAttribute("data-state", "ok");
+    await a.getByText("Diagnostic P2P").click();
     const diag = a.getByRole("list", { name: "Diagnostic P2P" });
     await expect(diag).toContainText("WebRTC disponible");
     await expect(diag).toContainText(`Relais joignable : ${relayUrl}`);
@@ -130,33 +134,53 @@ test.describe("P2P réel avec un relais Nostr local", () => {
       JSON.stringify({ token: "ghp_test", gistId: gist, relays: ["ws://127.0.0.1:1"] })), GIST);
     await page.goto("/");
     await page.getByTestId("peers").click();
+    await expect(page.locator("summary", { hasText: "Diagnostic P2P" }).locator("[data-state]")).toHaveAttribute("data-state", "ko", { timeout: 5000 });
+    await page.getByText("Diagnostic P2P").click();
     await expect(page.getByRole("list", { name: "Diagnostic P2P" })).toContainText("Relais injoignable : ws://127.0.0.1:1", { timeout: 5000 });
   });
 
-  test("un serveur TURN saisi est enregistré et signalé dans le diagnostic", async ({ browser }) => {
-    const page = await device(browser);
+  const METERED = `var pc = new RTCPeerConnection({
+  iceServers: [
+    { urls: "stun:stun.relay.metered.ca:80", },
+    { urls: "turn:eu.relay.metered.ca:80", username: "u1", credential: "c/1", },
+    { urls: "turn:eu.relay.metered.ca:80?transport=tcp", username: "u1", credential: "c/1", },
+    { urls: "turns:eu.relay.metered.ca:443?transport=tcp", username: "u1", credential: "c/1", },
+  ],
+});`;
+
+  async function openNetwork(page) {
     await page.getByTestId("peers").click();
-    const diag = page.getByRole("list", { name: "Diagnostic P2P" });
-    await expect(diag).toContainText("Aucun serveur TURN");
-    await page.getByLabel(/^Adresse TURN/).fill("turn:turn.exemple.org:443");
-    await page.getByLabel("Identifiant TURN").fill("moi");
-    await page.getByLabel("Mot de passe TURN").fill("secret");
+    await page.getByText("Réseau (avancé)").click();
+    return page.getByLabel(/^Serveur TURN/);
+  }
+
+  test("coller l'extrait Metered : icône de validation, enregistrement, diagnostic", async ({ browser }) => {
+    const page = await device(browser);
+    const field = await openNetwork(page);
+    await field.fill(METERED);
+    await expect(page.locator("#turn-check")).toHaveText(/3 adresses TURN reconnues/);
     await page.getByRole("button", { name: "Enregistrer le réseau" }).click();
-    await expect(diag).toContainText("Serveur TURN configuré");
+    await expect(page.locator("#turn-check")).toHaveText(/TURN configuré \(3 adresses\)/);
+    await expect(page.locator("summary", { hasText: "Réseau" }).locator("[data-state]")).toHaveAttribute("data-state", "ok");
     const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("sync")).turn);
-    expect(saved).toEqual({ urls: "turn:turn.exemple.org:443", username: "moi", credential: "secret" });
+    expect(saved).toEqual({ urls: "turn:eu.relay.metered.ca:80 turn:eu.relay.metered.ca:80?transport=tcp turns:eu.relay.metered.ca:443?transport=tcp", username: "u1", credential: "c/1" });
+    await page.getByText("Diagnostic P2P").click();
+    await expect(page.getByRole("list", { name: "Diagnostic P2P" })).toContainText("Serveur TURN configuré");
   });
 
-  test("coller le JSON iceServers du fournisseur remplit les champs TURN", async ({ browser }) => {
+  test("un extrait invalide est signalé et ne peut pas être enregistré", async ({ browser }) => {
     const page = await device(browser);
-    await page.getByTestId("peers").click();
-    const creds = { username: "u1", credential: "c1" };
-    const answer = [{ urls: "stun:stun.relay.metered.ca:80" },
-      { urls: "turn:global.relay.metered.ca:80", ...creds },
-      { urls: "turns:global.relay.metered.ca:443?transport=tcp", ...creds }];
-    await page.getByLabel(/^Adresse TURN/).fill(JSON.stringify(answer));
-    await expect(page.getByLabel(/^Adresse TURN/)).toHaveValue("turn:global.relay.metered.ca:80 turns:global.relay.metered.ca:443?transport=tcp");
-    await expect(page.getByLabel("Identifiant TURN")).toHaveValue("u1");
-    await expect(page.getByLabel("Mot de passe TURN")).toHaveValue("c1");
+    const field = await openNetwork(page);
+    await field.fill("n'importe quoi");
+    await expect(field).toHaveAttribute("aria-invalid", "true");
+    await expect(page.locator("#turn-check")).toHaveText(/Extrait non reconnu/);
+    await expect(page.getByRole("button", { name: "Enregistrer le réseau" })).toBeDisabled();
+  });
+
+  test("le JSON strict iceServers est aussi accepté", async ({ browser }) => {
+    const page = await device(browser);
+    const field = await openNetwork(page);
+    await field.fill(JSON.stringify({ iceServers: [{ urls: ["turn:a.example:3478", "turns:a.example:443"], username: "u", credential: "c" }] }));
+    await expect(page.locator("#turn-check")).toHaveText(/2 adresses TURN reconnues/);
   });
 });

@@ -53,7 +53,7 @@ export const useSyncStore = defineStore("sync", {
     selfPeer: (s) => ({ id: "self", device: s.device, self: true }),
     peerCount: (s) => s.peers.filter((p) => !p.self).length,
     relays: (s) => s.settings.relays ?? [],
-    turn: (s) => s.settings.turn ?? { urls: "", username: "", credential: "" },
+    turn: (s) => s.settings.turn ?? null,
   },
   actions: {
     init() {

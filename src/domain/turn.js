@@ -1,20 +1,32 @@
 /**
- * Read TURN settings from a pasted `iceServers` JSON, as TURN providers such as Metered give it:
- * an object or an array of { urls, username, credential }, possibly wrapped in { iceServers }.
+ * Read TURN settings from a pasted `iceServers` snippet, as TURN providers such as Metered give it:
+ * strict JSON or a JavaScript snippet (`new RTCPeerConnection({ iceServers: [...] })`, unquoted keys).
  * Returns { urls, username, credential } with every turn:/turns: URL space-separated, or null.
  */
 export function parseTurnJson(text) {
+  return fromJson(text) ?? fromSnippet(text);
+}
+
+const isTurn = (u) => /^turns?:/.test(u);
+const result = (urls, username, credential) =>
+  urls.length && username && credential ? { urls: [...new Set(urls)].join(" "), username, credential } : null;
+
+/** Strict JSON: { iceServers: [...] } or an array; `urls` may be a string or a list. */
+function fromJson(text) {
   try {
     const data = JSON.parse(text);
-    const servers = [data.iceServers ?? data].flat();
-    const isTurn = (u) => /^turns?:/.test(u);
-    const first = servers.find((s) => s.username && [s.urls].flat().some(isTurn));
-    if (!first) return null;
-    const urls = servers.filter((s) => s.username === first.username).flatMap((s) => [s.urls].flat()).filter(isTurn);
-    return { urls: [...new Set(urls)].join(" "), username: first.username, credential: first.credential };
+    const servers = [data.iceServers ?? data].flat().filter((s) => s?.username);
+    const [first] = servers;
+    return first ? result(servers.flatMap((s) => [s.urls].flat()).filter(isTurn), first.username, first.credential) : null;
   } catch {
     return null;
   }
+}
+
+/** JavaScript snippet with unquoted keys and trailing commas, as Metered shows it. */
+function fromSnippet(text) {
+  const field = (name) => [...text.matchAll(new RegExp(`["']?${name}["']?\\s*:\\s*["']([^"']+)["']`, "g"))].map((m) => m[1]);
+  return result(field("urls").filter(isTurn), field("username")[0], field("credential")[0]);
 }
 
 /** Several TURN URLs may be given, separated by spaces or commas. */

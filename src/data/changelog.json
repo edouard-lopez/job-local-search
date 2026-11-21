@@ -1,6 +1,30 @@
 [
   {
-    "hash": "b026aee",
+    "hash": "4a0dca8",
+    "date": "2026-11-21",
+    "subject": "Coche d'état sur chaque section du menu 👥 (synchronisation, diagnostic, réseau)",
+    "body": ""
+  },
+  {
+    "hash": "3d33544",
+    "date": "2026-11-21",
+    "subject": "Menu 👥 simplifié en sections repliables ; TURN configuré par collage validé de l'extrait iceServers",
+    "body": ""
+  },
+  {
+    "hash": "c297fdb",
+    "date": "2026-11-21",
+    "subject": "TURN : accepte l'extrait JavaScript iceServers fourni par Metered",
+    "body": ""
+  },
+  {
+    "hash": "6877f34",
+    "date": "2026-11-21",
+    "subject": "Merge pull request #11 from edouard-lopez/feat/confirm-update-repo-link",
+    "body": "Confirmation avant mise à jour des offres et lien vers le dépôt"
+  },
+  {
+    "hash": "4803efc",
     "date": "2026-11-21",
     "subject": "Confirmation avant la mise à jour des offres et lien vers le dépôt en pied de page",
     "body": ""

@@ -1,6 +1,7 @@
 <script setup>
-import { ref, watch } from "vue";
+import { computed, ref } from "vue";
 import AppIcon from "../atoms/AppIcon.vue";
+import StatusMark from "../atoms/StatusMark.vue";
 import PeerList from "../molecules/PeerList.vue";
 import SyncDiagnostic from "../molecules/SyncDiagnostic.vue";
 import { useSyncStore } from "../../stores/sync.js";
@@ -13,10 +14,26 @@ const open = ref(false);
 const token = ref("");
 const gistId = ref(sync.settings.gistId);
 const relays = ref(sync.relays.join("\n"));
-const turn = ref({ ...sync.turn });
-// Pasting the provider's iceServers JSON into the address field fills the three fields.
-watch(() => turn.value.urls, (text) => { const parsed = parseTurnJson(text); if (parsed) turn.value = parsed; });
-const saveNetwork = () => sync.setNetwork({ relays: relays.value.split(/\s+/), turn: { ...turn.value } });
+/** TURN is configured by pasting the provider's iceServers snippet; it is checked as you type. */
+const turnText = ref("");
+const turnParsed = computed(() => (turnText.value.trim() ? parseTurnJson(turnText.value) : null));
+const turnInvalid = computed(() => Boolean(turnText.value.trim()) && !turnParsed.value);
+function saveNetwork() {
+  const turn = turnParsed.value ?? sync.turn;
+  sync.setNetwork({ relays: relays.value.split(/\s+/), turn });
+  turnText.value = "";
+}
+const clearTurn = () => sync.setNetwork({ relays: sync.relays, turn: null });
+/** Section marks: ok, ko or null (nothing to report yet). */
+const syncState = computed(() => ({ ok: "ok", error: "ko" })[sync.status] ?? null);
+const diagState = computed(() => {
+  const { webrtc, servers } = sync.diag;
+  if (!webrtc) return "ko";
+  if (!servers.length) return null;
+  return servers.some((r) => r.ok) ? "ok" : "ko";
+});
+const networkState = computed(() => (sync.turn?.urls ? "ok" : null));
+const turnCount = (turn) => (turn?.urls ? turn.urls.split(" ").length : 0);
 
 async function submit() {
   await sync.configure(token.value, gistId.value);
@@ -38,15 +55,8 @@ async function submit() {
       @keydown.esc="open = false">
       <h2 class="text-sm font-semibold">{{ t("peers-title") }}</h2>
       <PeerList :peers="sync.peers" />
-      <h2 class="text-sm font-semibold">{{ t("sync-title") }}</h2>
       <p class="text-xs" role="status">{{ t(`sync-status-${sync.status}`, sync.error) }}</p>
-      <template v-if="sync.enabled">
-        <p class="text-xs text-gray-500">{{ t("sync-gist-hint") }} <code class="select-all break-all">{{ sync.settings.gistId }}</code></p>
-        <h2 class="text-sm font-semibold">{{ t("diag-title") }}</h2>
-        <SyncDiagnostic :diag="sync.diag" />
-        <button type="button" class="text-xs text-red-700 underline dark:text-red-400" @click="sync.disconnect()">{{ t("sync-disconnect") }}</button>
-      </template>
-      <form v-else class="space-y-2 text-sm" @submit.prevent="submit">
+      <form v-if="!sync.enabled" class="space-y-2 text-sm" @submit.prevent="submit">
         <p class="text-xs text-gray-500">{{ t("sync-help") }}</p>
         <label class="block">{{ t("sync-token") }}
           <input v-model="token" type="password" required autocomplete="off" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1 dark:border-gray-700 dark:bg-gray-950" />
@@ -56,26 +66,39 @@ async function submit() {
         </label>
         <button type="submit" class="rounded-md bg-emerald-700 px-3 py-1 text-white hover:bg-emerald-600">{{ t("sync-connect") }}</button>
       </form>
-      <form class="space-y-1 text-xs" @submit.prevent="saveNetwork">
-        <label class="block">{{ t("sync-relays") }}
-          <textarea v-model="relays" rows="2" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1 font-mono dark:border-gray-700 dark:bg-gray-950" />
-        </label>
-        <p class="text-gray-500">{{ t("sync-relays-help") }}</p>
-        <fieldset class="space-y-1">
-          <legend class="font-semibold">{{ t("sync-turn") }}</legend>
-          <p class="text-gray-500">{{ t("sync-turn-help") }}</p>
-          <label class="block">{{ t("sync-turn-urls") }}
-            <input v-model="turn.urls" type="text" placeholder="turn:exemple.org:443" autocomplete="off" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1 font-mono dark:border-gray-700 dark:bg-gray-950" />
+      <template v-else>
+        <details class="text-xs">
+          <summary class="cursor-pointer font-semibold">{{ t("sync-title") }}<StatusMark :state="syncState" /></summary>
+          <p class="mt-1 text-gray-500">{{ t("sync-gist-hint") }} <code class="select-all break-all">{{ sync.settings.gistId }}</code></p>
+          <button type="button" class="mt-1 text-red-700 underline dark:text-red-400" @click="sync.disconnect()">{{ t("sync-disconnect") }}</button>
+        </details>
+        <details class="text-xs">
+          <summary class="cursor-pointer font-semibold">{{ t("diag-title") }}<StatusMark :state="diagState" /></summary>
+          <SyncDiagnostic class="mt-1" :diag="sync.diag" />
+        </details>
+      </template>
+      <details class="text-xs">
+        <summary class="cursor-pointer font-semibold">{{ t("sync-network") }}<StatusMark :state="networkState" /></summary>
+        <form class="mt-1 space-y-2" @submit.prevent="saveNetwork">
+          <label class="block">{{ t("sync-relays") }}
+            <textarea v-model="relays" rows="2" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1 font-mono dark:border-gray-700 dark:bg-gray-950" />
           </label>
-          <label class="block">{{ t("sync-turn-username") }}
-            <input v-model="turn.username" type="text" autocomplete="off" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1 font-mono dark:border-gray-700 dark:bg-gray-950" />
+          <p class="text-gray-500">{{ t("sync-relays-help") }}</p>
+          <label class="block">{{ t("sync-turn") }}
+            <textarea v-model="turnText" rows="3" :placeholder="t('sync-turn-placeholder')" :aria-invalid="turnInvalid" aria-describedby="turn-check"
+              class="mt-0.5 w-full rounded border px-2 py-1 font-mono dark:bg-gray-950"
+              :class="turnInvalid ? 'border-red-600' : turnParsed ? 'border-emerald-600' : 'border-gray-300 dark:border-gray-700'" />
           </label>
-          <label class="block">{{ t("sync-turn-credential") }}
-            <input v-model="turn.credential" type="password" autocomplete="off" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1 font-mono dark:border-gray-700 dark:bg-gray-950" />
-          </label>
-        </fieldset>
-        <button type="submit" class="rounded-md px-2 py-0.5 ring-1 ring-inset ring-gray-300 hover:ring-gray-500 dark:ring-gray-700">{{ t("sync-relays-save") }}</button>
-      </form>
+          <p id="turn-check" class="flex items-center gap-1" role="status">
+            <template v-if="turnParsed"><AppIcon name="check" class="text-emerald-700" />{{ t("sync-turn-valid", turnCount(turnParsed)) }}</template>
+            <template v-else-if="turnInvalid"><AppIcon name="x" class="text-red-700" />{{ t("sync-turn-invalid") }}</template>
+            <template v-else-if="sync.turn?.urls">{{ t("sync-turn-current", turnCount(sync.turn)) }}
+              <button type="button" class="text-red-700 underline dark:text-red-400" @click="clearTurn">{{ t("sync-turn-clear") }}</button></template>
+            <span v-else class="text-gray-500">{{ t("sync-turn-help") }}</span>
+          </p>
+          <button type="submit" :disabled="turnInvalid" class="rounded-md px-2 py-0.5 ring-1 ring-inset ring-gray-300 hover:ring-gray-500 disabled:opacity-50 dark:ring-gray-700">{{ t("sync-relays-save") }}</button>
+        </form>
+      </details>
     </div>
   </div>
 </template>

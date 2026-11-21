@@ -3,6 +3,7 @@ import { ref } from "vue";
 import AppIcon from "../components/atoms/AppIcon.vue";
 import BaseChip from "../components/atoms/BaseChip.vue";
 import IconButton from "../components/atoms/IconButton.vue";
+import StatusMark from "../components/atoms/StatusMark.vue";
 import MetricItem from "../components/atoms/MetricItem.vue";
 import TechTag from "../components/atoms/TechTag.vue";
 import FilterGroup from "../components/molecules/FilterGroup.vue";
@@ -47,6 +48,7 @@ const toggle = (v) => (selected.value = selected.value.includes(v) ? selected.va
         <IconButton icon="pen" title="Générer un CV" label="Exemple : générer un CV" href="#" />
         <IconButton icon="x" title="Marquer comme exclue" label="Exemple : exclure" />
       </div>
+      <p class="text-sm">Synchronisation<StatusMark state="ok" /> · Diagnostic<StatusMark state="ko" /> · Réseau<StatusMark /></p>
       <ul class="flex gap-3"><MetricItem icon="braces" label="Score techno" value="4/5" good /><MetricItem icon="car" label="Voiture" value="~31 min" /></ul>
     </section>
 
