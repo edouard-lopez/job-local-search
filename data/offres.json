@@ -385,5 +385,40 @@
     "distance_km": 114.9,
     "velo_min": 345,
     "voiture_min": 153
+  },
+  {
+    "zone": "Lasseube (hors limite de trajet)",
+    "commune": "Pau",
+    "entite": "Hoist Group",
+    "secteur": "privé",
+    "poste": "Ingénieur DevOps H/F",
+    "contrat": "CDI",
+    "score_techno": 3,
+    "score_libre": 1,
+    "mission": "Hoist Group, société suédoise de solutions technologiques pour l'hôtellerie. Le poste gère les environnements de développement, de l'administration des serveurs au déploiement automatisé en production. Il maintient et fait évoluer les solutions de déploiement et d'intégration continue, prend en charge l'installation et la mise à jour des serveurs de production, et participe à la mise en place de tests automatisés. Il propose des choix d'architecture cloud. Équipe de développeurs orientés web, en mode projet. Profil : 5 ans d'expérience, Bac+4/5, Linux (Debian), scripts bash/perl, CI/CD (Jenkins, SonarQube, Ansible, Rundeck), TCP/IP, anglais et français.",
+    "technos": [
+      "Linux",
+      "Debian",
+      "Bash",
+      "Perl",
+      "Jenkins",
+      "SonarQube",
+      "Ansible",
+      "Rundeck",
+      "CI/CD",
+      "TCP/IP"
+    ],
+    "lien": "https://www.hellowork.com/fr-fr/emplois/58494005.html",
+    "email": "",
+    "telephone": "",
+    "adresse": "Pau (64), adresse non précisée",
+    "lat": 43.2951,
+    "lon": -0.3708,
+    "geo_precision": "centre de Pau (site réel inconnu)",
+    "publie": "2026-10-31",
+    "id": 13,
+    "distance_km": 114.6,
+    "velo_min": 344,
+    "voiture_min": 153
   }
 ]

@@ -47,3 +47,9 @@ Méthode : page « recrutement » du site de la mairie quand elle existe et rép
 - 13 offres revérifiées. Retirée : Capgemini Architecte Cloud DevOps (hellowork 84261072), la page indique « n'est plus disponible ». Les 5 pages hellowork en HTTP 410 sans texte (Team.is, Only Networks, Capgemini Software Engineer, Adaxis, Safran/Crit, Capgemini Java) sont conservées : aucune mention explicite d'expiration. À vérifier à la main.
 - Offres ouvertes confirmées : Éditeur mobilité (x2), SCC, Epsyl, FEBUS, UPPA/IUT.
 - Recherches web (France Travail, Welcome to the Jungle, choisirleservicepublic) : aucune nouvelle offre datée et vérifiée en zone. Bayonne (administrateur fonctionnel SIRH) vu mais hors profil technique ; Urrugne et Saint-Pierre-du-Mont hors zone. Pages des mairies non relues.
+
+## Mise à jour du 21/11/2026
+
+- 12 offres revérifiées (hellowork, choisirleservicepublic) : aucune mention explicite d'expiration, toutes conservées. Les 6 pages hellowork en HTTP 410 (Team.is, Only Networks, Capgemini Software Engineer, Adaxis, Safran/Crit, Capgemini Java) restent à vérifier à la main.
+- Ajoutée : Hoist Group, Ingénieur DevOps à Pau (hellowork 58494005, publiée le 31/10/2026, zone Lasseube/Pau). Salaire non indiqué par l'annonce (estimation Hellowork ignorée).
+- Recherche web : Capgemini DevOps-Cloud Pau (hellowork 82018264) déjà « n'est plus disponible » ; France Travail Bayonne (5761920) introuvable (404). Autres offres Pau/Anglet vues dans les résultats mais non lues : non ajoutées. Pages des mairies non relues.
