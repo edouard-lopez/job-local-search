@@ -1,6 +1,6 @@
 [
   {
-    "hash": "73c8bc2",
+    "hash": "c71d65b",
     "date": "2026-11-21",
     "subject": "Limite la mise à jour des offres au répertoire data/",
     "body": "Claude peut écrire seulement dans data/.\nLe workflow refuse le commit si un fichier hors de data/ change, src/ compris."
