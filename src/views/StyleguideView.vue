@@ -11,6 +11,7 @@ import OfferMetrics from "../components/molecules/OfferMetrics.vue";
 import TechList from "../components/molecules/TechList.vue";
 import PeerList from "../components/molecules/PeerList.vue";
 import SyncDiagnostic from "../components/molecules/SyncDiagnostic.vue";
+import UpdateOffersButton from "../components/organisms/UpdateOffersButton.vue";
 import SyncMenu from "../components/organisms/SyncMenu.vue";
 import OfferCard from "../components/organisms/OfferCard.vue";
 import { ICONS } from "../components/atoms/icons.js";
@@ -64,8 +65,8 @@ const toggle = (v) => (selected.value = selected.value.includes(v) ? selected.va
     </section>
 
     <section class="space-y-3">
-      <h3 class="font-semibold">Organismes : menu des pairs</h3>
-      <div class="flex justify-end"><SyncMenu /></div>
+      <h3 class="font-semibold">Organismes : menu des pairs, mise à jour des offres</h3>
+      <div class="flex justify-end gap-2"><SyncMenu /><UpdateOffersButton /></div>
     </section>
 
     <section class="space-y-3">
