@@ -1,7 +1,7 @@
 export const ORX = [43.6036, -1.3767];
 export const BIKE_KMH = 20;
-export const GOOD_TRIP_MIN = 30;
-export const GOOD_SCORE = 3;
+/** Route colours on the map, by travel mode. */
+export const ROUTE_COLORS = { bike: "#16a34a", car: "#2563eb" };
 
 /**
  * Fetch one route from Orx to an offer on routing.openstreetmap.de.

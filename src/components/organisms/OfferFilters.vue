@@ -3,6 +3,7 @@ import { computed } from "vue";
 import FilterGroup from "../molecules/FilterGroup.vue";
 import { useOffersStore } from "../../stores/offers.js";
 import { isKnown, sortTechnos } from "../../domain/technos.js";
+import { TRIAGE_GROUPS } from "../../domain/triage.js";
 import { t } from "../../i18n/index.js";
 
 const store = useOffersStore();
@@ -21,7 +22,7 @@ const technoOrder = computed(() => sortTechnos(Object.keys(store.technoCounts)))
     </label>
     <fieldset class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
       <legend class="float-left mr-2 font-semibold uppercase tracking-wide">{{ t("filter-hide-groups") }}</legend>
-      <label v-for="g in ['todo', 'dig', 'out']" :key="g">
+      <label v-for="g in TRIAGE_GROUPS" :key="g">
         <input type="checkbox" :checked="store.hiddenGroups.includes(g)" @change="store.toggleGroup(g)"> {{ t(`group-${g}`) }}
       </label>
     </fieldset>

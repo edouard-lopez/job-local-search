@@ -10,7 +10,6 @@ const LEGACY_KEY = "triage";
 const SAVE_DELAY_MS = 2000;
 const DIAG_EVERY_MS = 2000;
 
-
 const read = (key) => { try { return localStorage.getItem(key); } catch { return null; } };
 const write = (key, value) => { try { value == null ? localStorage.removeItem(key) : localStorage.setItem(key, value); } catch { /* storage unavailable */ } };
 
@@ -32,10 +31,13 @@ let peers = null;
 let saveTimer = null;
 let diagTimer = null;
 
-/** Sync settings, peers seen by WebRTC, and the Gist save status. */
+const NO_SETTINGS = { token: "", gistId: "" };
+const loadSettings = () => { try { return JSON.parse(read(SETTINGS_KEY)) ?? NO_SETTINGS; } catch { return NO_SETTINGS; } };
+
+/** Sync settings, peers seen peer to peer, and the Gist save status. */
 export const useSyncStore = defineStore("sync", {
   state: () => ({
-    settings: JSON.parse(read(SETTINGS_KEY) ?? "null") ?? { token: "", gistId: "" },
+    settings: loadSettings(),
     device: deviceLabel(),
     peers: [],
     status: "off", // off | syncing | ok | error
@@ -45,6 +47,7 @@ export const useSyncStore = defineStore("sync", {
   }),
   getters: {
     enabled: (s) => Boolean(s.settings.token && s.settings.gistId),
+    selfPeer: (s) => ({ id: "self", device: s.device, self: true }),
     peerCount: (s) => s.peers.filter((p) => !p.self).length,
     relays: (s) => s.settings.relays ?? [],
   },
@@ -55,7 +58,7 @@ export const useSyncStore = defineStore("sync", {
         write(STATE_KEY, toBase64(Y.encodeStateAsUpdate(doc)));
         if (origin !== "gist") this.scheduleSave();
       });
-      this.peers = [{ id: "self", device: this.device, self: true }];
+      this.peers = [this.selfPeer];
       if (this.enabled) this.connect();
     },
     /** Save settings; create the Gist when only a token is given. */
@@ -67,8 +70,7 @@ export const useSyncStore = defineStore("sync", {
         write(SETTINGS_KEY, JSON.stringify(this.settings));
         await this.connect();
       } catch (e) {
-        this.status = "error";
-        this.error = e.message;
+        this.fail(e);
       }
     },
     /** Replace the Nostr relays (empty: Trystero's public list) and restart peer-to-peer. */
@@ -83,14 +85,13 @@ export const useSyncStore = defineStore("sync", {
       peers = null;
       clearInterval(diagTimer);
       this.diag = { ...this.diag, servers: [], room: false, links: 0 };
-      this.peers = [{ id: "self", device: this.device, self: true }];
+      this.peers = [this.selfPeer];
     },
     disconnect() {
       this.stopPeers();
-      this.settings = { token: "", gistId: "" };
+      this.settings = NO_SETTINGS;
       write(SETTINGS_KEY, null);
       this.status = "off";
-      this.peers = [{ id: "self", device: this.device, self: true }];
     },
     async connect() {
       this.status = "syncing";
@@ -99,17 +100,15 @@ export const useSyncStore = defineStore("sync", {
         if (remote) Y.applyUpdate(doc, remote, "gist");
         await this.save();
       } catch (e) {
-        this.status = "error";
-        this.error = e.message;
+        this.fail(e);
       }
       await this.startPeers();
     },
     async startPeers() {
       if (peers || !this.diag.webrtc) return;
-      const self = { id: "self", device: this.device, self: true };
       peers = await joinPeers({
         gistId: this.settings.gistId, relays: this.relays, device: this.device, doc,
-        onPeers: (others) => { this.peers = [self, ...others]; },
+        onPeers: (others) => { this.peers = [this.selfPeer, ...others]; },
       });
       diagTimer = setInterval(() => this.refreshDiag(), DIAG_EVERY_MS);
       this.refreshDiag();
@@ -128,9 +127,12 @@ export const useSyncStore = defineStore("sync", {
         this.status = "ok";
         this.error = "";
       } catch (e) {
-        this.status = "error";
-        this.error = e.message;
+        this.fail(e);
       }
+    },
+    fail(error) {
+      this.status = "error";
+      this.error = error.message;
     },
   },
 });

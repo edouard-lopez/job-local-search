@@ -1,6 +1,6 @@
 <script setup>
 import MetricItem from "../atoms/MetricItem.vue";
-import { GOOD_SCORE, GOOD_TRIP_MIN } from "../../domain/geo.js";
+import { GOOD_SCORE, GOOD_TRIP_MIN } from "../../domain/thresholds.js";
 import { t } from "../../i18n/index.js";
 
 defineProps({ offer: { type: Object, required: true } });

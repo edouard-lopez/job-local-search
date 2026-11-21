@@ -1,6 +1,12 @@
 [
   {
-    "hash": "ddf0380",
+    "hash": "c9f2b27",
+    "date": "2026-11-21",
+    "subject": "Nettoyage : groupes de tri centralisés, constantes regroupées, store de synchro simplifié",
+    "body": ""
+  },
+  {
+    "hash": "2132bbc",
     "date": "2026-11-21",
     "subject": "P2P via relais Nostr publics (Trystero) au lieu du serveur y-webrtc hors service",
     "body": ""

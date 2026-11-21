@@ -73,5 +73,6 @@
   "diag-links": "$1 {{PLURAL:$1|lien direct|liens directs}} WebRTC",
   "sync-relays": "Relais Nostr",
   "sync-relays-help": "Une adresse wss:// par ligne. Laissez vide pour la liste publique par défaut. Tous les appareils doivent partager la même liste.",
-  "sync-relays-save": "Enregistrer les relais"
+  "sync-relays-save": "Enregistrer les relais",
+  "map-popup-ad": "Annonce"
 }
