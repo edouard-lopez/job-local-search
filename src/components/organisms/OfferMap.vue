@@ -7,6 +7,7 @@ import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import { useOffersStore } from "../../stores/offers.js";
 import { useRouteStore } from "../../stores/route.js";
 import { ORX, ROUTE_COLORS } from "../../domain/geo.js";
+import { safeUrl } from "../../domain/text.js";
 import { t } from "../../i18n/index.js";
 
 // Bundlers break Leaflet's default icon URLs: point them at the bundled files.
@@ -25,7 +26,7 @@ const ARRIVAL_ICON = L.divIcon({
 });
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
-const popup = (o) => `<b>${esc(o.poste)}</b><br>${esc(o.entite)}<br>${esc(o.commune)} · ${esc(o.contrat)}<br><a href="${esc(o.lien)}" target="_blank" rel="noopener">${esc(t("map-popup-ad"))}</a>`;
+const popup = (o) => `<b>${esc(o.poste)}</b><br>${esc(o.entite)}<br>${esc(o.commune)} · ${esc(o.contrat)}<br>${safeUrl(o.lien) ? `<a href="${esc(o.lien)}" target="_blank" rel="noopener">${esc(t("map-popup-ad"))}</a>` : ""}`;
 
 function publishBounds() {
   const b = map.getBounds();

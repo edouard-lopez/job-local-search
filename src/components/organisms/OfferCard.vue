@@ -3,7 +3,7 @@ import { computed } from "vue";
 import IconButton from "../atoms/IconButton.vue";
 import OfferMetrics from "../molecules/OfferMetrics.vue";
 import TechList from "../molecules/TechList.vue";
-import { shorten } from "../../domain/text.js";
+import { safeUrl, shorten } from "../../domain/text.js";
 import { workflowUrl } from "../../domain/github.js";
 import { t } from "../../i18n/index.js";
 
@@ -42,7 +42,7 @@ function onKey(event) {
         <h3 class="text-[15px] font-semibold leading-snug">
           <template v-if="dig"><span class="text-blue-600" aria-hidden="true">★</span><span class="sr-only">{{ t("offer-status-dig") }} : </span>{{ " " }}</template>
           <span v-if="out" class="sr-only">{{ t("offer-status-out") }} : </span>
-          <a :href="offer.lien" target="_blank" rel="noopener"
+          <a :href="safeUrl(offer.lien)" target="_blank" rel="noopener"
             class="text-emerald-800 underline decoration-emerald-600/60 decoration-2 underline-offset-2 hover:text-emerald-600 hover:decoration-emerald-600 dark:text-emerald-300">
             {{ offer.poste }}<span class="sr-only">{{ t("offer-ad-new-tab") }}</span></a>
           {{ " " }}
