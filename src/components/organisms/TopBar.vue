@@ -1,11 +1,7 @@
 <script setup>
-import AppIcon from "../atoms/AppIcon.vue";
 import SyncMenu from "./SyncMenu.vue";
-import { workflowUrl } from "../../domain/github.js";
+import UpdateOffersButton from "./UpdateOffersButton.vue";
 import { t } from "../../i18n/index.js";
-
-/** The update runs a paid workflow: ask before opening it. */
-const confirmUpdate = (event) => { if (!window.confirm(t("update-offers-confirm"))) event.preventDefault(); };
 </script>
 
 <template>
@@ -16,12 +12,7 @@ const confirmUpdate = (event) => { if (!window.confirm(t("update-offers-confirm"
     </div>
     <div class="flex shrink-0 items-center gap-2">
     <SyncMenu />
-    <a :href="workflowUrl('update-offers.yml')" @click="confirmUpdate" target="_blank" rel="noopener" :title="t('update-offers-hint')"
-      class="inline-flex shrink-0 items-center gap-1.5 rounded-md px-3 py-1.5 text-sm ring-1 ring-inset ring-gray-300 hover:ring-gray-500 dark:ring-gray-700">
-      <AppIcon name="refresh" />
-      <span class="sr-only sm:not-sr-only">{{ t("update-offers") }}</span>
-      <span class="sr-only">{{ t("opens-github") }}</span>
-    </a>
+    <UpdateOffersButton />
     </div>
   </header>
 </template>
