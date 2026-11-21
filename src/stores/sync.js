@@ -1,17 +1,20 @@
 import { defineStore } from "pinia";
 import * as Y from "yjs";
 import { deviceLabel } from "../domain/device.js";
+import { joinPeers } from "../domain/p2p.js";
 import { createGist, readGist, writeGist, toBase64, fromBase64 } from "../domain/gist.js";
 
 const SETTINGS_KEY = "sync";
 const STATE_KEY = "triage-yjs";
 const LEGACY_KEY = "triage";
 const SAVE_DELAY_MS = 2000;
+const DIAG_EVERY_MS = 2000;
+
 
 const read = (key) => { try { return localStorage.getItem(key); } catch { return null; } };
 const write = (key, value) => { try { value == null ? localStorage.removeItem(key) : localStorage.setItem(key, value); } catch { /* storage unavailable */ } };
 
-/** One Yjs document per browser: the triage map, cached locally, shared by WebRTC and saved in a Gist. */
+/** One Yjs document per browser: the triage map, cached locally, shared peer to peer and saved in a Gist. */
 export const doc = new Y.Doc();
 export const triageMap = doc.getMap("triage");
 
@@ -25,8 +28,9 @@ function restoreLocal() {
   } catch { /* nothing to import */ }
 }
 
-let provider = null;
+let peers = null;
 let saveTimer = null;
+let diagTimer = null;
 
 /** Sync settings, peers seen by WebRTC, and the Gist save status. */
 export const useSyncStore = defineStore("sync", {
@@ -36,10 +40,13 @@ export const useSyncStore = defineStore("sync", {
     peers: [],
     status: "off", // off | syncing | ok | error
     error: "",
+    /** Peer-to-peer health, refreshed while connected. */
+    diag: { webrtc: typeof RTCPeerConnection !== "undefined", servers: [], room: false, links: 0 },
   }),
   getters: {
     enabled: (s) => Boolean(s.settings.token && s.settings.gistId),
     peerCount: (s) => s.peers.filter((p) => !p.self).length,
+    relays: (s) => s.settings.relays ?? [],
   },
   actions: {
     init() {
@@ -56,7 +63,7 @@ export const useSyncStore = defineStore("sync", {
       this.error = "";
       try {
         const id = gistId.trim() || (await createGist(token.trim(), Y.encodeStateAsUpdate(doc)));
-        this.settings = { token: token.trim(), gistId: id };
+        this.settings = { ...this.settings, token: token.trim(), gistId: id };
         write(SETTINGS_KEY, JSON.stringify(this.settings));
         await this.connect();
       } catch (e) {
@@ -64,9 +71,22 @@ export const useSyncStore = defineStore("sync", {
         this.error = e.message;
       }
     },
+    /** Replace the Nostr relays (empty: Trystero's public list) and restart peer-to-peer. */
+    async setRelays(urls) {
+      this.settings = { ...this.settings, relays: urls.map((u) => u.trim()).filter(Boolean) };
+      write(SETTINGS_KEY, JSON.stringify(this.settings));
+      this.stopPeers();
+      if (this.enabled) await this.startPeers();
+    },
+    stopPeers() {
+      peers?.stop();
+      peers = null;
+      clearInterval(diagTimer);
+      this.diag = { ...this.diag, servers: [], room: false, links: 0 };
+      this.peers = [{ id: "self", device: this.device, self: true }];
+    },
     disconnect() {
-      provider?.destroy();
-      provider = null;
+      this.stopPeers();
       this.settings = { token: "", gistId: "" };
       write(SETTINGS_KEY, null);
       this.status = "off";
@@ -85,17 +105,17 @@ export const useSyncStore = defineStore("sync", {
       await this.startPeers();
     },
     async startPeers() {
-      if (provider || typeof RTCPeerConnection === "undefined") return;
-      const { WebrtcProvider } = await import("y-webrtc");
-      // The secret Gist id names the room and encrypts the signalling messages.
-      provider = new WebrtcProvider(`job-local-search-${this.settings.gistId}`, doc, { password: this.settings.gistId });
-      const awareness = provider.awareness;
-      awareness.setLocalStateField("device", this.device);
-      const refresh = () => {
-        this.peers = [...awareness.getStates()].map(([id, s]) => ({ id, device: s.device ?? "?", self: id === awareness.clientID }));
-      };
-      awareness.on("change", refresh);
-      refresh();
+      if (peers || !this.diag.webrtc) return;
+      const self = { id: "self", device: this.device, self: true };
+      peers = await joinPeers({
+        gistId: this.settings.gistId, relays: this.relays, device: this.device, doc,
+        onPeers: (others) => { this.peers = [self, ...others]; },
+      });
+      diagTimer = setInterval(() => this.refreshDiag(), DIAG_EVERY_MS);
+      this.refreshDiag();
+    },
+    refreshDiag() {
+      if (peers) this.diag = { webrtc: this.diag.webrtc, ...peers.diag() };
     },
     scheduleSave() {
       if (!this.enabled) return;

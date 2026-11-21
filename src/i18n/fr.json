@@ -62,5 +62,16 @@
   "group-todo": "Non traitées",
   "group-dig": "À creuser",
   "group-out": "Exclues",
-  "filter-hide-groups": "Masquer"
+  "filter-hide-groups": "Masquer",
+  "diag-title": "Diagnostic P2P",
+  "diag-webrtc-ok": "WebRTC disponible",
+  "diag-webrtc-ko": "WebRTC indisponible dans ce navigateur",
+  "diag-server-ok": "Relais joignable : $1",
+  "diag-server-ko": "Relais injoignable : $1",
+  "diag-room-ok": "Annonce publiée sur au moins un relais",
+  "diag-room-ko": "Aucun relais joignable pour l'instant",
+  "diag-links": "$1 {{PLURAL:$1|lien direct|liens directs}} WebRTC",
+  "sync-relays": "Relais Nostr",
+  "sync-relays-help": "Une adresse wss:// par ligne. Laissez vide pour la liste publique par défaut. Tous les appareils doivent partager la même liste.",
+  "sync-relays-save": "Enregistrer les relais"
 }
