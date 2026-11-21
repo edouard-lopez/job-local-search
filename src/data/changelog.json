@@ -1,6 +1,12 @@
 [
   {
-    "hash": "da9821b",
+    "hash": "b52666d",
+    "date": "2026-11-21",
+    "subject": "Menu 👥 simplifié en sections repliables ; TURN configuré par collage validé de l'extrait iceServers",
+    "body": ""
+  },
+  {
+    "hash": "c297fdb",
     "date": "2026-11-21",
     "subject": "TURN : accepte l'extrait JavaScript iceServers fourni par Metered",
     "body": ""

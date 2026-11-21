@@ -4,11 +4,29 @@
  * Returns { urls, username, credential } with every turn:/turns: URL space-separated, or null.
  */
 export function parseTurnJson(text) {
+  return fromJson(text) ?? fromSnippet(text);
+}
+
+const isTurn = (u) => /^turns?:/.test(u);
+const result = (urls, username, credential) =>
+  urls.length && username && credential ? { urls: [...new Set(urls)].join(" "), username, credential } : null;
+
+/** Strict JSON: { iceServers: [...] } or an array; `urls` may be a string or a list. */
+function fromJson(text) {
+  try {
+    const data = JSON.parse(text);
+    const servers = [data.iceServers ?? data].flat().filter((s) => s?.username);
+    const [first] = servers;
+    return first ? result(servers.flatMap((s) => [s.urls].flat()).filter(isTurn), first.username, first.credential) : null;
+  } catch {
+    return null;
+  }
+}
+
+/** JavaScript snippet with unquoted keys and trailing commas, as Metered shows it. */
+function fromSnippet(text) {
   const field = (name) => [...text.matchAll(new RegExp(`["']?${name}["']?\\s*:\\s*["']([^"']+)["']`, "g"))].map((m) => m[1]);
-  const urls = [...new Set(field("urls").filter((u) => /^turns?:/.test(u)))];
-  const [username] = field("username");
-  const [credential] = field("credential");
-  return urls.length && username && credential ? { urls: urls.join(" "), username, credential } : null;
+  return result(field("urls").filter(isTurn), field("username")[0], field("credential")[0]);
 }
 
 /** Several TURN URLs may be given, separated by spaces or commas. */
