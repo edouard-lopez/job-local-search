@@ -1,7 +1,7 @@
 // Build src/data/changelog.json from the git history (newest first).
 // Skips automatic data updates and drops trailer lines (Co-Authored-By, Claude-Session).
 import { execFileSync } from "node:child_process";
-import { writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync } from "node:fs";
 
 const SEP = "\u001e", END = "\u001f";
 const raw = execFileSync("git", ["log", `--pretty=format:%h${SEP}%ad${SEP}%s${SEP}%b${END}`, "--date=short"], { encoding: "utf8" });
@@ -11,5 +11,6 @@ const entries = raw.split(END).map((r) => r.trim()).filter(Boolean).map((r) => {
   return { hash, date, subject, body: cleanBody };
 }).filter((e) => !/^Met à jour les offres/.test(e.subject) && e.subject !== "wip");
 
+mkdirSync(new URL("../src/data/", import.meta.url), { recursive: true });
 writeFileSync(new URL("../src/data/changelog.json", import.meta.url), JSON.stringify(entries, null, 2) + "\n");
 console.log(`${entries.length} entrées écrites dans src/data/changelog.json`);
