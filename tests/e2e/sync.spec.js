@@ -61,6 +61,19 @@ test.describe("Synchronisation entre appareils", () => {
     expect(doc.getMap("triage").toJSON()).toEqual({ [remote.lien]: "dig", [local.lien]: "dig" });
   });
 
+  test("revenir sur l'onglet relit le Gist : un ⭐ posé ailleurs apparaît", async ({ page }) => {
+    const o = nearOffer();
+    let content = "";
+    await page.route("https://api.github.com/gists**", (r) =>
+      r.fulfill({ json: { id: GIST, files: { [FILE]: { content } } } }));
+    await page.addInitScript((gist) => localStorage.setItem("sync", JSON.stringify({ token: "ghp_test", gistId: gist })), GIST);
+    await page.goto("/");
+    await expect(card(page, o)).not.toHaveAccessibleName(/^À creuser\./);
+    content = remoteUpdate(o);
+    await page.evaluate(() => document.dispatchEvent(new Event("visibilitychange")));
+    await expect(card(page, o)).toHaveAccessibleName(/^À creuser\./);
+  });
+
   test("un jeton seul crée un Gist secret", async ({ page }) => {
     const saves = await fakeGist(page, "");
     await page.goto("/");
