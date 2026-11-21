@@ -18,12 +18,12 @@ const technoOrder = computed(() => sortTechnos(Object.keys(store.technoCounts)))
     <FilterGroup :title="t('filter-tech')" :label="t('filter-tech-label')" :counts="store.technoCounts"
       :order="technoOrder" :selected="store.technos" :is-known="isKnown" @toggle="store.toggleTechno" />
     <label class="mt-1 text-xs font-semibold uppercase tracking-wide text-gray-500">
-      <input v-model="store.hideLasseube" type="checkbox"> {{ t("filter-hide-lasseube") }}
+      <input id="filter-hide-lasseube" v-model="store.hideLasseube" name="hide-lasseube" type="checkbox"> {{ t("filter-hide-lasseube") }}
     </label>
     <fieldset class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
       <legend class="float-left mr-2 font-semibold uppercase tracking-wide">{{ t("filter-hide-groups") }}</legend>
       <label v-for="g in TRIAGE_GROUPS" :key="g">
-        <input type="checkbox" :checked="store.hiddenGroups.includes(g)" @change="store.toggleGroup(g)"> {{ t(`group-${g}`) }}
+        <input :id="`filter-hide-${g}`" name="hide-groups" :value="g" type="checkbox" :checked="store.hiddenGroups.includes(g)" @change="store.toggleGroup(g)"> {{ t(`group-${g}`) }}
       </label>
     </fieldset>
   </div>

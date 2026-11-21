@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, useId } from "vue";
 import AppIcon from "../atoms/AppIcon.vue";
 import StatusMark from "../atoms/StatusMark.vue";
 import PeerList from "../molecules/PeerList.vue";
@@ -10,6 +10,8 @@ import { t } from "../../i18n/index.js";
 
 /** Top-bar button: number of other open devices; opens their list and the Gist settings. */
 const sync = useSyncStore();
+/** Unique prefix: the menu can appear twice on a page (top bar and styleguide). */
+const uid = useId();
 const open = ref(false);
 const token = ref("");
 const gistId = ref(sync.settings.gistId);
@@ -44,13 +46,13 @@ async function submit() {
 
 <template>
   <div class="relative">
-    <button type="button" :aria-expanded="open" aria-controls="sync-menu" :aria-label="t('peers-button', sync.peerCount)"
+    <button type="button" :aria-expanded="open" :aria-controls="`${uid}-menu`" :aria-label="t('peers-button', sync.peerCount)"
       :title="t('peers-title')" data-testid="peers"
       class="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm ring-1 ring-inset ring-gray-300 hover:ring-gray-500 dark:ring-gray-700"
       :class="{ 'text-emerald-700 dark:text-emerald-400': sync.peerCount > 0 }" @click="open = !open">
       <AppIcon name="users" /><span aria-hidden="true">{{ sync.peerCount }}</span>
     </button>
-    <div v-if="open" id="sync-menu" role="dialog" :aria-label="t('peers-title')"
+    <div v-if="open" :id="`${uid}-menu`" role="dialog" :aria-label="t('peers-title')"
       class="absolute right-0 z-[1000] mt-2 w-80 max-w-[calc(100vw-2rem)] space-y-3 rounded-lg border border-gray-200 bg-white p-3 shadow-lg dark:border-gray-800 dark:bg-gray-900"
       @keydown.esc="open = false">
       <h2 class="text-sm font-semibold">{{ t("peers-title") }}</h2>
@@ -59,10 +61,10 @@ async function submit() {
       <form v-if="!sync.enabled" class="space-y-2 text-sm" @submit.prevent="submit">
         <p class="text-xs text-gray-500">{{ t("sync-help") }}</p>
         <label class="block">{{ t("sync-token") }}
-          <input v-model="token" type="password" required autocomplete="off" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1 dark:border-gray-700 dark:bg-gray-950" />
+          <input :id="`${uid}-token`" v-model="token" name="gist-token" type="password" required autocomplete="off" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1 dark:border-gray-700 dark:bg-gray-950" />
         </label>
         <label class="block">{{ t("sync-gist") }}
-          <input v-model="gistId" type="text" autocomplete="off" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1 dark:border-gray-700 dark:bg-gray-950" />
+          <input :id="`${uid}-gist`" v-model="gistId" name="gist-id" type="text" autocomplete="off" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1 dark:border-gray-700 dark:bg-gray-950" />
         </label>
         <button type="submit" class="rounded-md bg-emerald-700 px-3 py-1 text-white hover:bg-emerald-600">{{ t("sync-connect") }}</button>
       </form>
@@ -81,15 +83,15 @@ async function submit() {
         <summary class="cursor-pointer font-semibold">{{ t("sync-network") }}<StatusMark :state="networkState" /></summary>
         <form class="mt-1 space-y-2" @submit.prevent="saveNetwork">
           <label class="block">{{ t("sync-relays") }}
-            <textarea v-model="relays" rows="2" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1 font-mono dark:border-gray-700 dark:bg-gray-950" />
+            <textarea :id="`${uid}-relays`" v-model="relays" name="relays" rows="2" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1 font-mono dark:border-gray-700 dark:bg-gray-950" />
           </label>
           <p class="text-gray-500">{{ t("sync-relays-help") }}</p>
           <label class="block">{{ t("sync-turn") }}
-            <textarea v-model="turnText" rows="3" :placeholder="t('sync-turn-placeholder')" :aria-invalid="turnInvalid" aria-describedby="turn-check"
+            <textarea :id="`${uid}-turn`" v-model="turnText" name="turn" rows="3" :placeholder="t('sync-turn-placeholder')" :aria-invalid="turnInvalid" :aria-describedby="`${uid}-turn-check`"
               class="mt-0.5 w-full rounded border px-2 py-1 font-mono dark:bg-gray-950"
               :class="turnInvalid ? 'border-red-600' : turnParsed ? 'border-emerald-600' : 'border-gray-300 dark:border-gray-700'" />
           </label>
-          <p id="turn-check" class="flex items-center gap-1" role="status">
+          <p :id="`${uid}-turn-check`" class="flex items-center gap-1" role="status">
             <template v-if="turnParsed"><AppIcon name="check" class="text-emerald-700" />{{ t("sync-turn-valid", turnCount(turnParsed)) }}</template>
             <template v-else-if="turnInvalid"><AppIcon name="x" class="text-red-700" />{{ t("sync-turn-invalid") }}</template>
             <template v-else-if="sync.turn?.urls">{{ t("sync-turn-current", turnCount(sync.turn)) }}
