@@ -73,6 +73,14 @@
   "diag-links": "$1 {{PLURAL:$1|lien direct|liens directs}} WebRTC",
   "sync-relays": "Relais Nostr",
   "sync-relays-help": "Une adresse wss:// par ligne. Laissez vide pour la liste publique par défaut. Tous les appareils doivent partager la même liste.",
-  "sync-relays-save": "Enregistrer les relais",
-  "map-popup-ad": "Annonce"
+  "sync-relays-save": "Enregistrer le réseau",
+  "map-popup-ad": "Annonce",
+  "sync-turn": "Serveur TURN (optionnel)",
+  "sync-turn-help": "Nécessaire quand un appareil est en 4G/5G : il relaie le trafic chiffré si la connexion directe échoue.",
+  "sync-turn-urls": "Adresse TURN",
+  "sync-turn-username": "Identifiant TURN",
+  "sync-turn-credential": "Mot de passe TURN",
+  "diag-turn-on": "Serveur TURN configuré",
+  "diag-turn-off": "Aucun serveur TURN : la 4G/5G peut bloquer les liens directs",
+  "diag-error": "Dernière erreur : $1"
 }

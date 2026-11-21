@@ -119,4 +119,18 @@ test.describe("P2P réel avec un relais Nostr local", () => {
     await page.getByTestId("peers").click();
     await expect(page.getByRole("list", { name: "Diagnostic P2P" })).toContainText("Relais injoignable : ws://127.0.0.1:1", { timeout: 5000 });
   });
+
+  test("un serveur TURN saisi est enregistré et signalé dans le diagnostic", async ({ browser }) => {
+    const page = await device(browser);
+    await page.getByTestId("peers").click();
+    const diag = page.getByRole("list", { name: "Diagnostic P2P" });
+    await expect(diag).toContainText("Aucun serveur TURN");
+    await page.getByLabel("Adresse TURN").fill("turn:turn.exemple.org:443");
+    await page.getByLabel("Identifiant TURN").fill("moi");
+    await page.getByLabel("Mot de passe TURN").fill("secret");
+    await page.getByRole("button", { name: "Enregistrer le réseau" }).click();
+    await expect(diag).toContainText("Serveur TURN configuré");
+    const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("sync")).turn);
+    expect(saved).toEqual({ urls: "turn:turn.exemple.org:443", username: "moi", credential: "secret" });
+  });
 });

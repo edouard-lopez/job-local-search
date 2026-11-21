@@ -43,13 +43,14 @@ export const useSyncStore = defineStore("sync", {
     status: "off", // off | syncing | ok | error
     error: "",
     /** Peer-to-peer health, refreshed while connected. */
-    diag: { webrtc: typeof RTCPeerConnection !== "undefined", servers: [], room: false, links: 0 },
+    diag: { webrtc: typeof RTCPeerConnection !== "undefined", servers: [], room: false, links: 0, turn: false, error: "" },
   }),
   getters: {
     enabled: (s) => Boolean(s.settings.token && s.settings.gistId),
     selfPeer: (s) => ({ id: "self", device: s.device, self: true }),
     peerCount: (s) => s.peers.filter((p) => !p.self).length,
     relays: (s) => s.settings.relays ?? [],
+    turn: (s) => s.settings.turn ?? { urls: "", username: "", credential: "" },
   },
   actions: {
     init() {
@@ -73,9 +74,9 @@ export const useSyncStore = defineStore("sync", {
         this.fail(e);
       }
     },
-    /** Replace the Nostr relays (empty: Trystero's public list) and restart peer-to-peer. */
-    async setRelays(urls) {
-      this.settings = { ...this.settings, relays: urls.map((u) => u.trim()).filter(Boolean) };
+    /** Replace the Nostr relays (empty: Trystero's public list) and the TURN server, then restart peer-to-peer. */
+    async setNetwork({ relays, turn }) {
+      this.settings = { ...this.settings, relays: relays.map((u) => u.trim()).filter(Boolean), turn };
       write(SETTINGS_KEY, JSON.stringify(this.settings));
       this.stopPeers();
       if (this.enabled) await this.startPeers();
@@ -84,7 +85,7 @@ export const useSyncStore = defineStore("sync", {
       peers?.stop();
       peers = null;
       clearInterval(diagTimer);
-      this.diag = { ...this.diag, servers: [], room: false, links: 0 };
+      this.diag = { ...this.diag, servers: [], room: false, links: 0, error: "" };
       this.peers = [this.selfPeer];
     },
     disconnect() {
@@ -107,7 +108,7 @@ export const useSyncStore = defineStore("sync", {
     async startPeers() {
       if (peers || !this.diag.webrtc) return;
       peers = await joinPeers({
-        gistId: this.settings.gistId, relays: this.relays, device: this.device, doc,
+        gistId: this.settings.gistId, relays: this.relays, turn: this.turn, device: this.device, doc,
         onPeers: (others) => { this.peers = [this.selfPeer, ...others]; },
       });
       diagTimer = setInterval(() => this.refreshDiag(), DIAG_EVERY_MS);

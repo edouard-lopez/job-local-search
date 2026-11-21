@@ -1,6 +1,30 @@
 [
   {
-    "hash": "c9f2b27",
+    "hash": "ffcfa5e",
+    "date": "2026-11-21",
+    "subject": "Serveur TURN configurable et erreurs de connexion dans le diagnostic P2P",
+    "body": ""
+  },
+  {
+    "hash": "9e20454",
+    "date": "2026-11-21",
+    "subject": "Merge pull request #9 from edouard-lopez/refactor/clean-code",
+    "body": "Nettoyage clean-code : groupes de tri, constantes, store de synchro"
+  },
+  {
+    "hash": "ac73317",
+    "date": "2026-11-21",
+    "subject": "Fusion de main",
+    "body": ""
+  },
+  {
+    "hash": "c800a94",
+    "date": "2026-11-21",
+    "subject": "Merge pull request #8 from edouard-lopez/feat/sync-diagnostic",
+    "body": "P2P via relais Nostr et diagnostic de synchronisation"
+  },
+  {
+    "hash": "54ea553",
     "date": "2026-11-21",
     "subject": "Nettoyage : groupes de tri centralisés, constantes regroupées, store de synchro simplifié",
     "body": ""

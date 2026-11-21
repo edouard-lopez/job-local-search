@@ -12,7 +12,8 @@ const open = ref(false);
 const token = ref("");
 const gistId = ref(sync.settings.gistId);
 const relays = ref(sync.relays.join("\n"));
-const saveRelays = () => sync.setRelays(relays.value.split(/\s+/));
+const turn = ref({ ...sync.turn });
+const saveNetwork = () => sync.setNetwork({ relays: relays.value.split(/\s+/), turn: { ...turn.value } });
 
 async function submit() {
   await sync.configure(token.value, gistId.value);
@@ -52,11 +53,24 @@ async function submit() {
         </label>
         <button type="submit" class="rounded-md bg-emerald-700 px-3 py-1 text-white hover:bg-emerald-600">{{ t("sync-connect") }}</button>
       </form>
-      <form class="space-y-1 text-xs" @submit.prevent="saveRelays">
+      <form class="space-y-1 text-xs" @submit.prevent="saveNetwork">
         <label class="block">{{ t("sync-relays") }}
           <textarea v-model="relays" rows="2" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1 font-mono dark:border-gray-700 dark:bg-gray-950" />
         </label>
         <p class="text-gray-500">{{ t("sync-relays-help") }}</p>
+        <fieldset class="space-y-1">
+          <legend class="font-semibold">{{ t("sync-turn") }}</legend>
+          <p class="text-gray-500">{{ t("sync-turn-help") }}</p>
+          <label class="block">{{ t("sync-turn-urls") }}
+            <input v-model="turn.urls" type="text" placeholder="turn:exemple.org:443" autocomplete="off" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1 font-mono dark:border-gray-700 dark:bg-gray-950" />
+          </label>
+          <label class="block">{{ t("sync-turn-username") }}
+            <input v-model="turn.username" type="text" autocomplete="off" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1 font-mono dark:border-gray-700 dark:bg-gray-950" />
+          </label>
+          <label class="block">{{ t("sync-turn-credential") }}
+            <input v-model="turn.credential" type="password" autocomplete="off" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1 font-mono dark:border-gray-700 dark:bg-gray-950" />
+          </label>
+        </fieldset>
         <button type="submit" class="rounded-md px-2 py-0.5 ring-1 ring-inset ring-gray-300 hover:ring-gray-500 dark:ring-gray-700">{{ t("sync-relays-save") }}</button>
       </form>
     </div>
