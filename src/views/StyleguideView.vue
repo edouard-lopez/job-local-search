@@ -20,7 +20,7 @@ import { t } from "../i18n/index.js";
 // Sample data: one offer shown in every state, so each component is visible here.
 const sample = {
   id: 0, poste: "Ingénieur DevOps", entite: "Exemple de Société Coopérative du Numérique", commune: "Bayonne",
-  secteur: "privé", contrat: "CDI", publie: "2026-11-20", lien: "#", score_techno: 4, score_libre: 2,
+  secteur: "privé", contrat: "CDI", publie: "2026-11-20", lien: "#", score_techno: 4, score_libre: 2, salaire: "38-45 k€ brut/an",
   velo_min: 25, voiture_min: 31, distance_km: 18.4, technos: ["Kubernetes", "Ansible", "Docker", "Rust"],
   mission: "Exemple de mission, pour montrer le texte déplié.", email: "", telephone: "",
 };

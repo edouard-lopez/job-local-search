@@ -22,7 +22,7 @@ for i, o in enumerate(offres, 1):
 
 (ROOT/"data/offres.json").write_text(json.dumps(offres, ensure_ascii=False, indent=2))
 cols = [("commune","Commune"),("entite","Entité"),("secteur","Secteur"),("poste","Intitulé du poste"),
-        ("contrat","Type de contrat"),("score_techno","Score techno /5"),("score_libre","Score logiciel libre /5"),
+        ("contrat","Type de contrat"),("score_techno","Score techno /5"),("score_libre","Score logiciel libre /5"),("salaire","Salaire"),
         ("mission","Mission"),("technos","Technos"),("lien","Lien annonce"),("email","Email contact"),
         ("telephone","Téléphone contact"),("distance_km","Distance route estimée (km)"),
         ("velo_min","Vélo depuis Orx (min, estimé)"),("voiture_min","Voiture depuis Orx (min, estimé)"),
@@ -31,7 +31,7 @@ with open(ROOT/"data/offres.csv", "w", newline="", encoding="utf-8") as f:
     w = csv.writer(f)
     w.writerow([c[1] for c in cols])
     for o in offres:
-        w.writerow([", ".join(o[k]) if k == "technos" else o[k] for k, _ in cols])
+        w.writerow([", ".join(o[k]) if k == "technos" else o.get(k, "") for k, _ in cols])
 
 import re
 crit = (ROOT/"SEARCH-CRITERIA.md").read_text()

@@ -43,3 +43,4 @@ Tous : CDI, CDD (avec durée), freelance, intérim, alternance, fonction publiqu
 - Ne garder que des annonces réellement lues, encore ouvertes, avec leur lien.
 - Ne jamais inventer un email, un téléphone ou une offre : laisser vide.
 - Mission résumée en 250 mots max, en français.
+- Champ `salaire` : recopier le salaire ou la fourchette seulement s'il est écrit dans l'annonce (ex. « 38-45 k€ brut/an »). Sinon, laisser vide.
