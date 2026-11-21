@@ -28,9 +28,10 @@ const routeText = computed(() => {
   if (route.status === "loading") return t("route-loading");
   if (route.status === "failed") return t("route-failed");
   if (route.status !== "ready") return "";
-  const { mode, km, minutes } = route.route;
-  const bike = mode === "bike";
-  return t("route-result", t(bike ? "travel-bike" : "travel-car"), km.toFixed(1), Math.round(minutes), bike ? t("route-bike-speed") : "");
+  return route.routes.map(({ mode, km, minutes }) => {
+    const bike = mode === "bike";
+    return t("route-result", t(bike ? "travel-bike" : "travel-car"), km.toFixed(1), Math.round(minutes), bike ? t("route-bike-speed") : "");
+  }).join(" · ");
 });
 </script>
 
