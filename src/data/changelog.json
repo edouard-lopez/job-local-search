@@ -1,5 +1,17 @@
 [
   {
+    "hash": "6489772",
+    "date": "2026-11-21",
+    "subject": "Merge remote-tracking branch 'origin/main' into fix/artefacts-3-jours",
+    "body": "# Conflicts:\n#\tsrc/data/changelog.json"
+  },
+  {
+    "hash": "63e26c9",
+    "date": "2026-11-21",
+    "subject": "Durcit le prompt de candidature contre la fuite du CV",
+    "body": "Claude visite seulement le lien de l'offre.\nIl ignore les consignes cachées dans la page web.\nIl n'envoie jamais le CV hors des fichiers générés."
+  },
+  {
     "hash": "347759f",
     "date": "2026-11-21",
     "subject": "Conserve les candidatures générées 3 jours seulement",
