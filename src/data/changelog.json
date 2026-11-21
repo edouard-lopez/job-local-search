@@ -1,21 +1,15 @@
 [
   {
-    "hash": "4a0dca8",
+    "hash": "24ab36c",
     "date": "2026-11-21",
-    "subject": "Coche d'état sur chaque section du menu 👥 (synchronisation, diagnostic, réseau)",
-    "body": ""
+    "subject": "Conserve les candidatures générées 3 jours seulement",
+    "body": "Le dépôt est public : les artefacts contenant le CV adapté expirent après 3 jours."
   },
   {
-    "hash": "3d33544",
+    "hash": "00eafa0",
     "date": "2026-11-21",
-    "subject": "Menu 👥 simplifié en sections repliables ; TURN configuré par collage validé de l'extrait iceServers",
-    "body": ""
-  },
-  {
-    "hash": "c297fdb",
-    "date": "2026-11-21",
-    "subject": "TURN : accepte l'extrait JavaScript iceServers fourni par Metered",
-    "body": ""
+    "subject": "Menu 👥 simplifié, collage TURN validé et marques d'état (#12)",
+    "body": "* TURN : accepte l'extrait JavaScript iceServers fourni par Metered\n\n\n* Menu 👥 simplifié en sections repliables ; TURN configuré par collage validé de l'extrait iceServers\n\n\n* Coche d'état sur chaque section du menu 👥 (synchronisation, diagnostic, réseau)\n\n\n---------"
   },
   {
     "hash": "6877f34",
