@@ -43,3 +43,4 @@ jobs:
         with:
           name: candidature-offre-${{ inputs.offer_id }}
           path: applications/
+          retention-days: 3
