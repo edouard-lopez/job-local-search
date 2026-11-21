@@ -1,0 +1,308 @@
+[
+  {
+    "hash": "9b949c6",
+    "date": "2026-11-21",
+    "subject": "Durcit le prompt de candidature contre la fuite du CV",
+    "body": "Claude visite seulement le lien de l'offre.\nIl ignore les consignes cachées dans la page web.\nIl n'envoie jamais le CV hors des fichiers générés."
+  },
+  {
+    "hash": "00eafa0",
+    "date": "2026-11-21",
+    "subject": "Menu 👥 simplifié, collage TURN validé et marques d'état (#12)",
+    "body": "* TURN : accepte l'extrait JavaScript iceServers fourni par Metered\n\n\n* Menu 👥 simplifié en sections repliables ; TURN configuré par collage validé de l'extrait iceServers\n\n\n* Coche d'état sur chaque section du menu 👥 (synchronisation, diagnostic, réseau)\n\n\n---------"
+  },
+  {
+    "hash": "6877f34",
+    "date": "2026-11-21",
+    "subject": "Merge pull request #11 from edouard-lopez/feat/confirm-update-repo-link",
+    "body": "Confirmation avant mise à jour des offres et lien vers le dépôt"
+  },
+  {
+    "hash": "4803efc",
+    "date": "2026-11-21",
+    "subject": "Confirmation avant la mise à jour des offres et lien vers le dépôt en pied de page",
+    "body": ""
+  },
+  {
+    "hash": "e64a310",
+    "date": "2026-11-21",
+    "subject": "Merge pull request #10 from edouard-lopez/feat/turn-server",
+    "body": "Synchro en 4G : serveur TURN configurable et relecture du Gist"
+  },
+  {
+    "hash": "9de7ff1",
+    "date": "2026-11-21",
+    "subject": "TURN : import de JSON iceServers multi-entrées, textes harmonisés sans fournisseur imposé",
+    "body": ""
+  },
+  {
+    "hash": "f08c6d4",
+    "date": "2026-11-21",
+    "subject": "Relecture du Gist toutes les 30 s et au retour sur l'onglet (synchro sans lien direct)",
+    "body": ""
+  },
+  {
+    "hash": "7e93398",
+    "date": "2026-11-21",
+    "subject": "TURN : plusieurs adresses et import direct d’un JSON iceServers",
+    "body": ""
+  },
+  {
+    "hash": "1baa9a5",
+    "date": "2026-11-21",
+    "subject": "Serveur TURN configurable et erreurs de connexion dans le diagnostic P2P",
+    "body": ""
+  },
+  {
+    "hash": "9e20454",
+    "date": "2026-11-21",
+    "subject": "Merge pull request #9 from edouard-lopez/refactor/clean-code",
+    "body": "Nettoyage clean-code : groupes de tri, constantes, store de synchro"
+  },
+  {
+    "hash": "ac73317",
+    "date": "2026-11-21",
+    "subject": "Fusion de main",
+    "body": ""
+  },
+  {
+    "hash": "c800a94",
+    "date": "2026-11-21",
+    "subject": "Merge pull request #8 from edouard-lopez/feat/sync-diagnostic",
+    "body": "P2P via relais Nostr et diagnostic de synchronisation"
+  },
+  {
+    "hash": "54ea553",
+    "date": "2026-11-21",
+    "subject": "Nettoyage : groupes de tri centralisés, constantes regroupées, store de synchro simplifié",
+    "body": ""
+  },
+  {
+    "hash": "2132bbc",
+    "date": "2026-11-21",
+    "subject": "P2P via relais Nostr publics (Trystero) au lieu du serveur y-webrtc hors service",
+    "body": ""
+  },
+  {
+    "hash": "35bdbc2",
+    "date": "2026-11-21",
+    "subject": "Fusion de main",
+    "body": "# Conflicts:\n#\tsrc/data/changelog.json"
+  },
+  {
+    "hash": "8f4ee6a",
+    "date": "2026-11-21",
+    "subject": "Merge pull request #7 from edouard-lopez/feat/both-routes",
+    "body": "Itinéraires vélo et voiture affichés ensemble"
+  },
+  {
+    "hash": "cf780a5",
+    "date": "2026-11-21",
+    "subject": "Diagnostic P2P et serveurs de mise en relation configurables",
+    "body": ""
+  },
+  {
+    "hash": "5980bd5",
+    "date": "2026-11-21",
+    "subject": "Fusion de main",
+    "body": "# Conflicts:\n#\tsrc/data/changelog.json"
+  },
+  {
+    "hash": "df92727",
+    "date": "2026-11-21",
+    "subject": "Merge pull request #6 from edouard-lopez/feat/group-separators",
+    "body": "Séparateurs de groupes et option pour masquer un groupe"
+  },
+  {
+    "hash": "2cb64f6",
+    "date": "2026-11-21",
+    "subject": "Sélection d'une offre : itinéraires vélo et voiture affichés ensemble",
+    "body": ""
+  },
+  {
+    "hash": "a9ea941",
+    "date": "2026-11-20",
+    "subject": "Séparateur pleine largeur et option pour masquer un groupe d'offres",
+    "body": ""
+  },
+  {
+    "hash": "b67a95d",
+    "date": "2026-11-20",
+    "subject": "Séparateurs nommés avant chaque groupe d'offres",
+    "body": ""
+  },
+  {
+    "hash": "e488e0a",
+    "date": "2026-11-21",
+    "subject": "Merge pull request #5 from edouard-lopez/feat/order-by-triage",
+    "body": "Liste groupée par état : non traitées, à creuser, exclues"
+  },
+  {
+    "hash": "fc3db9f",
+    "date": "2026-11-21",
+    "subject": "Merge pull request #4 from edouard-lopez/feat/sync-yjs-gist",
+    "body": "Tri partagé entre appareils (Yjs + Gist) et indicateur de pairs"
+  },
+  {
+    "hash": "2a86626",
+    "date": "2026-11-20",
+    "subject": "Liste ordonnée : non traitées, puis à creuser, puis exclues",
+    "body": ""
+  },
+  {
+    "hash": "b9a31d5",
+    "date": "2026-11-20",
+    "subject": "Tri partagé entre appareils : Yjs en P2P (WebRTC) et sauvegarde dans un Gist, indicateur de pairs",
+    "body": ""
+  },
+  {
+    "hash": "b676f60",
+    "date": "2026-11-21",
+    "subject": "Merge pull request #3 from edouard-lopez/feat/highlight-dig",
+    "body": "Bordure « à creuser », marqueur d'arrivée et couleurs du trajet"
+  },
+  {
+    "hash": "865f0c2",
+    "date": "2026-11-20",
+    "subject": "Actions GitHub mises à jour vers leurs dernières versions stables",
+    "body": ""
+  },
+  {
+    "hash": "ac907fd",
+    "date": "2026-11-20",
+    "subject": "Bordure verte à gauche et trajet vert à vélo, bleu en voiture",
+    "body": ""
+  },
+  {
+    "hash": "a952a80",
+    "date": "2026-11-20",
+    "subject": "Bordure verte « à creuser », marqueur d'arrivée rouge et itinéraire bleu",
+    "body": ""
+  },
+  {
+    "hash": "028e33c",
+    "date": "2026-11-21",
+    "subject": "Merge pull request #2 from edouard-lopez/feat/vue3-migration",
+    "body": "Porte la carte en Vue 3 (Vite, Pinia, banana-i18n, Tailwind)"
+  },
+  {
+    "hash": "9df8821",
+    "date": "2026-11-20",
+    "subject": "Merge pull request #1 from edouard-lopez/test/e2e-playwright",
+    "body": "Ajoute des tests end-to-end Playwright"
+  },
+  {
+    "hash": "c655cbb",
+    "date": "2026-11-20",
+    "subject": "Porte la carte en Vue 3 (Vite, Pinia, banana-i18n, Tailwind)",
+    "body": "- composants en atomes, molécules, organismes et vues ; mise en page barre, corps, pied\n- logique métier isolée dans src/domain, état dans des stores Pinia\n- textes dans src/i18n/fr.json\n- pages styleguide et changelog, skill commit qui régénère le changelog\n- les 26 tests end-to-end passent sur la nouvelle version, plus 1 test des pages\n- publication Pages : build Vite"
+  },
+  {
+    "hash": "4b83229",
+    "date": "2026-11-20",
+    "subject": "Ajoute des tests end-to-end Playwright sur la carte actuelle",
+    "body": "26 tests décrivent le comportement attendu : filtres, tri par date, zone visible,\ncarte d'offre, tri À creuser / À exclure, itinéraire, clavier et mobile.\nIls passent par les rôles et libellés accessibles, pour survivre au portage Vue."
+  },
+  {
+    "hash": "b67f5a6",
+    "date": "2026-11-20",
+    "subject": "Met en valeur les bons scores et trajets courts, voiture à 45 km/h",
+    "body": "- technos inconnues sur fond blanc\n- icônes Lucide braces et heart-handshake pour les scores\n- vert gras si score ≥ 3/5 ou trajet < 30 min, couleur par défaut sinon\n- vitesse voiture : 45 km/h"
+  },
+  {
+    "hash": "0b2cfc4",
+    "date": "2026-11-20",
+    "subject": "Remplace les libellés de score par des icônes et renforce les liens de titre",
+    "body": "- scores techno et logiciel libre en icônes Lucide (code, git-fork), avec infobulles\n- titre d'offre souligné et coloré\n- technos inconnues en gris plus foncé"
+  },
+  {
+    "hash": "f551386",
+    "date": "2026-11-20",
+    "subject": "Revoit les actions d'offre, ajoute des icônes de trajet et l'accessibilité",
+    "body": "- ❌ retire « À creuser », sinon exclut ; une offre exclue ne garde que ⭐\n- technos inconnues à 100 % d'opacité\n- icônes vélo, voiture et distance\n- lecteur d'écran : libellés des boutons, statut des offres, listes, zones live, offres activables au clavier"
+  },
+  {
+    "hash": "5abc22e",
+    "date": "2026-11-20",
+    "subject": "Passe la carte sous Tailwind, avec icônes monochromes",
+    "body": "- technos inconnues : même pastille, en gris à 80 % d'opacité ; légende retirée\n- SQL, API REST et Tests automatisés ajoutés aux technos maîtrisées\n- étoile → bouton CV une fois l'offre marquée « À creuser » ; croix en bas à droite\n- bouton de mise à jour dans la barre du haut"
+  },
+  {
+    "hash": "62166b6",
+    "date": "2026-11-20",
+    "subject": "Refond les cartes d'offre : actions en icônes, titre cliquable, itinéraire au clic",
+    "body": "- technos groupées (connues puis inconnues), triées A-Z, sans coche\n- date après l'intitulé, nom d'entreprise abrégé avec <abbr>\n- clic sur une offre : centre la carte et trace l'itinéraire (vélo < 20 km, sinon voiture)\n- actions ⭐ ❌ 📝 à droite avec infobulles"
+  },
+  {
+    "hash": "b0fc487",
+    "date": "2026-11-20",
+    "subject": "Distingue les technos connues, trie par date et ajoute le tri à creuser/à exclure",
+    "body": "- technos connues (liste de SEARCH-CRITERIA.md) : fond plein et coche ; inconnues : pointillés\n- vitesse vélo : 20 km/h\n- annonces triées de la plus récente à la plus ancienne\n- boutons « À creuser » (étoile bleue, bordure gauche) et « À exclure » (carte réduite, estompée)"
+  },
+  {
+    "hash": "8de214f",
+    "date": "2026-11-17",
+    "subject": "Restaure 7 offres retirées à tort et durcit la règle de retrait",
+    "body": "Les 7 annonces HelloWork sont encore en ligne. L'offre de la Ville de Bayonne\nreste retirée : sa date limite (09/11/2026) est passée."
+  },
+  {
+    "hash": "2e03483",
+    "date": "2026-11-17",
+    "subject": "Utilise Sonnet en effort bas dans les workflows Claude",
+    "body": ""
+  },
+  {
+    "hash": "b6949ef",
+    "date": "2026-11-17",
+    "subject": "Limite les workflows Claude à 40 tours",
+    "body": ""
+  },
+  {
+    "hash": "9085ec0",
+    "date": "2026-11-17",
+    "subject": "Passe upload-pages-artifact en v4 pour le déploiement Pages",
+    "body": ""
+  },
+  {
+    "hash": "e576be9",
+    "date": "2026-11-17",
+    "subject": "Rétablit l'authentification git avant le commit des offres",
+    "body": "L'action Claude révoque son jeton git à la fin de son étape, donc le push échouait."
+  },
+  {
+    "hash": "9918485",
+    "date": "2026-11-17",
+    "subject": "Utilise CLAUDE_CODE_OAUTH_TOKEN au lieu d'une clé API",
+    "body": ""
+  },
+  {
+    "hash": "81c1235",
+    "date": "2026-11-17",
+    "subject": "Ajoute la publication GitHub Pages et les workflows Claude",
+    "body": "- SEARCH-CRITERIA.md pilote la mise à jour des offres\n- update-offers et generate-application, réservés à edouard-lopez\n- boutons de mise à jour et de candidature sur la carte"
+  },
+  {
+    "hash": "e9167f3",
+    "date": "2026-11-14",
+    "subject": "Affiche le nombre d'offres sur chaque tag de filtre",
+    "body": ""
+  },
+  {
+    "hash": "e2589a0",
+    "date": "2026-11-13",
+    "subject": "Ajoute les liens vers les pages emploi non lues",
+    "body": ""
+  },
+  {
+    "hash": "6bfe3ed",
+    "date": "2026-11-13",
+    "subject": "Ajoute le passage en revue des mairies et collectivités",
+    "body": ""
+  },
+  {
+    "hash": "6dcbbdb",
+    "date": "2026-11-13",
+    "subject": "Ajoute la carte des offres informatiques autour d'Orx",
+    "body": "13 offres vérifiées (Bayonne, Anglet, Bidart, Tarnos, Pau), CSV, JSON,\ncarte Leaflet filtrable et README."
+  }
+]
