@@ -1,4 +1,5 @@
 import * as Y from "yjs";
+import { turnUrls } from "./turn.js";
 
 /**
  * Share a Yjs document with the other open devices, peer to peer over WebRTC.
@@ -10,7 +11,7 @@ export async function joinPeers({ gistId, relays, turn, device, doc, onPeers }) 
   const config = { appId: "job-local-search", password: gistId };
   if (relays.length) config.relayConfig = { urls: relays };
   // TURN relays the traffic when a direct link is impossible, e.g. a phone on 4G behind a carrier NAT.
-  if (turn?.urls) config.turnConfig = [{ urls: turn.urls, username: turn.username, credential: turn.credential }];
+  if (turn?.urls) config.turnConfig = [{ urls: turnUrls(turn.urls), username: turn.username, credential: turn.credential }];
   const room = joinRoom(config, gistId);
   const [sendUpdate, onUpdate] = actions(room, "y-update");
   const [sendHello, onHello] = actions(room, "hello");

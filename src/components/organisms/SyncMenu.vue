@@ -1,9 +1,10 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import AppIcon from "../atoms/AppIcon.vue";
 import PeerList from "../molecules/PeerList.vue";
 import SyncDiagnostic from "../molecules/SyncDiagnostic.vue";
 import { useSyncStore } from "../../stores/sync.js";
+import { parseTurnJson } from "../../domain/turn.js";
 import { t } from "../../i18n/index.js";
 
 /** Top-bar button: number of other open devices; opens their list and the Gist settings. */
@@ -13,6 +14,8 @@ const token = ref("");
 const gistId = ref(sync.settings.gistId);
 const relays = ref(sync.relays.join("\n"));
 const turn = ref({ ...sync.turn });
+// Pasting Cloudflare's JSON answer into the address field fills the three fields.
+watch(() => turn.value.urls, (text) => { const parsed = parseTurnJson(text); if (parsed) turn.value = parsed; });
 const saveNetwork = () => sync.setNetwork({ relays: relays.value.split(/\s+/), turn: { ...turn.value } });
 
 async function submit() {

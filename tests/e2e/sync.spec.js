@@ -125,12 +125,22 @@ test.describe("P2P réel avec un relais Nostr local", () => {
     await page.getByTestId("peers").click();
     const diag = page.getByRole("list", { name: "Diagnostic P2P" });
     await expect(diag).toContainText("Aucun serveur TURN");
-    await page.getByLabel("Adresse TURN").fill("turn:turn.exemple.org:443");
+    await page.getByLabel(/^Adresse TURN/).fill("turn:turn.exemple.org:443");
     await page.getByLabel("Identifiant TURN").fill("moi");
     await page.getByLabel("Mot de passe TURN").fill("secret");
     await page.getByRole("button", { name: "Enregistrer le réseau" }).click();
     await expect(diag).toContainText("Serveur TURN configuré");
     const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("sync")).turn);
     expect(saved).toEqual({ urls: "turn:turn.exemple.org:443", username: "moi", credential: "secret" });
+  });
+
+  test("coller la réponse JSON de Cloudflare remplit les champs TURN", async ({ browser }) => {
+    const page = await device(browser);
+    await page.getByTestId("peers").click();
+    const answer = { iceServers: { urls: ["stun:stun.cloudflare.com:3478", "turn:turn.cloudflare.com:3478?transport=udp", "turns:turn.cloudflare.com:443?transport=tcp"], username: "u1", credential: "c1" } };
+    await page.getByLabel(/^Adresse TURN/).fill(JSON.stringify(answer));
+    await expect(page.getByLabel(/^Adresse TURN/)).toHaveValue("turn:turn.cloudflare.com:3478?transport=udp turns:turn.cloudflare.com:443?transport=tcp");
+    await expect(page.getByLabel("Identifiant TURN")).toHaveValue("u1");
+    await expect(page.getByLabel("Mot de passe TURN")).toHaveValue("c1");
   });
 });
