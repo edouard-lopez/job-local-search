@@ -1,15 +1,45 @@
 [
   {
+    "hash": "ddf0380",
+    "date": "2026-11-21",
+    "subject": "P2P via relais Nostr publics (Trystero) au lieu du serveur y-webrtc hors service",
+    "body": ""
+  },
+  {
+    "hash": "35bdbc2",
+    "date": "2026-11-21",
+    "subject": "Fusion de main",
+    "body": "# Conflicts:\n#\tsrc/data/changelog.json"
+  },
+  {
+    "hash": "8f4ee6a",
+    "date": "2026-11-21",
+    "subject": "Merge pull request #7 from edouard-lopez/feat/both-routes",
+    "body": "Itinéraires vélo et voiture affichés ensemble"
+  },
+  {
     "hash": "cf780a5",
     "date": "2026-11-21",
     "subject": "Diagnostic P2P et serveurs de mise en relation configurables",
     "body": ""
   },
   {
+    "hash": "5980bd5",
+    "date": "2026-11-21",
+    "subject": "Fusion de main",
+    "body": "# Conflicts:\n#\tsrc/data/changelog.json"
+  },
+  {
     "hash": "df92727",
     "date": "2026-11-21",
     "subject": "Merge pull request #6 from edouard-lopez/feat/group-separators",
     "body": "Séparateurs de groupes et option pour masquer un groupe"
+  },
+  {
+    "hash": "2cb64f6",
+    "date": "2026-11-21",
+    "subject": "Sélection d'une offre : itinéraires vélo et voiture affichés ensemble",
+    "body": ""
   },
   {
     "hash": "a9ea941",

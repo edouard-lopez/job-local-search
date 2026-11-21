@@ -57,7 +57,7 @@ const toggle = (v) => (selected.value = selected.value.includes(v) ? selected.va
       <OfferMetrics :offer="sample" />
       <TechList :technos="sample.technos" />
       <PeerList :peers="[{ id: 1, device: 'Linux · Firefox', self: true }, { id: 2, device: 'Android · Firefox' }, { id: 3, device: 'macOS · Safari' }]" />
-      <SyncDiagnostic :diag="{ webrtc: true, servers: [{ url: 'wss://signaling.exemple.org', ok: true }, { url: 'wss://signaling.yjs.dev', ok: false }], room: true, links: 1 }" />
+      <SyncDiagnostic :diag="{ webrtc: true, servers: [{ url: 'wss://relay.exemple.org', ok: true }, { url: 'wss://nos.exemple.net', ok: false }], room: true, links: 1 }" />
     </section>
 
     <section class="space-y-3">

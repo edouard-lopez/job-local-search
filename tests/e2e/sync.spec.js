@@ -1,5 +1,6 @@
 import * as Y from "yjs";
 import { test, expect, nearOffer, OFFERS, card } from "./fixtures.js";
+import { startRelay } from "./nostr-relay.js";
 
 const GIST = "abc123secret";
 const FILE = "job-local-search-triage.yjs";
@@ -80,23 +81,19 @@ test.describe("Synchronisation entre appareils", () => {
   });
 });
 
-test.describe("P2P réel avec un serveur de mise en relation local", () => {
+test.describe("P2P réel avec un relais Nostr local", () => {
   test.skip(({ isMobile }) => isMobile, "un seul projet suffit");
-  let server;
-  test.beforeAll(async () => {
-    const { spawn } = await import("node:child_process");
-    server = spawn("node", ["node_modules/y-webrtc/bin/server.js"], { env: { ...process.env, PORT: "4455" } });
-    await new Promise((ok) => server.stdout.once("data", ok));
-  });
-  test.afterAll(() => server?.kill());
+  let relay, relayUrl;
+  test.beforeAll(async () => { relay = await startRelay(0); relayUrl = `ws://127.0.0.1:${relay.address().port}`; });
+  test.afterAll(() => relay?.close());
 
   async function device(browser) {
     const context = await browser.newContext();
     const page = await context.newPage();
     await page.route(/tile\.openstreetmap\.org/, (r) => r.abort());
     await fakeGist(page, "");
-    await page.addInitScript((gist) => localStorage.setItem("sync",
-      JSON.stringify({ token: "ghp_test", gistId: gist, signaling: ["ws://127.0.0.1:4455"] })), GIST);
+    await page.addInitScript(([gist, url]) => localStorage.setItem("sync",
+      JSON.stringify({ token: "ghp_test", gistId: gist, relays: [url] })), [GIST, relayUrl]);
     await page.goto("/");
     return page;
   }
@@ -107,19 +104,19 @@ test.describe("P2P réel avec un serveur de mise en relation local", () => {
     await a.getByTestId("peers").click();
     const diag = a.getByRole("list", { name: "Diagnostic P2P" });
     await expect(diag).toContainText("WebRTC disponible");
-    await expect(diag).toContainText("Serveur joignable : ws://127.0.0.1:4455");
-    await expect(diag).toContainText("Salle rejointe");
+    await expect(diag).toContainText(`Relais joignable : ${relayUrl}`);
+    await expect(diag).toContainText("Annonce publiée sur au moins un relais");
     const o = nearOffer();
     await card(a, o).getByRole("button", { name: /Marquer .* À creuser/ }).click();
     await expect(card(b, o)).toHaveAccessibleName(/^À creuser\./, { timeout: 10000 });
   });
 
-  test("un serveur injoignable apparaît en rouge dans le diagnostic", async ({ page }) => {
+  test("un relais injoignable apparaît en rouge dans le diagnostic", async ({ page }) => {
     await fakeGist(page, "");
     await page.addInitScript((gist) => localStorage.setItem("sync",
-      JSON.stringify({ token: "ghp_test", gistId: gist, signaling: ["ws://127.0.0.1:1"] })), GIST);
+      JSON.stringify({ token: "ghp_test", gistId: gist, relays: ["ws://127.0.0.1:1"] })), GIST);
     await page.goto("/");
     await page.getByTestId("peers").click();
-    await expect(page.getByRole("list", { name: "Diagnostic P2P" })).toContainText("Serveur injoignable : ws://127.0.0.1:1", { timeout: 5000 });
+    await expect(page.getByRole("list", { name: "Diagnostic P2P" })).toContainText("Relais injoignable : ws://127.0.0.1:1", { timeout: 5000 });
   });
 });

@@ -11,8 +11,8 @@ const sync = useSyncStore();
 const open = ref(false);
 const token = ref("");
 const gistId = ref(sync.settings.gistId);
-const servers = ref(sync.signaling.join("\n"));
-const saveServers = () => sync.setSignaling(servers.value.split(/\s+/));
+const relays = ref(sync.relays.join("\n"));
+const saveRelays = () => sync.setRelays(relays.value.split(/\s+/));
 
 async function submit() {
   await sync.configure(token.value, gistId.value);
@@ -52,12 +52,12 @@ async function submit() {
         </label>
         <button type="submit" class="rounded-md bg-emerald-700 px-3 py-1 text-white hover:bg-emerald-600">{{ t("sync-connect") }}</button>
       </form>
-      <form class="space-y-1 text-xs" @submit.prevent="saveServers">
-        <label class="block">{{ t("sync-signaling") }}
-          <textarea v-model="servers" rows="2" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1 font-mono dark:border-gray-700 dark:bg-gray-950" />
+      <form class="space-y-1 text-xs" @submit.prevent="saveRelays">
+        <label class="block">{{ t("sync-relays") }}
+          <textarea v-model="relays" rows="2" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1 font-mono dark:border-gray-700 dark:bg-gray-950" />
         </label>
-        <p class="text-gray-500">{{ t("sync-signaling-help") }}</p>
-        <button type="submit" class="rounded-md px-2 py-0.5 ring-1 ring-inset ring-gray-300 hover:ring-gray-500 dark:ring-gray-700">{{ t("sync-signaling-save") }}</button>
+        <p class="text-gray-500">{{ t("sync-relays-help") }}</p>
+        <button type="submit" class="rounded-md px-2 py-0.5 ring-1 ring-inset ring-gray-300 hover:ring-gray-500 dark:ring-gray-700">{{ t("sync-relays-save") }}</button>
       </form>
     </div>
   </div>
