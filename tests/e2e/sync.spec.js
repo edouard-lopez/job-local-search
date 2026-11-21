@@ -80,7 +80,7 @@ test.describe("Synchronisation entre appareils", () => {
     await page.getByTestId("peers").click();
     await page.getByLabel("Jeton GitHub").fill("ghp_test");
     await page.getByRole("button", { name: "Connecter" }).click();
-    await page.getByText("Synchronisation", { exact: true }).click();
+    await page.locator("summary", { hasText: "Synchronisation" }).click();
     await expect(page.getByText(GIST)).toBeVisible();
     expect(saves[0].public).toBe(false);
   });
@@ -116,6 +116,8 @@ test.describe("P2P réel avec un relais Nostr local", () => {
     const [a, b] = [await device(browser), await device(browser)];
     await expect(a.getByTestId("peers")).toHaveText("1", { timeout: 15000 });
     await a.getByTestId("peers").click();
+    await expect(a.locator("summary", { hasText: "Diagnostic P2P" }).locator("[data-state]")).toHaveAttribute("data-state", "ok");
+    await expect(a.locator("summary", { hasText: "Synchronisation" }).locator("[data-state]")).toHaveAttribute("data-state", "ok");
     await a.getByText("Diagnostic P2P").click();
     const diag = a.getByRole("list", { name: "Diagnostic P2P" });
     await expect(diag).toContainText("WebRTC disponible");
@@ -132,6 +134,7 @@ test.describe("P2P réel avec un relais Nostr local", () => {
       JSON.stringify({ token: "ghp_test", gistId: gist, relays: ["ws://127.0.0.1:1"] })), GIST);
     await page.goto("/");
     await page.getByTestId("peers").click();
+    await expect(page.locator("summary", { hasText: "Diagnostic P2P" }).locator("[data-state]")).toHaveAttribute("data-state", "ko", { timeout: 5000 });
     await page.getByText("Diagnostic P2P").click();
     await expect(page.getByRole("list", { name: "Diagnostic P2P" })).toContainText("Relais injoignable : ws://127.0.0.1:1", { timeout: 5000 });
   });
@@ -158,6 +161,7 @@ test.describe("P2P réel avec un relais Nostr local", () => {
     await expect(page.locator("#turn-check")).toHaveText(/3 adresses TURN reconnues/);
     await page.getByRole("button", { name: "Enregistrer le réseau" }).click();
     await expect(page.locator("#turn-check")).toHaveText(/TURN configuré \(3 adresses\)/);
+    await expect(page.locator("summary", { hasText: "Réseau" }).locator("[data-state]")).toHaveAttribute("data-state", "ok");
     const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("sync")).turn);
     expect(saved).toEqual({ urls: "turn:eu.relay.metered.ca:80 turn:eu.relay.metered.ca:80?transport=tcp turns:eu.relay.metered.ca:443?transport=tcp", username: "u1", credential: "c/1" });
     await page.getByText("Diagnostic P2P").click();

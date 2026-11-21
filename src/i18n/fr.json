@@ -87,5 +87,7 @@
   "sync-turn-valid": "$1 {{PLURAL:$1|adresse TURN reconnue|adresses TURN reconnues}}, avec identifiant",
   "sync-turn-invalid": "Extrait non reconnu : il faut une adresse turn:, un username et un credential",
   "sync-turn-current": "TURN configuré ($1 {{PLURAL:$1|adresse|adresses}}).",
-  "sync-turn-clear": "Retirer"
+  "sync-turn-clear": "Retirer",
+  "status-ok": "(OK)",
+  "status-ko": "(problème)"
 }

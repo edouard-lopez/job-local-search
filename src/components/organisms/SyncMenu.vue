@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from "vue";
 import AppIcon from "../atoms/AppIcon.vue";
+import StatusMark from "../atoms/StatusMark.vue";
 import PeerList from "../molecules/PeerList.vue";
 import SyncDiagnostic from "../molecules/SyncDiagnostic.vue";
 import { useSyncStore } from "../../stores/sync.js";
@@ -23,6 +24,15 @@ function saveNetwork() {
   turnText.value = "";
 }
 const clearTurn = () => sync.setNetwork({ relays: sync.relays, turn: null });
+/** Section marks: ok, ko or null (nothing to report yet). */
+const syncState = computed(() => ({ ok: "ok", error: "ko" })[sync.status] ?? null);
+const diagState = computed(() => {
+  const { webrtc, servers } = sync.diag;
+  if (!webrtc) return "ko";
+  if (!servers.length) return null;
+  return servers.some((r) => r.ok) ? "ok" : "ko";
+});
+const networkState = computed(() => (sync.turn?.urls ? "ok" : null));
 const turnCount = (turn) => (turn?.urls ? turn.urls.split(" ").length : 0);
 
 async function submit() {
@@ -58,17 +68,17 @@ async function submit() {
       </form>
       <template v-else>
         <details class="text-xs">
-          <summary class="cursor-pointer font-semibold">{{ t("sync-title") }}</summary>
+          <summary class="cursor-pointer font-semibold">{{ t("sync-title") }}<StatusMark :state="syncState" /></summary>
           <p class="mt-1 text-gray-500">{{ t("sync-gist-hint") }} <code class="select-all break-all">{{ sync.settings.gistId }}</code></p>
           <button type="button" class="mt-1 text-red-700 underline dark:text-red-400" @click="sync.disconnect()">{{ t("sync-disconnect") }}</button>
         </details>
         <details class="text-xs">
-          <summary class="cursor-pointer font-semibold">{{ t("diag-title") }}</summary>
+          <summary class="cursor-pointer font-semibold">{{ t("diag-title") }}<StatusMark :state="diagState" /></summary>
           <SyncDiagnostic class="mt-1" :diag="sync.diag" />
         </details>
       </template>
       <details class="text-xs">
-        <summary class="cursor-pointer font-semibold">{{ t("sync-network") }}</summary>
+        <summary class="cursor-pointer font-semibold">{{ t("sync-network") }}<StatusMark :state="networkState" /></summary>
         <form class="mt-1 space-y-2" @submit.prevent="saveNetwork">
           <label class="block">{{ t("sync-relays") }}
             <textarea v-model="relays" rows="2" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1 font-mono dark:border-gray-700 dark:bg-gray-950" />
