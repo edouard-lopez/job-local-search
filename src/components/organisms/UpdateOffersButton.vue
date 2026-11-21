@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, useId } from "vue";
 import AppIcon from "../atoms/AppIcon.vue";
 import ConfirmDialog from "../molecules/ConfirmDialog.vue";
 import { dispatchWorkflow, runsUrl } from "../../domain/github.js";
@@ -14,6 +14,7 @@ const KEY = "github-actions-token";
 const read = () => { try { return localStorage.getItem(KEY) ?? ""; } catch { return ""; } };
 const save = (v) => { try { v ? localStorage.setItem(KEY, v) : localStorage.removeItem(KEY); } catch { /* storage unavailable */ } };
 
+const uid = useId();
 const open = ref(false);
 const saved = ref(read());
 const token = ref("");
@@ -53,7 +54,7 @@ async function run() {
     <template v-else>
       <p>{{ t("update-offers-confirm") }}</p>
       <label v-if="!saved" class="block">{{ t("update-offers-token") }}
-        <input v-model="token" type="password" required autocomplete="off" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1 dark:border-gray-700 dark:bg-gray-950" />
+        <input :id="`${uid}-token`" v-model="token" name="actions-token" type="password" required autocomplete="off" class="mt-0.5 w-full rounded border border-gray-300 px-2 py-1 dark:border-gray-700 dark:bg-gray-950" />
         <span class="mt-0.5 block text-xs text-gray-500">{{ t("update-offers-token-help") }}</span>
       </label>
       <p v-else class="text-xs text-gray-500">{{ t("update-offers-token-saved") }}

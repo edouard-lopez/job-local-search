@@ -158,9 +158,9 @@ test.describe("P2P réel avec un relais Nostr local", () => {
     const page = await device(browser);
     const field = await openNetwork(page);
     await field.fill(METERED);
-    await expect(page.locator("#turn-check")).toHaveText(/3 adresses TURN reconnues/);
+    await expect(page.locator("[id$=turn-check]")).toHaveText(/3 adresses TURN reconnues/);
     await page.getByRole("button", { name: "Enregistrer le réseau" }).click();
-    await expect(page.locator("#turn-check")).toHaveText(/TURN configuré \(3 adresses\)/);
+    await expect(page.locator("[id$=turn-check]")).toHaveText(/TURN configuré \(3 adresses\)/);
     await expect(page.locator("summary", { hasText: "Réseau" }).locator("[data-state]")).toHaveAttribute("data-state", "ok");
     const saved = await page.evaluate(() => JSON.parse(localStorage.getItem("sync")).turn);
     expect(saved).toEqual({ urls: "turn:eu.relay.metered.ca:80 turn:eu.relay.metered.ca:80?transport=tcp turns:eu.relay.metered.ca:443?transport=tcp", username: "u1", credential: "c/1" });
@@ -173,7 +173,7 @@ test.describe("P2P réel avec un relais Nostr local", () => {
     const field = await openNetwork(page);
     await field.fill("n'importe quoi");
     await expect(field).toHaveAttribute("aria-invalid", "true");
-    await expect(page.locator("#turn-check")).toHaveText(/Extrait non reconnu/);
+    await expect(page.locator("[id$=turn-check]")).toHaveText(/Extrait non reconnu/);
     await expect(page.getByRole("button", { name: "Enregistrer le réseau" })).toBeDisabled();
   });
 
@@ -181,6 +181,6 @@ test.describe("P2P réel avec un relais Nostr local", () => {
     const page = await device(browser);
     const field = await openNetwork(page);
     await field.fill(JSON.stringify({ iceServers: [{ urls: ["turn:a.example:3478", "turns:a.example:443"], username: "u", credential: "c" }] }));
-    await expect(page.locator("#turn-check")).toHaveText(/2 adresses TURN reconnues/);
+    await expect(page.locator("[id$=turn-check]")).toHaveText(/2 adresses TURN reconnues/);
   });
 });
