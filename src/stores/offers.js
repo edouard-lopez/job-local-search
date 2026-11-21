@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import offers from "../../data/offres.json";
 import { contractCategory } from "../domain/contracts.js";
 import { useTriageStore } from "./triage.js";
+import { groupOf } from "../domain/triage.js";
 
 const countBy = (values) => values.reduce((acc, v) => ((acc[v] = (acc[v] ?? 0) + 1), acc), {});
 const toggle = (list, value) => (list.includes(value) ? list.filter((v) => v !== value) : [...list, value]);
@@ -12,7 +13,7 @@ export const useOffersStore = defineStore("offers", {
     contracts: [],
     technos: [],
     hideLasseube: false,
-    /** Triage groups to hide: "todo", "dig", "out". */
+    /** Triage groups to hide (see TRIAGE_GROUPS). */
     hiddenGroups: [],
     /** Map bounds as [[south, west], [north, east]]; null until the map is ready. */
     bounds: null,
@@ -23,13 +24,12 @@ export const useOffersStore = defineStore("offers", {
     /** Offers matching the filters, wherever they are on the map. */
     filtered(s) {
       const triage = useTriageStore();
-      const group = (o) => triage.statusOf(o) ?? "todo";
       return s.offers.filter(
         (o) =>
           (!s.contracts.length || s.contracts.includes(contractCategory(o.contrat))) &&
           (!s.technos.length || o.technos.some((t) => s.technos.includes(t))) &&
           !(s.hideLasseube && o.zone.startsWith("Lasseube")) &&
-          !s.hiddenGroups.includes(group(o)),
+          !s.hiddenGroups.includes(groupOf(triage.statusOf(o))),
       );
     },
     /** Filtered offers inside the visible map area, newest first. */

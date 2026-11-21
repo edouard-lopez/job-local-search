@@ -6,7 +6,7 @@ import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import { useOffersStore } from "../../stores/offers.js";
 import { useRouteStore } from "../../stores/route.js";
-import { ORX } from "../../domain/geo.js";
+import { ORX, ROUTE_COLORS } from "../../domain/geo.js";
 import { t } from "../../i18n/index.js";
 
 // Bundlers break Leaflet's default icon URLs: point them at the bundled files.
@@ -25,7 +25,7 @@ const ARRIVAL_ICON = L.divIcon({
 });
 
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
-const popup = (o) => `<b>${esc(o.poste)}</b><br>${esc(o.entite)}<br>${esc(o.commune)} · ${esc(o.contrat)}<br><a href="${esc(o.lien)}" target="_blank" rel="noopener">Annonce</a>`;
+const popup = (o) => `<b>${esc(o.poste)}</b><br>${esc(o.entite)}<br>${esc(o.commune)} · ${esc(o.contrat)}<br><a href="${esc(o.lien)}" target="_blank" rel="noopener">${esc(t("map-popup-ad"))}</a>`;
 
 function publishBounds() {
   const b = map.getBounds();
@@ -44,9 +44,8 @@ function drawRoute() {
   const offer = offers.offers.find((o) => o.id === route.offerId);
   if (offer) arrival = L.marker([offer.lat, offer.lon], { icon: ARRIVAL_ICON, zIndexOffset: 1000, title: offer.poste }).addTo(map);
   if (route.status === "ready") {
-    // Bike in green, car in blue; both drawn so they can be compared.
     routeLayer = L.featureGroup(route.routes.map((r) =>
-      L.geoJSON(r.geometry, { style: { color: r.mode === "bike" ? "#16a34a" : "#2563eb", weight: 5, opacity: 0.75 } }))).addTo(map);
+      L.geoJSON(r.geometry, { style: { color: ROUTE_COLORS[r.mode], weight: 5, opacity: 0.75 } }))).addTo(map);
     map.fitBounds(routeLayer.getBounds(), { padding: [30, 30] });
   } else if (route.status === "failed" && offer) {
     map.setView([offer.lat, offer.lon], 13);
