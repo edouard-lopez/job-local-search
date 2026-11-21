@@ -20,7 +20,7 @@ import { t } from "../i18n/index.js";
 // Sample data: one offer shown in every state, so each component is visible here.
 const sample = {
   id: 0, poste: "Ingénieur DevOps", entite: "Exemple de Société Coopérative du Numérique", commune: "Bayonne",
-  secteur: "privé", contrat: "CDI", publie: "2026-11-20", lien: "#", score_techno: 4, score_libre: 2, salaire: { min: 50, max: 58, brut: true },
+  secteur: "privé", contrat: "CDI", publie: "2026-11-20", lien: "#", score_techno: 4, score_libre: 2, salaire: { min: 45, max: 55, brut: true },
   velo_min: 25, voiture_min: 31, distance_km: 18.4, technos: ["Kubernetes", "Ansible", "Docker", "Rust"],
   mission: "Exemple de mission, pour montrer le texte déplié.", email: "", telephone: "",
 };
@@ -49,7 +49,7 @@ const toggle = (v) => (selected.value = selected.value.includes(v) ? selected.va
         <IconButton icon="x" title="Marquer comme exclue" label="Exemple : exclure" />
       </div>
       <p class="text-sm">Synchronisation<StatusMark state="ok" /> · Diagnostic<StatusMark state="ko" /> · Réseau<StatusMark /></p>
-      <ul class="flex gap-3"><MetricItem icon="braces" label="Score techno" value="4/5" good /><MetricItem icon="car" label="Voiture" value="~31 min" /><MetricItem icon="coins" label="Salaire" value="35 k€" abbr="par an, pas en brut (net ou non précisé)"><AppIcon name="message-square-exclamation-point" class="text-amber-600" /></MetricItem></ul>
+      <ul class="flex gap-3"><MetricItem icon="braces" label="Score techno" value="4/5" good /><MetricItem icon="car" label="Voiture" value="~31 min" /></ul>
     </section>
 
     <section class="space-y-3">
@@ -57,6 +57,7 @@ const toggle = (v) => (selected.value = selected.value.includes(v) ? selected.va
       <FilterGroup title="Technos" label="Exemple de filtre" :counts="{ Docker: 3, Kubernetes: 2, Rust: 1 }"
         :order="['Docker', 'Kubernetes', 'Rust']" :selected="selected" :is-known="isKnown" @toggle="toggle" />
       <OfferMetrics :offer="sample" />
+      <OfferMetrics :offer="{ ...sample, salaire: { min: 52, max: 60, brut: false } }" data-testid="metrics-net" />
       <TechList :technos="sample.technos" />
       <PeerList :peers="[{ id: 1, device: 'Linux · Firefox', self: true }, { id: 2, device: 'Android · Firefox' }, { id: 3, device: 'macOS · Safari' }]" />
       <SyncDiagnostic :diag="{ webrtc: true, servers: [{ url: 'wss://relay.exemple.org', ok: true }, { url: 'wss://nos.exemple.net', ok: false }], room: true, links: 1, turn: false, error: 'could not connect to peer after exchanging SDP' }" />
