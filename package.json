@@ -3,8 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "predev": "npm run changelog",
     "dev": "vite",
     "build:data": "python3 scripts/build.py",
+    "prebuild": "npm run changelog",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1 --port 4173 --strictPort",
     "changelog": "node scripts/changelog.mjs",
