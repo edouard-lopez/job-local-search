@@ -3,7 +3,11 @@ import * as Y from "yjs";
 import { deviceLabel } from "../domain/device.js";
 import { joinPeers } from "../domain/p2p.js";
 import { readStorage as read, writeStorage as write } from "../domain/storage.js";
-import { createGist, readGist, writeGist, toBase64, fromBase64 } from "../domain/gist.js";
+import { createGist, readGist, writeGist } from "../domain/gist.js";
+import { debounce } from "../domain/debounce.js";
+import { NO_SETTINGS, isEnabled, parseSettings, withNetwork } from "../domain/sync-settings.js";
+import { encodeDoc, restoreTriage } from "../domain/triage-doc.js";
+import { whileVisible } from "../domain/while-visible.js";
 
 const SETTINGS_KEY = "sync";
 const STATE_KEY = "triage-yjs";
@@ -18,28 +22,17 @@ const PULL_EVERY_MS = 30000;
 export const doc = new Y.Doc();
 export const triageMap = doc.getMap("triage");
 
-function restoreLocal() {
-  const saved = read(STATE_KEY);
-  if (saved) { Y.applyUpdate(doc, fromBase64(saved), "local"); return; }
-  // First run after the Yjs switch: import the former JSON triage.
-  try {
-    const legacy = JSON.parse(read(LEGACY_KEY) ?? "{}");
-    doc.transact(() => Object.entries(legacy).forEach(([k, v]) => triageMap.set(k, v)), "local");
-  } catch { /* nothing to import */ }
-}
-
 let peers = null;
-let saveTimer = null;
+let saveLater = null;
 let diagTimer = null;
-let pullTimer = null;
+let stopPulling = null;
 
-const NO_SETTINGS = { token: "", gistId: "" };
-const loadSettings = () => { try { return JSON.parse(read(SETTINGS_KEY)) ?? NO_SETTINGS; } catch { return NO_SETTINGS; } };
+const saveSettings = (settings) => write(SETTINGS_KEY, settings === NO_SETTINGS ? null : JSON.stringify(settings));
 
 /** Sync settings, peers seen peer to peer, and the Gist save status. */
 export const useSyncStore = defineStore("sync", {
   state: () => ({
-    settings: loadSettings(),
+    settings: parseSettings(read(SETTINGS_KEY)),
     device: deviceLabel(),
     peers: [],
     status: "off", // off | syncing | ok | error
@@ -48,7 +41,7 @@ export const useSyncStore = defineStore("sync", {
     diag: { webrtc: typeof RTCPeerConnection !== "undefined", servers: [], room: false, links: 0, turn: false, error: "" },
   }),
   getters: {
-    enabled: (s) => Boolean(s.settings.token && s.settings.gistId),
+    enabled: (s) => isEnabled(s.settings),
     selfPeer: (s) => ({ id: "self", device: s.device, self: true }),
     peerCount: (s) => s.peers.filter((p) => !p.self).length,
     relays: (s) => s.settings.relays ?? [],
@@ -56,9 +49,10 @@ export const useSyncStore = defineStore("sync", {
   },
   actions: {
     init() {
-      restoreLocal();
+      restoreTriage(doc, triageMap, { saved: read(STATE_KEY), legacy: read(LEGACY_KEY) });
+      saveLater = debounce(() => this.save(), SAVE_DELAY_MS);
       doc.on("update", (_update, origin) => {
-        write(STATE_KEY, toBase64(Y.encodeStateAsUpdate(doc)));
+        write(STATE_KEY, encodeDoc(doc));
         if (origin !== "gist") this.scheduleSave();
       });
       this.peers = [this.selfPeer];
@@ -70,7 +64,7 @@ export const useSyncStore = defineStore("sync", {
       try {
         const id = gistId.trim() || (await createGist(token.trim(), Y.encodeStateAsUpdate(doc)));
         this.settings = { ...this.settings, token: token.trim(), gistId: id };
-        write(SETTINGS_KEY, JSON.stringify(this.settings));
+        saveSettings(this.settings);
         await this.connect();
       } catch (e) {
         this.fail(e);
@@ -78,8 +72,8 @@ export const useSyncStore = defineStore("sync", {
     },
     /** Replace the Nostr relays (empty: Trystero's public list) and the TURN server, then restart peer-to-peer. */
     async setNetwork({ relays, turn }) {
-      this.settings = { ...this.settings, relays: relays.map((u) => u.trim()).filter(Boolean), turn };
-      write(SETTINGS_KEY, JSON.stringify(this.settings));
+      this.settings = withNetwork(this.settings, { relays, turn });
+      saveSettings(this.settings);
       this.stopPeers();
       if (this.enabled) await this.startPeers();
     },
@@ -93,7 +87,7 @@ export const useSyncStore = defineStore("sync", {
     disconnect() {
       this.stopPeers();
       this.settings = NO_SETTINGS;
-      write(SETTINGS_KEY, null);
+      saveSettings(NO_SETTINGS);
       this.status = "off";
     },
     async connect() {
@@ -113,10 +107,8 @@ export const useSyncStore = defineStore("sync", {
       if (remote) Y.applyUpdate(doc, remote, "gist");
     },
     watchGist() {
-      if (pullTimer) return;
-      const pullIfVisible = () => { if (this.enabled && !document.hidden) this.pull().catch((e) => this.fail(e)); };
-      pullTimer = setInterval(pullIfVisible, PULL_EVERY_MS);
-      document.addEventListener("visibilitychange", pullIfVisible);
+      if (stopPulling) return;
+      stopPulling = whileVisible(() => { if (this.enabled) this.pull().catch((e) => this.fail(e)); }, PULL_EVERY_MS);
     },
     async startPeers() {
       if (peers || !this.diag.webrtc) return;
@@ -131,9 +123,7 @@ export const useSyncStore = defineStore("sync", {
       if (peers) this.diag = { webrtc: this.diag.webrtc, ...peers.diag() };
     },
     scheduleSave() {
-      if (!this.enabled) return;
-      clearTimeout(saveTimer);
-      saveTimer = setTimeout(() => this.save(), SAVE_DELAY_MS);
+      if (this.enabled) saveLater?.schedule();
     },
     async save() {
       try {
