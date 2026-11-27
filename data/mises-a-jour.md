@@ -4,6 +4,16 @@ Journal de la recherche : une section par mise à jour, de la plus récente à l
 
 ## Mise à jour du 27/11/2026
 
+- **5 offres** revérifiées (hellowork, choisirleservicepublic) : pages ouvertes, aucune mention explicite d'expiration. Toutes **conservées**, aucune retirée.
+- Salaires déjà renseignés pour 3 offres ; aucun salaire écrit pour UPPA/IUT et Hoist Group.
+- Recherche web : pistes à Pau (Akkodis, ISAGRI, Capgemini) et Anglet (DevOps Cloud en intérim) sans date ni page lue directement, donc **non ajoutées**. Pages des mairies non relues.
+
+```diff
+# aucune offre ajoutée ni retirée
+```
+
+## Mise à jour du 27/11/2026
+
 - 11 offres revérifiées. Retirées (pages hellowork indiquant « n'est plus disponible ») :
 
 ```diff
