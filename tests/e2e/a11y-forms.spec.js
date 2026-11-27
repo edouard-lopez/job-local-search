@@ -21,7 +21,7 @@ test("les champs de formulaire ont un id unique, un name et un libellé", async 
   await page.locator("summary", { hasText: "Réseau" }).click();
   await checkFields(page);
   await page.keyboard.press("Escape");
-  await page.getByRole("button", { name: /Mettre à jour les offres/ }).click();
+  await page.getByRole("button", { name: /Chercher des offres/ }).click();
   await checkFields(page);
 });
 

@@ -1,11 +1,20 @@
 <script setup>
+import OffersAge from "../molecules/OffersAge.vue";
+import UpdateOffersButton from "./UpdateOffersButton.vue";
+import { useUpdatesStore } from "../../stores/updates.js";
 import { repoUrl } from "../../domain/github.js";
 import { t } from "../../i18n/index.js";
+
+const updates = useUpdatesStore();
 </script>
 
 <template>
   <footer class="flex flex-wrap items-center justify-between gap-2 border-t border-gray-200 px-4 py-2 text-xs text-gray-500 dark:border-gray-800">
-    <span>{{ t("footer-source") }}</span>
+    <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+      <span>{{ t("footer-source") }}</span>
+      <OffersAge v-if="updates.updated" :since="updates.updated" />
+      <UpdateOffersButton />
+    </div>
     <nav class="flex gap-3" aria-label="Pied de page">
       <RouterLink to="/" class="hover:underline">{{ t("nav-home") }}</RouterLink>
       <RouterLink to="/styleguide" class="hover:underline">{{ t("nav-styleguide") }}</RouterLink>
