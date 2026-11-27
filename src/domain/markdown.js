@@ -14,34 +14,55 @@ export function parseUpdates(md) {
   });
 }
 
-/** Paragraphs and lists: [{ type: "paragraph", text } | { type: "list", items: [text] }]. */
+const DIFF_OPEN = /^```diff\s*$/;
+const FENCE_CLOSE = /^```\s*$/;
+const BULLET = /^\s*[-*] (.*)/;
+const DIFF_LINE = /^([+-]) ?(.*)/;
+
+/** One line inside a diff fence: "+ x" is added, "- x" is removed, anything else is plain. */
+function diffLine(line) {
+  const m = line.match(DIFF_LINE);
+  return m ? { sign: m[1], text: m[2] } : { sign: " ", text: line.trim() };
+}
+
+/** Add a non-diff line to the blocks; `current` is the open list or paragraph, if any. Returns the new open block. */
+function addTextLine(blocks, current, line) {
+  const bullet = line.match(BULLET);
+  if (bullet) {
+    const list = current?.type === "list" ? current : { type: "list", items: [] };
+    if (list !== current) blocks.push(list);
+    list.items.push(bullet[1]);
+    return list;
+  }
+  if (current?.type === "list" && /^\s+/.test(line)) {
+    current.items[current.items.length - 1] += ` ${line.trim()}`;
+    return current;
+  }
+  if (current?.type === "paragraph") {
+    current.text += ` ${line.trim()}`;
+    return current;
+  }
+  const paragraph = { type: "paragraph", text: line.trim() };
+  blocks.push(paragraph);
+  return paragraph;
+}
+
+/** Paragraphs, lists and diffs: [{ type: "paragraph", text } | { type: "list", items } | { type: "diff", lines }]. */
 export function parseBlocks(body) {
   const blocks = [];
   let current = null;
-  let diff = null;
   for (const raw of body.split("\n")) {
     const line = raw.trimEnd();
-    if (/^```diff\s*$/.test(line)) { diff = { type: "diff", lines: [] }; blocks.push(diff); current = null; continue; }
-    if (diff) {
-      if (/^```\s*$/.test(line)) diff = null;
-      else if (line.trim()) {
-        const m = line.match(/^([+-]) ?(.*)/);
-        diff.lines.push(m ? { sign: m[1], text: m[2] } : { sign: " ", text: line.trim() });
-      }
-      continue;
-    }
-    if (!line.trim()) { current = null; continue; }
-    const item = line.match(/^\s*[-*] (.*)/);
-    if (item) {
-      if (current?.type !== "list") { current = { type: "list", items: [] }; blocks.push(current); }
-      current.items.push(item[1]);
-    } else if (current?.type === "list" && /^\s+/.test(line)) {
-      current.items[current.items.length - 1] += ` ${line.trim()}`;
-    } else if (current?.type === "paragraph") {
-      current.text += ` ${line.trim()}`;
-    } else {
-      current = { type: "paragraph", text: line.trim() };
+    if (current?.type === "diff") {
+      if (FENCE_CLOSE.test(line)) current = null;
+      else if (line.trim()) current.lines.push(diffLine(line));
+    } else if (DIFF_OPEN.test(line)) {
+      current = { type: "diff", lines: [] };
       blocks.push(current);
+    } else if (!line.trim()) {
+      current = null;
+    } else {
+      current = addTextLine(blocks, current, line);
     }
   }
   return blocks;

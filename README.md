@@ -12,11 +12,13 @@ Carte et tableau des offres informatiques (ingénieur, DevOps, sysadmin, dévelo
 - `#/styleguide` montre chaque composant ; `#/changelog` montre l'historique des commits.
 - `data/offres-source.json` : la saisie. `scripts/build.py` en tire `offres.json`, `offres.csv` et `known-technos.json`.
 - `tests/e2e/` : tests Playwright qui garantissent les fonctionnalités entre deux versions.
+- `tests/unit/` : tests Vitest rapides de la logique (`src/domain/`).
 
 ```sh
 npm ci
 python3 scripts/build.py   # recalcule les données
 npm run dev                # développement
+npm run test:unit          # tests unitaires (Vitest)
 npm run test:e2e           # build + tests end-to-end
 npm run changelog          # régénère le changelog (voir .claude/skills/commit)
 ```

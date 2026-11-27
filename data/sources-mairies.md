@@ -1,4 +1,4 @@
-# Sources consultées : mairies et collectivités (17/11/2026)
+# Sources consultées : mairies et collectivités (17/11/2026 ; recherche web complémentaire le 27/11/2026 : [Welcome to the Jungle](https://www.welcometothejungle.com/fr/pages/emploi-devops-infra-pyrenees-atlantiques), [France Travail](https://candidat.francetravail.fr/offres/recherche), aucune nouvelle offre vérifiée)
 
 Méthode : page « recrutement » du site de la mairie quand elle existe et répond. Sinon, offres de l'employeur sur emploi-territorial.fr (où publient presque toutes les collectivités).
 « Échec » signifie que le site a refusé la lecture automatique : à vérifier à la main.
