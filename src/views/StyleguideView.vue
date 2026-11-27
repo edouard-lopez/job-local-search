@@ -67,6 +67,7 @@ const toggle = (v) => (selected.value = selected.value.includes(v) ? selected.va
       <OfferMetrics :offer="{ ...sample, salaire: { min: 52, max: 60, brut: false } }" data-testid="metrics-net" />
       <TechList :technos="sample.technos" />
       <MarkdownBlocks class="text-xs" data-testid="markdown" source="- **11 offres** revérifiées ; retirée : `hellowork 84261072`.&#10;- Source : [emploi-territorial](https://www.emploi-territorial.fr), [lien non sûr](javascript:alert(1))." />
+      <MarkdownBlocks class="text-xs" data-testid="diff-sample" source="```diff&#10;+ Hoist Group, DevOps à Pau&#10;- Team.is&#10;- Only Networks&#10;```" />
       <p class="flex flex-wrap items-center gap-x-4 text-xs text-gray-500" data-testid="ages">
         <OffersAge v-for="d in ages" :key="d" :since="d" :now="NOW" />
       </p>
