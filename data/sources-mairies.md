@@ -60,3 +60,8 @@ Méthode : page « recrutement » du site de la mairie quand elle existe et rép
 - Salaires ajoutés (écrits dans l'annonce, brut non précisé) : Éditeur mobilité senior 45-50 k€, Éditeur mobilité 35-42 k€, Epsyl 35-47 k€. L'estimation Hellowork de l'offre DevOps 58494005 n'est pas un salaire de l'annonce : omise.
 - Pages en HTTP 410 sans texte (Team.is, Only Networks, Capgemini, Adaxis, Safran/Crit, etc.) conservées : pas de mention explicite d'expiration.
 - Recherches web (France Travail, Welcome to the Jungle, choisirleservicepublic, emploi-collectivites) : pistes vues (Akkodis et ISAGRI à Pau, DevOps Cloud à Anglet, CD Landes technicien informatique) non lues directement, donc non ajoutées. Pages des mairies non relues.
+
+## Mise à jour du 27/11/2026
+
+- 11 offres revérifiées. Retirées (pages hellowork indiquant « n'est plus disponible ») : Team.is, Only Networks, Capgemini Software Engineer, Adaxis, Safran/Crit, Capgemini Java. Conservées : Éditeur mobilité (x2), Epsyl, UPPA/IUT, Hoist Group (pages ouvertes ; aucun salaire écrit pour UPPA et Hoist).
+- Recherches web (France Travail, Welcome to the Jungle, choisirleservicepublic, emploi-territorial) : aucune nouvelle offre datée et vérifiée en zone. Haut Béarn (administrateur systèmes et réseaux, avis 2025-12) : ancien, non retenu. Urrugne, Saint-Pierre-du-Mont, Bayonne (SIRH) hors zone ou hors profil. Pages des mairies non relues.
