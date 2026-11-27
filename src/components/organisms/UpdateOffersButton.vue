@@ -4,7 +4,7 @@ import AppIcon from "../atoms/AppIcon.vue";
 import ConfirmDialog from "../molecules/ConfirmDialog.vue";
 import SearchButton from "../molecules/SearchButton.vue";
 import { useUpdatesStore } from "../../stores/updates.js";
-import { dispatchWorkflow, runsUrl } from "../../domain/github.js";
+import { dispatchWorkflow, newRunId, runsUrl } from "../../domain/github.js";
 import { t } from "../../i18n/index.js";
 
 /**
@@ -34,12 +34,12 @@ async function run() {
   const value = saved.value || token.value.trim();
   if (!value) return;
   state.value = "sending";
-  const startedAt = Date.now();
+  const runId = newRunId();
   try {
-    await dispatchWorkflow(value, WORKFLOW);
+    await dispatchWorkflow(value, WORKFLOW, runId);
     save(value); saved.value = value; token.value = "";
     state.value = "done";
-    updates.track(value, startedAt);
+    updates.track(value, runId);
   } catch (e) {
     error.value = e.message;
     state.value = "error";
