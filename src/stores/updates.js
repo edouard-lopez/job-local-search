@@ -1,13 +1,14 @@
 import { defineStore } from "pinia";
 import built from "../data/offers-updated.json";
 import { findDispatchRun } from "../domain/github.js";
+import { readStorage, writeStorage } from "../domain/storage.js";
 
 const WORKFLOW = "update-offers.yml";
 const KEY = "update-run";
 const POLL_MS = 15_000;
 const GIVE_UP_MS = 90 * 60_000;
-const read = () => { try { return JSON.parse(localStorage.getItem(KEY)); } catch { return null; } };
-const write = (v) => { try { v ? localStorage.setItem(KEY, JSON.stringify(v)) : localStorage.removeItem(KEY); } catch { /* storage unavailable */ } };
+const read = () => { try { return JSON.parse(readStorage(KEY)); } catch { return null; } };
+const write = (v) => writeStorage(KEY, v ? JSON.stringify(v) : null);
 
 /**
  * Follows the "update offers" workflow once it is started, and records when the offers were last updated.

@@ -4,6 +4,7 @@ import raw from "../../../data/mises-a-jour.md?raw";
 import AppIcon from "../atoms/AppIcon.vue";
 import MarkdownBlocks from "../molecules/MarkdownBlocks.vue";
 import { fingerprint, parseUpdates } from "../../domain/markdown.js";
+import { readStorage, writeStorage } from "../../domain/storage.js";
 import { repoUrl } from "../../domain/github.js";
 import { t } from "../../i18n/index.js";
 
@@ -11,8 +12,8 @@ import { t } from "../../i18n/index.js";
 const latest = parseUpdates(raw)[0] ?? null;
 const stamp = latest ? `${latest.title}#${fingerprint(latest.body)}` : "";
 const KEY = "seen-update";
-const read = () => { try { return localStorage.getItem(KEY) ?? ""; } catch { return ""; } };
-const write = (v) => { try { localStorage.setItem(KEY, v); } catch { /* storage unavailable */ } };
+const read = () => readStorage(KEY) ?? "";
+const write = (v) => writeStorage(KEY, v);
 
 const uid = useId();
 const open = ref(false);

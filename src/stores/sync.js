@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import * as Y from "yjs";
 import { deviceLabel } from "../domain/device.js";
 import { joinPeers } from "../domain/p2p.js";
+import { readStorage as read, writeStorage as write } from "../domain/storage.js";
 import { createGist, readGist, writeGist, toBase64, fromBase64 } from "../domain/gist.js";
 
 const SETTINGS_KEY = "sync";
@@ -12,8 +13,6 @@ const DIAG_EVERY_MS = 2000;
 /** Re-read the Gist this often while the page is visible: syncs devices that cannot link directly (4G). */
 const PULL_EVERY_MS = 30000;
 
-const read = (key) => { try { return localStorage.getItem(key); } catch { return null; } };
-const write = (key, value) => { try { value == null ? localStorage.removeItem(key) : localStorage.setItem(key, value); } catch { /* storage unavailable */ } };
 
 /** One Yjs document per browser: the triage map, cached locally, shared peer to peer and saved in a Gist. */
 export const doc = new Y.Doc();
