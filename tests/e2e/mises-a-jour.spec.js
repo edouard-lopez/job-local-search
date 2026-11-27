@@ -20,3 +20,11 @@ test("le styleguide rend les liens non sûrs en texte", async ({ page }) => {
   await expect(md.locator("li")).toHaveCount(2);
   await expect(md.locator("a[href^='javascript']")).toHaveCount(0);
 });
+
+test("la cloche distingue offres retirées (rouge) et ajoutées (vert)", async ({ page }) => {
+  await page.goto("/#/");
+  await page.getByTestId("bell").click();
+  const diff = page.getByTestId("diff");
+  await expect(diff.locator("[data-diff='-']")).toHaveCount(6);
+  await expect(diff.locator("[data-diff='-']").first()).toContainText("Team.is");
+});

@@ -18,8 +18,18 @@ export function parseUpdates(md) {
 export function parseBlocks(body) {
   const blocks = [];
   let current = null;
+  let diff = null;
   for (const raw of body.split("\n")) {
     const line = raw.trimEnd();
+    if (/^```diff\s*$/.test(line)) { diff = { type: "diff", lines: [] }; blocks.push(diff); current = null; continue; }
+    if (diff) {
+      if (/^```\s*$/.test(line)) diff = null;
+      else if (line.trim()) {
+        const m = line.match(/^([+-]) ?(.*)/);
+        diff.lines.push(m ? { sign: m[1], text: m[2] } : { sign: " ", text: line.trim() });
+      }
+      continue;
+    }
     if (!line.trim()) { current = null; continue; }
     const item = line.match(/^\s*[-*] (.*)/);
     if (item) {
