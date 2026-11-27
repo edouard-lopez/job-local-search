@@ -4,6 +4,7 @@ import AppIcon from "../atoms/AppIcon.vue";
 import ConfirmDialog from "../molecules/ConfirmDialog.vue";
 import SearchButton from "../molecules/SearchButton.vue";
 import { useUpdatesStore } from "../../stores/updates.js";
+import { readStorage, writeStorage } from "../../domain/storage.js";
 import { dispatchWorkflow, newRunId, runsUrl } from "../../domain/github.js";
 import { t } from "../../i18n/index.js";
 
@@ -13,8 +14,8 @@ import { t } from "../../i18n/index.js";
  */
 const WORKFLOW = "update-offers.yml";
 const KEY = "github-actions-token";
-const read = () => { try { return localStorage.getItem(KEY) ?? ""; } catch { return ""; } };
-const save = (v) => { try { v ? localStorage.setItem(KEY, v) : localStorage.removeItem(KEY); } catch { /* storage unavailable */ } };
+const read = () => readStorage(KEY) ?? "";
+const save = (v) => writeStorage(KEY, v);
 
 const updates = useUpdatesStore();
 const phase = computed(() => (updates.phase === "failed" ? "idle" : updates.phase));
