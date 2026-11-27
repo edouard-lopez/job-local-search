@@ -11,7 +11,7 @@ export default defineConfig({
   reporter: process.env.CI ? "github" : "list",
   use: { baseURL: `http://127.0.0.1:${PORT}`, trace: "off", locale: "fr-FR" },
   webServer: {
-    command: process.env.E2E_SERVER ?? "npm run build && npm run preview",
+    command: process.env.E2E_SERVER ?? "E2E_DATA=1 npm run build && npm run preview",
     url: `http://127.0.0.1:${PORT}`,
     reuseExistingServer: !process.env.CI,
   },

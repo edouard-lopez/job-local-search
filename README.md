@@ -11,7 +11,7 @@ Carte et tableau des offres informatiques (ingénieur, DevOps, sysadmin, dévelo
   - `i18n/fr.json` : tous les textes de l'interface.
 - `#/styleguide` montre chaque composant ; `#/changelog` montre l'historique des commits.
 - `data/offres-source.json` : la saisie. `scripts/build.py` en tire `offres.json`, `offres.csv` et `known-technos.json`.
-- `tests/e2e/` : tests Playwright qui garantissent les fonctionnalités entre deux versions.
+- `tests/e2e/` : tests Playwright qui garantissent les fonctionnalités entre deux versions. Ils tournent sur une copie figée des offres (`tests/e2e/data/offres.json`), pas sur les données du jour.
 - `tests/unit/` : tests Vitest rapides de la logique (`src/domain/`).
 
 ```sh
