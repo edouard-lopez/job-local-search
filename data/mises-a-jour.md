@@ -4,6 +4,17 @@ Journal de la recherche : une section par mise à jour, de la plus récente à l
 
 ## Mise à jour du 27/11/2026
 
+- **5 offres** revérifiées. **Retirée** : UPPA/IUT d'Anglet, la page indique « L'offre a été dépubliée, elle n'est donc plus accessible ».
+- **Conservées** (4) : Éditeur mobilité (x2), Epsyl, Hoist Group. Pages hellowork ouvertes, sans mention d'expiration.
+- Salaires des deux offres Éditeur mobilité : l'annonce précise **brut**, champ `brut` corrigé en `true`. Aucun salaire écrit pour Hoist Group.
+- Recherche web ([France Travail](https://candidat.francetravail.fr/offres/recherche), [Welcome to the Jungle](https://www.welcometothejungle.com/fr/pages/emploi-devops-infra-pyrenees-atlantiques)) : pistes à Bayonne et Anglet non lues ou non datées, donc **non ajoutées**.
+
+```diff
+- Ingénieur d'étude en informatique système et réseaux (UPPA / IUT)
+```
+
+## Mise à jour du 27/11/2026
+
 - **5 offres** revérifiées (hellowork, choisirleservicepublic) : pages ouvertes, aucune mention explicite d'expiration. Toutes **conservées**, aucune retirée.
 - Salaires déjà renseignés pour 3 offres ; aucun salaire écrit pour UPPA/IUT et Hoist Group.
 - Recherche web : pistes à Pau (Akkodis, ISAGRI, Capgemini) et Anglet (DevOps Cloud en intérim) sans date ni page lue directement, donc **non ajoutées**. Pages des mairies non relues.
