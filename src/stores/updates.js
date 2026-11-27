@@ -6,8 +6,8 @@ const WORKFLOW = "update-offers.yml";
 const KEY = "update-run";
 const POLL_MS = 15_000;
 const GIVE_UP_MS = 90 * 60_000;
-const read = () => { try { return Number(localStorage.getItem(KEY)) || 0; } catch { return 0; } };
-const write = (v) => { try { v ? localStorage.setItem(KEY, String(v)) : localStorage.removeItem(KEY); } catch { /* storage unavailable */ } };
+const read = () => { try { return JSON.parse(localStorage.getItem(KEY)); } catch { return null; } };
+const write = (v) => { try { v ? localStorage.setItem(KEY, JSON.stringify(v)) : localStorage.removeItem(KEY); } catch { /* storage unavailable */ } };
 
 /**
  * Follows the "update offers" workflow once it is started, and records when the offers were last updated.
@@ -16,15 +16,15 @@ const write = (v) => { try { v ? localStorage.setItem(KEY, String(v)) : localSto
 export const useUpdatesStore = defineStore("updates", {
   state: () => ({ updated: built.updated, phase: "idle", error: "", runUrl: "" }),
   actions: {
-    /** Poll the run started at `startedAt` (ms) until it ends. */
-    async track(token, startedAt) {
+    /** Poll the run identified by `runId` (started at `startedAt`, ms) until it ends. */
+    async track(token, runId, startedAt = Date.now()) {
       this.phase = "running";
       this.error = "";
-      write(startedAt);
+      write({ runId, startedAt });
       const poll = async () => {
         if (this.phase !== "running") return;
         try {
-          const run = await findDispatchRun(token, WORKFLOW, startedAt);
+          const run = await findDispatchRun(token, WORKFLOW, runId);
           if (run?.html_url) this.runUrl = run.html_url;
           if (run?.status === "completed") return this.finish(run);
         } catch (e) {
@@ -51,8 +51,8 @@ export const useUpdatesStore = defineStore("updates", {
     },
     /** After a page reload: follow a run that was started before it. */
     resume(token) {
-      const startedAt = read();
-      if (token && startedAt && this.phase === "idle") this.track(token, startedAt);
+      const saved = read();
+      if (token && saved?.runId && this.phase === "idle") this.track(token, saved.runId, saved.startedAt);
     },
   },
 });
