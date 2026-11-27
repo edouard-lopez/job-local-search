@@ -47,4 +47,4 @@ Tous : CDI, CDD (avec durée), freelance, intérim, alternance, fonction publiqu
 
 ## Journal des mises à jour
 
-`data/mises-a-jour.md` garde une section `## Mise à jour du JJ/MM/AAAA` par passage, la plus récente en premier. Format : puces, **gras**, `code`, liens https. La dernière section s'affiche dans la cloche de l'application.
+`data/mises-a-jour.md` garde une section `## Mise à jour du JJ/MM/AAAA` par passage, la plus récente en premier. Format : puces, **gras**, `code`, liens https. Les offres ajoutées ou retirées vont dans un bloc ```diff (`+ Titre` pour une ajout, `- Titre` pour un retrait). La dernière section s'affiche dans la cloche de l'application.

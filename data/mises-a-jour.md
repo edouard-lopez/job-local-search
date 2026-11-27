@@ -4,7 +4,18 @@ Journal de la recherche : une section par mise à jour, de la plus récente à l
 
 ## Mise à jour du 27/11/2026
 
-- 11 offres revérifiées. Retirées (pages hellowork indiquant « n'est plus disponible ») : Team.is, Only Networks, Capgemini Software Engineer, Adaxis, Safran/Crit, Capgemini Java. Conservées : Éditeur mobilité (x2), Epsyl, UPPA/IUT, Hoist Group (pages ouvertes ; aucun salaire écrit pour UPPA et Hoist).
+- 11 offres revérifiées. Retirées (pages hellowork indiquant « n'est plus disponible ») :
+
+```diff
+- Team.is
+- Only Networks
+- Capgemini Software Engineer
+- Adaxis
+- Safran/Crit
+- Capgemini Java
+```
+
+- Conservées : Éditeur mobilité (x2), Epsyl, UPPA/IUT, Hoist Group (pages ouvertes ; aucun salaire écrit pour UPPA et Hoist).
 - Recherches web (France Travail, Welcome to the Jungle, choisirleservicepublic, emploi-territorial) : aucune nouvelle offre datée et vérifiée en zone. Haut Béarn (administrateur systèmes et réseaux, avis 2025-12) : ancien, non retenu. Urrugne, Saint-Pierre-du-Mont, Bayonne (SIRH) hors zone ou hors profil. Pages des mairies non relues.
 
 ## Mise à jour du 21/11/2026
@@ -17,7 +28,11 @@ Journal de la recherche : une section par mise à jour, de la plus récente à l
 ## Mise à jour du 21/11/2026
 
 - 12 offres revérifiées (hellowork, choisirleservicepublic) : aucune mention explicite d'expiration, toutes conservées. Les 6 pages hellowork en HTTP 410 (Team.is, Only Networks, Capgemini Software Engineer, Adaxis, Safran/Crit, Capgemini Java) restent à vérifier à la main.
-- Ajoutée : Hoist Group, Ingénieur DevOps à Pau (hellowork 58494005, publiée le 31/10/2026, zone Lasseube/Pau). Salaire non indiqué par l'annonce (estimation Hellowork ignorée).
+- Offres ajoutées (hellowork 58494005, publiée le 31/10/2026, zone Lasseube/Pau). Salaire non indiqué par l'annonce (estimation Hellowork ignorée) :
+
+```diff
++ Hoist Group, Ingénieur DevOps à Pau
+```
 - Recherche web : Capgemini DevOps-Cloud Pau (hellowork 82018264) déjà « n'est plus disponible » ; France Travail Bayonne (5761920) introuvable (404). Autres offres Pau/Anglet vues dans les résultats mais non lues : non ajoutées. Pages des mairies non relues.
 
 ## Mise à jour du 20/11/2026
