@@ -45,24 +45,38 @@ const startSearch = async (page) => {
   await dialog.getByRole("button", { name: "Fermer" }).click();
 };
 
+/**
+ * Fake GitHub: records the tracking id sent with the dispatch, then lists the runs.
+ * A run by someone else (newer, already finished) is always listed too: it must never be picked.
+ */
+async function mockWorkflow(page, runOf) {
+  const state = { nonce: "", polls: 0, dispatchBody: null, listAuth: null, listUrl: "" };
+  const other = { html_url: "https://github.com/edouard-lopez/job-local-search/actions/runs/1", display_title: "Mettre à jour les offres ",
+    created_at: new Date(Date.now() + 1000).toISOString(), status: "completed", conclusion: "success", updated_at: new Date(Date.now() + 5000).toISOString() };
+  await page.route("**/actions/workflows/*/dispatches", (r) => {
+    state.dispatchBody = r.request().postDataJSON();
+    state.nonce = state.dispatchBody.inputs?.nonce ?? "";
+    r.fulfill({ status: 204 });
+  });
+  await page.route("**/actions/workflows/*/runs**", (r) => {
+    state.polls++;
+    state.listAuth = r.request().headers().authorization;
+    state.listUrl = r.request().url();
+    const ours = { html_url: "https://github.com/edouard-lopez/job-local-search/actions/runs/42", display_title: `Mettre à jour les offres ${state.nonce}`,
+      created_at: new Date().toISOString(), ...runOf(state.polls) };
+    r.fulfill({ json: { workflow_runs: [other, ours] } });
+  });
+  return state;
+}
+
 test.describe("suivi du workflow", () => {
   test.beforeEach(async ({ page }) => { await page.clock.install(); await page.goto("/"); });
 
   test("en cours, puis ✔ vert à la place du bouton, et la date est mise à jour", async ({ page }) => {
     const future = new Date(Date.now() + 2 * 86_400_000);
-    let polls = 0;
-    const seen = [];
-    await page.route("**/actions/workflows/*/dispatches", (r) => r.fulfill({ status: 204 }));
-    await page.route("**/actions/workflows/*/runs**", (r) => {
-      polls++;
-      seen.push({ url: r.request().url(), auth: r.request().headers().authorization });
-      const done = polls >= 2;
-      r.fulfill({ json: { workflow_runs: [{
-        html_url: "https://github.com/edouard-lopez/job-local-search/actions/runs/42",
-        created_at: new Date(Date.now() - 1000).toISOString(),
-        status: done ? "completed" : "in_progress", conclusion: done ? "success" : null,
-        updated_at: future.toISOString() }] } });
-    });
+    const gh = await mockWorkflow(page, (polls) => polls >= 2
+      ? { status: "completed", conclusion: "success", updated_at: future.toISOString() }
+      : { status: "in_progress", conclusion: null, updated_at: new Date().toISOString() });
     await startSearch(page);
     const footer = page.getByRole("contentinfo");
     const running = footer.getByTestId("update-running");
@@ -79,14 +93,34 @@ test.describe("suivi du workflow", () => {
     await expect(footer.getByRole("button", { name: "Chercher des offres" })).toHaveCount(0);
     await expect(footer.locator("time")).toHaveText("offres d'aujourd'hui");
     await expect(footer.locator("time abbr")).toHaveAttribute("title", `Dernière mise à jour : ${future.toLocaleString("fr-FR", { dateStyle: "long", timeStyle: "short" })}`);
-    expect(seen[0].url).toMatch(/\/workflows\/update-offers\.yml\/runs\?event=workflow_dispatch/);
-    expect(seen[0].auth).toBe("Bearer github_pat_test");
+    expect(gh.nonce).toMatch(/^[0-9a-f]{12}$/);
+    expect(gh.dispatchBody).toEqual({ ref: "main", inputs: { nonce: gh.nonce } });
+    expect(gh.listUrl).toMatch(/\/workflows\/update-offers\.yml\/runs\?event=workflow_dispatch/);
+    expect(gh.listAuth).toBe("Bearer github_pat_test");
+  });
+
+  test("une autre exécution manuelle plus récente n'est jamais suivie", async ({ page }) => {
+    await mockWorkflow(page, () => ({ status: "in_progress", conclusion: null, updated_at: new Date().toISOString() }));
+    await startSearch(page);
+    await page.clock.fastForward(40_000);
+    const running = page.getByTestId("update-running");
+    await expect(running).toBeVisible();
+    await expect(running.getByRole("link")).toHaveAttribute("href", /\/runs\/42$/);
+    await expect(page.getByTestId("update-done")).toHaveCount(0);
+  });
+
+  test("tant que GitHub ne liste pas notre exécution, le lien mène à la liste des exécutions", async ({ page }) => {
+    await page.route("**/actions/workflows/*/dispatches", (r) => r.fulfill({ status: 204 }));
+    await page.route("**/actions/workflows/*/runs**", (r) => r.fulfill({ json: { workflow_runs: [
+      { html_url: "https://github.com/x/y/actions/runs/1", display_title: "Mettre à jour les offres ", status: "completed", conclusion: "success", created_at: new Date().toISOString(), updated_at: new Date().toISOString() }] } }));
+    await startSearch(page);
+    await page.clock.fastForward(40_000);
+    await expect(page.getByTestId("update-running").getByRole("link")).toHaveAttribute("href", /\/actions\/workflows\/update-offers\.yml\?query=event%3Aworkflow_dispatch$/);
+    await expect(page.getByTestId("update-done")).toHaveCount(0);
   });
 
   test("un échec du workflow remet le bouton et affiche l'erreur", async ({ page }) => {
-    await page.route("**/actions/workflows/*/dispatches", (r) => r.fulfill({ status: 204 }));
-    await page.route("**/actions/workflows/*/runs**", (r) => r.fulfill({ json: { workflow_runs: [{
-      created_at: new Date().toISOString(), status: "completed", conclusion: "failure", updated_at: new Date().toISOString() }] } }));
+    await mockWorkflow(page, () => ({ status: "completed", conclusion: "failure", updated_at: new Date().toISOString() }));
     await startSearch(page);
     await expect(page.getByRole("alert")).toContainText("La recherche a échoué (failure)");
     await expect(page.getByRole("contentinfo").getByRole("button", { name: "Chercher des offres" })).toBeVisible();
@@ -94,13 +128,9 @@ test.describe("suivi du workflow", () => {
   });
 
   test("après un rechargement, le suivi reprend avec le jeton enregistré", async ({ page }) => {
-    let polls = 0;
-    await page.route("**/actions/workflows/*/dispatches", (r) => r.fulfill({ status: 204 }));
-    await page.route("**/actions/workflows/*/runs**", (r) => {
-      polls++;
-      r.fulfill({ json: { workflow_runs: [{ created_at: new Date().toISOString(), status: polls >= 3 ? "completed" : "queued",
-        conclusion: polls >= 3 ? "success" : null, updated_at: new Date().toISOString() }] } });
-    });
+    await mockWorkflow(page, (polls) => polls >= 3
+      ? { status: "completed", conclusion: "success", updated_at: new Date().toISOString() }
+      : { status: "queued", conclusion: null, updated_at: new Date().toISOString() });
     await startSearch(page);
     await page.reload();
     await expect(page.getByTestId("update-running")).toBeVisible();

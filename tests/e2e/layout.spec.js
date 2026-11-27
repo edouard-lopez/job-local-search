@@ -33,7 +33,7 @@ test.describe("Mise en page", () => {
     expect(requests[0].url()).toMatch(/\/repos\/edouard-lopez\/job-local-search\/actions\/workflows\/update-offers\.yml\/dispatches$/);
     expect(requests[0].method()).toBe("POST");
     expect(requests[0].headers().authorization).toBe("Bearer github_pat_test");
-    expect(requests[0].postDataJSON()).toEqual({ ref: "main" });
+    expect(requests[0].postDataJSON()).toEqual({ ref: "main", inputs: { nonce: expect.stringMatching(/^[0-9a-f]{12}$/) } });
     await dialog.getByRole("button", { name: "Fermer" }).click();
     await expect(page.getByTestId("update-running")).toBeVisible();
     expect(await page.evaluate(() => localStorage.getItem("github-actions-token"))).toBe("github_pat_test");
