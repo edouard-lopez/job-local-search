@@ -48,7 +48,7 @@ async function run() {
 </script>
 
 <template>
-  <SearchButton :phase="phase" @click="show" />
+  <SearchButton :phase="phase" :href="updates.runUrl || runsUrl(WORKFLOW)" @click="show" />
   <p v-if="updates.phase === 'failed'" role="alert" class="flex items-center gap-1 text-red-700 dark:text-red-400">
     <AppIcon name="x" />{{ t("update-offers-failed", updates.error) }}
   </p>

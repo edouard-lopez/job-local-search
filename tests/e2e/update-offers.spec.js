@@ -58,13 +58,18 @@ test.describe("suivi du workflow", () => {
       seen.push({ url: r.request().url(), auth: r.request().headers().authorization });
       const done = polls >= 2;
       r.fulfill({ json: { workflow_runs: [{
+        html_url: "https://github.com/edouard-lopez/job-local-search/actions/runs/42",
         created_at: new Date(Date.now() - 1000).toISOString(),
         status: done ? "completed" : "in_progress", conclusion: done ? "success" : null,
         updated_at: future.toISOString() }] } });
     });
     await startSearch(page);
     const footer = page.getByRole("contentinfo");
-    await expect(footer.getByTestId("update-running")).toContainText("Recherche en cours");
+    const running = footer.getByTestId("update-running");
+    await expect(running).toContainText("Recherche en cours");
+    await expect(running.getByRole("link", { name: /Recherche en cours/ })).toHaveAttribute("href", "https://github.com/edouard-lopez/job-local-search/actions/runs/42");
+    await expect(running.getByRole("link")).toHaveAttribute("target", "_blank");
+    await expect(footer.getByTestId("update-spinner")).toHaveCSS("animation-name", "spin");
     await expect(footer.getByRole("button", { name: "Chercher des offres" })).toHaveCount(0);
     await page.clock.fastForward(16_000);
     const done = footer.getByTestId("update-done");
@@ -100,4 +105,12 @@ test.describe("suivi du workflow", () => {
     await page.reload();
     await expect(page.getByTestId("update-running")).toBeVisible();
   });
+});
+
+test("la recherche en cours tourne et pointe vers les exécutions, même sans préférence de mouvement", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/#/styleguide");
+  const running = page.getByTestId("search-phases").getByTestId("update-running");
+  await expect(running.getByTestId("update-spinner")).toHaveCSS("animation-name", "spin");
+  await expect(running.getByRole("link")).toHaveAttribute("href", /\/actions/);
 });

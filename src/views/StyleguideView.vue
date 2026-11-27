@@ -68,7 +68,7 @@ const toggle = (v) => (selected.value = selected.value.includes(v) ? selected.va
         <OffersAge v-for="d in ages" :key="d" :since="d" :now="NOW" />
       </p>
       <p class="flex flex-wrap items-center gap-x-4 text-xs text-gray-500" data-testid="search-phases">
-        <SearchButton phase="idle" /><SearchButton phase="running" /><SearchButton phase="done" />
+        <SearchButton phase="idle" /><SearchButton phase="running" href="https://github.com/edouard-lopez/job-local-search/actions" /><SearchButton phase="done" />
       </p>
       <PeerList :peers="[{ id: 1, device: 'Linux · Firefox', self: true }, { id: 2, device: 'Android · Firefox' }, { id: 3, device: 'macOS · Safari' }]" />
       <SyncDiagnostic :diag="{ webrtc: true, servers: [{ url: 'wss://relay.exemple.org', ok: true }, { url: 'wss://nos.exemple.net', ok: false }], room: true, links: 1, turn: false, error: 'could not connect to peer after exchanging SDP' }" />

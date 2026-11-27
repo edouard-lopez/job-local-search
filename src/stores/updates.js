@@ -14,7 +14,7 @@ const write = (v) => { try { v ? localStorage.setItem(KEY, String(v)) : localSto
  * phase: idle | running | done | failed. `updated` starts from the build and moves to the run's end.
  */
 export const useUpdatesStore = defineStore("updates", {
-  state: () => ({ updated: built.updated, phase: "idle", error: "" }),
+  state: () => ({ updated: built.updated, phase: "idle", error: "", runUrl: "" }),
   actions: {
     /** Poll the run started at `startedAt` (ms) until it ends. */
     async track(token, startedAt) {
@@ -25,6 +25,7 @@ export const useUpdatesStore = defineStore("updates", {
         if (this.phase !== "running") return;
         try {
           const run = await findDispatchRun(token, WORKFLOW, startedAt);
+          if (run?.html_url) this.runUrl = run.html_url;
           if (run?.status === "completed") return this.finish(run);
         } catch (e) {
           if (/ 40[13]$/.test(e.message)) return this.fail(e.message);
