@@ -32,7 +32,7 @@ Une case de la carte masque cette zone.
 
 ## Méthode
 
-- Sources : HelloWork, emploi-territorial.fr et sites des mairies, le 13/11/2026. Détail commune par commune dans `data/sources-mairies.md`.
+- Sources : HelloWork, emploi-territorial.fr et sites des mairies, le 13/11/2026. Détail commune par commune dans `data/sources-mairies.md`. Journal des mises à jour (affiché par la cloche) dans `data/mises-a-jour.md`.
 - Seules des annonces réellement consultées sont listées, avec leur lien. Les offres expirées sont exclues.
 - Email et téléphone restent vides quand l'annonce ne les donne pas. Aucun contact n'est inventé.
 - **Score techno /5** : recouvrement avec le CV master (TypeScript/Node, CI/CD, Kubernetes, Docker, tests, Linux).

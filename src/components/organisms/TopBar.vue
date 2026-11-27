@@ -1,4 +1,5 @@
 <script setup>
+import NotificationBell from "./NotificationBell.vue";
 import SyncMenu from "./SyncMenu.vue";
 import { t } from "../../i18n/index.js";
 </script>
@@ -11,6 +12,7 @@ import { t } from "../../i18n/index.js";
     </div>
     <div class="flex shrink-0 items-center gap-2">
     <SyncMenu />
+    <NotificationBell />
     </div>
   </header>
 </template>

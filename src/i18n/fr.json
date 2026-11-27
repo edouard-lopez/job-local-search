@@ -111,5 +111,8 @@
   "offers-age-day": "offres de $1 {{PLURAL:$1|jour|jours}}",
   "offers-age-week": "offres de $1 {{PLURAL:$1|semaine|semaines}}",
   "offers-age-month": "offres de $1 mois",
-  "offers-age-title": "Dernière mise à jour : $1"
+  "offers-age-title": "Dernière mise à jour : $1",
+  "bell-button": "Dernière mise à jour des offres",
+  "bell-unread": "Dernière mise à jour des offres, non lue",
+  "bell-history": "Tout l'historique des mises à jour"
 }
