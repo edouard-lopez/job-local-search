@@ -11,6 +11,8 @@ import OfferMetrics from "../components/molecules/OfferMetrics.vue";
 import TechList from "../components/molecules/TechList.vue";
 import PeerList from "../components/molecules/PeerList.vue";
 import SyncDiagnostic from "../components/molecules/SyncDiagnostic.vue";
+import MarkdownBlocks from "../components/molecules/MarkdownBlocks.vue";
+import NotificationBell from "../components/organisms/NotificationBell.vue";
 import OffersAge from "../components/molecules/OffersAge.vue";
 import SearchButton from "../components/molecules/SearchButton.vue";
 import UpdateOffersButton from "../components/organisms/UpdateOffersButton.vue";
@@ -64,6 +66,7 @@ const toggle = (v) => (selected.value = selected.value.includes(v) ? selected.va
       <OfferMetrics :offer="sample" />
       <OfferMetrics :offer="{ ...sample, salaire: { min: 52, max: 60, brut: false } }" data-testid="metrics-net" />
       <TechList :technos="sample.technos" />
+      <MarkdownBlocks class="text-xs" data-testid="markdown" source="- **11 offres** revérifiées ; retirée : `hellowork 84261072`.&#10;- Source : [emploi-territorial](https://www.emploi-territorial.fr), [lien non sûr](javascript:alert(1))." />
       <p class="flex flex-wrap items-center gap-x-4 text-xs text-gray-500" data-testid="ages">
         <OffersAge v-for="d in ages" :key="d" :since="d" :now="NOW" />
       </p>
@@ -75,8 +78,8 @@ const toggle = (v) => (selected.value = selected.value.includes(v) ? selected.va
     </section>
 
     <section class="space-y-3">
-      <h3 class="font-semibold">Organismes : menu des pairs, recherche d'offres</h3>
-      <div class="flex justify-end gap-2"><SyncMenu /><UpdateOffersButton /></div>
+      <h3 class="font-semibold">Organismes : menu des pairs, cloche des mises à jour, recherche d'offres</h3>
+      <div class="flex justify-end gap-2"><SyncMenu /><NotificationBell /><UpdateOffersButton /></div>
     </section>
 
     <section class="space-y-3">

@@ -44,3 +44,7 @@ Tous : CDI, CDD (avec durée), freelance, intérim, alternance, fonction publiqu
 - Ne jamais inventer un email, un téléphone ou une offre : laisser vide.
 - Mission résumée en 250 mots max, en français.
 - Champ `salaire` : seulement s'il est écrit dans l'annonce, sinon l'omettre. Format : `{"min": 38, "max": 45, "brut": true}`, en k€ par an (convertir un salaire mensuel × 12). `brut` vaut false si l'annonce donne du net ou ne précise pas.
+
+## Journal des mises à jour
+
+`data/mises-a-jour.md` garde une section `## Mise à jour du JJ/MM/AAAA` par passage, la plus récente en premier. Format : puces, **gras**, `code`, liens https. La dernière section s'affiche dans la cloche de l'application.
