@@ -1,8 +1,8 @@
 import { test as base, expect } from "@playwright/test";
 import { readFileSync } from "node:fs";
 
-/** Offers as published: the page and the tests read the same file. */
-export const OFFERS = JSON.parse(readFileSync(new URL("../../data/offres.json", import.meta.url)));
+/** A frozen copy of the offers: the e2e build reads the same file (E2E_DATA=1, see vite.config.js). */
+export const OFFERS = JSON.parse(readFileSync(new URL("./data/offres.json", import.meta.url)));
 
 /** Known technos, parsed from SEARCH-CRITERIA.md the same way the build does. */
 const criteria = readFileSync(new URL("../../SEARCH-CRITERIA.md", import.meta.url), "utf8");
