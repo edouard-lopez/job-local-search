@@ -4,6 +4,16 @@ Journal de la recherche : une section par mise à jour, de la plus récente à l
 
 ## Mise à jour du 27/11/2026
 
+- **4 offres** revérifiées sur hellowork : pages ouvertes, sans mention d'expiration. Toutes **conservées**, aucune retirée.
+- Dates de publication des deux offres Éditeur mobilité corrigées : la page indique **24/11/2026**. Salaires inchangés : **45-50 k€** et **35-42 k€** (Epsyl : **35-47 k€**, brut non précisé). Aucun salaire écrit pour Hoist Group (estimation Hellowork ignorée).
+- Recherche web ([France Travail](https://candidat.francetravail.fr/offres/recherche), [Welcome to the Jungle](https://www.welcometothejungle.com/fr/pages/emploi-devops-infra-pyrenees-atlantiques)) : pistes à Bayonne, Anglet et Tarnos non lues ou non datées, donc **non ajoutées**.
+
+```diff
+# aucune offre ajoutée ni retirée
+```
+
+## Mise à jour du 27/11/2026
+
 - **5 offres** revérifiées. **Retirée** : UPPA/IUT d'Anglet, la page indique « L'offre a été dépubliée, elle n'est donc plus accessible ».
 - **Conservées** (4) : Éditeur mobilité (x2), Epsyl, Hoist Group. Pages hellowork ouvertes, sans mention d'expiration.
 - Salaires des deux offres Éditeur mobilité : l'annonce précise **brut**, champ `brut` corrigé en `true`. Aucun salaire écrit pour Hoist Group.
