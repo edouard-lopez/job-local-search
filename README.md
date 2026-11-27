@@ -55,7 +55,7 @@ Une case de la carte masque cette zone.
 ## Publication sur GitHub
 
 - `pages.yml` publie la carte sur GitHub Pages à chaque push sur `main`.
-- `update-offers.yml` (bouton « ↻ Mettre à jour les offres ») : Claude relit `SEARCH-CRITERIA.md`, refait la recherche, committe et republie.
+- `update-offers.yml` (bouton « ↻ Chercher des offres » du pied de page) : Claude relit `SEARCH-CRITERIA.md`, refait la recherche, committe et republie.
 - `generate-application.yml` (lien « ✉ Candidature » sur chaque offre) : lance « Run workflow » avec le numéro de l'offre. Claude applique le skill `adapter-candidature` et dépose CV + lettre en artefact du run.
 - Seul `edouard-lopez` peut lancer ces workflows. Les autres doivent se connecter avec ce compte ou forker le dépôt.
 

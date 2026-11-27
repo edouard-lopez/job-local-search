@@ -3,18 +3,18 @@ import { test, expect, OFFERS, visibleCount } from "./fixtures.js";
 test.describe("Mise en page", () => {
   test.beforeEach(async ({ page }) => { await page.goto("/"); });
 
-  test("affiche le titre, la carte et le bouton de mise à jour", async ({ page }) => {
+  test("affiche le titre, la carte et le bouton de recherche d'offres", async ({ page }) => {
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Offres informatique autour d'Orx");
     await expect(page.getByRole("region", { name: /Carte des offres/ })).toBeVisible();
-    await expect(page.getByRole("button", { name: /Mettre à jour les offres/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /Chercher des offres/ })).toBeVisible();
   });
 
-  test("mettre à jour les offres demande une confirmation ; annuler ne lance rien", async ({ page }) => {
+  test("chercher des offres demande une confirmation ; annuler ne lance rien", async ({ page }) => {
     let calls = 0;
     await page.route("**/actions/workflows/*/dispatches", (r) => { calls++; r.fulfill({ status: 204 }); });
-    await page.getByRole("button", { name: /Mettre à jour les offres/ }).click();
-    const dialog = page.getByRole("dialog", { name: "Mettre à jour les offres" });
-    await expect(dialog).toContainText("Lancer la mise à jour des offres ?");
+    await page.getByRole("button", { name: /Chercher des offres/ }).click();
+    const dialog = page.getByRole("dialog", { name: "Chercher des offres" });
+    await expect(dialog).toContainText("Lancer la recherche d'offres ?");
     await dialog.getByRole("button", { name: "Annuler" }).click();
     await expect(dialog).toBeHidden();
     expect(calls).toBe(0);
@@ -23,26 +23,26 @@ test.describe("Mise en page", () => {
   test("confirmer lance le workflow avec le jeton, puis le garde", async ({ page }) => {
     const requests = [];
     await page.route("**/actions/workflows/*/dispatches", (r) => { requests.push(r.request()); r.fulfill({ status: 204 }); });
-    await page.getByRole("button", { name: /Mettre à jour les offres/ }).click();
-    const dialog = page.getByRole("dialog", { name: "Mettre à jour les offres" });
+    await page.route("**/actions/workflows/*/runs**", (r) => r.fulfill({ json: { workflow_runs: [] } }));
+    await page.getByRole("button", { name: /Chercher des offres/ }).click();
+    const dialog = page.getByRole("dialog", { name: "Chercher des offres" });
     await dialog.getByLabel("Jeton GitHub").fill("github_pat_test");
     await dialog.getByRole("button", { name: "Lancer" }).click();
-    await expect(dialog.getByRole("status")).toContainText("Mise à jour lancée");
+    await expect(dialog.getByRole("status")).toContainText("Recherche lancée");
     expect(requests).toHaveLength(1);
     expect(requests[0].url()).toMatch(/\/repos\/edouard-lopez\/job-local-search\/actions\/workflows\/update-offers\.yml\/dispatches$/);
     expect(requests[0].method()).toBe("POST");
     expect(requests[0].headers().authorization).toBe("Bearer github_pat_test");
     expect(requests[0].postDataJSON()).toEqual({ ref: "main" });
     await dialog.getByRole("button", { name: "Fermer" }).click();
-    await page.getByRole("button", { name: /Mettre à jour les offres/ }).click();
-    await expect(dialog.getByLabel("Jeton GitHub")).toHaveCount(0);
-    await expect(dialog).toContainText("Jeton GitHub enregistré");
+    await expect(page.getByTestId("update-running")).toBeVisible();
+    expect(await page.evaluate(() => localStorage.getItem("github-actions-token"))).toBe("github_pat_test");
   });
 
   test("un échec de lancement s'affiche et ne garde pas le jeton", async ({ page }) => {
     await page.route("**/actions/workflows/*/dispatches", (r) => r.fulfill({ status: 403 }));
-    await page.getByRole("button", { name: /Mettre à jour les offres/ }).click();
-    const dialog = page.getByRole("dialog", { name: "Mettre à jour les offres" });
+    await page.getByRole("button", { name: /Chercher des offres/ }).click();
+    const dialog = page.getByRole("dialog", { name: "Chercher des offres" });
     await dialog.getByLabel("Jeton GitHub").fill("mauvais");
     await dialog.getByRole("button", { name: "Lancer" }).click();
     await expect(dialog.getByRole("alert")).toContainText("GitHub 403");

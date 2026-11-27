@@ -5,3 +5,4 @@ test-results/
 playwright-report/
 dist/
 src/data/changelog.json
+src/data/offers-updated.json

@@ -1,10 +1,10 @@
 {
   "app-title": "Offres informatique autour d'Orx",
   "app-subtitle": "La liste suit la zone visible de la carte. Cliquez une offre pour voir l'itinéraire.",
-  "update-offers": "Mettre à jour les offres",
-  "update-offers-hint": "Lance le workflow de mise à jour sur GitHub",
+  "update-offers": "Chercher des offres",
+  "update-offers-hint": "Lance la recherche de nouvelles offres sur GitHub",
   "update-offers-run": "Lancer",
-  "update-offers-started": "Mise à jour lancée. Elle prend quelques minutes.",
+  "update-offers-started": "Recherche lancée. Elle prend quelques minutes. Le pied de page affichera ✔ à la fin.",
   "update-offers-follow": "Suivre l'exécution sur GitHub",
   "update-offers-token": "Jeton GitHub",
   "update-offers-token-help": "Jeton fine-grained limité à ce dépôt, avec la permission « Actions : lecture et écriture ». Il reste dans ce navigateur.",
@@ -94,7 +94,7 @@
   "diag-turn-off": "Aucun serveur TURN : la 4G/5G peut bloquer les liens directs",
   "diag-error": "Dernière erreur : $1",
   "nav-repo": "Code source",
-  "update-offers-confirm": "Lancer la mise à jour des offres ? Le workflow GitHub consomme des crédits Claude.",
+  "update-offers-confirm": "Lancer la recherche d'offres ? Le workflow GitHub consomme des crédits Claude.",
   "sync-network": "Réseau (avancé)",
   "sync-turn-placeholder": "iceServers: [ { urls: \"turn:…\", username: \"…\", credential: \"…\" } ]",
   "sync-turn-valid": "$1 {{PLURAL:$1|adresse TURN reconnue|adresses TURN reconnues}}, avec identifiant",
@@ -102,5 +102,14 @@
   "sync-turn-current": "TURN configuré ($1 {{PLURAL:$1|adresse|adresses}}).",
   "sync-turn-clear": "Retirer",
   "status-ok": "(OK)",
-  "status-ko": "(problème)"
+  "status-ko": "(problème)",
+  "update-offers-running": "Recherche en cours…",
+  "update-offers-done": "Recherche terminée",
+  "update-offers-done-hint": "Recharge la page pour voir les nouvelles offres",
+  "update-offers-failed": "La recherche a échoué ($1)",
+  "offers-age-today": "offres d'aujourd'hui",
+  "offers-age-day": "offres de $1 {{PLURAL:$1|jour|jours}}",
+  "offers-age-week": "offres de $1 {{PLURAL:$1|semaine|semaines}}",
+  "offers-age-month": "offres de $1 mois",
+  "offers-age-title": "Dernière mise à jour : $1"
 }

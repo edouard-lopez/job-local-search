@@ -16,7 +16,7 @@ test.describe("Carte d'une offre", () => {
     const o = nearOffer((x) => x.entite.split(/\s+/).length > 3);
     test.skip(!o, "aucune entreprise au nom long près d'Orx");
     const c = card(page, o);
-    const abbr = c.locator("abbr");
+    const abbr = c.locator("abbr").first();
     await expect(abbr).toHaveAttribute("title", o.entite);
     await expect(abbr).toHaveText(o.entite.split(/\s+/).slice(0, 3).join(" ") + "…");
   });

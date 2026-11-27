@@ -3,13 +3,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "predev": "npm run changelog",
+    "predev": "npm run generate",
     "dev": "vite",
     "build:data": "python3 scripts/build.py",
-    "prebuild": "npm run changelog",
+    "prebuild": "npm run generate",
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1 --port 4173 --strictPort",
+    "generate": "npm run changelog && npm run offers-date",
     "changelog": "node scripts/changelog.mjs",
+    "offers-date": "node scripts/offers-date.mjs",
     "test:e2e": "playwright test --trace off"
   },
   "devDependencies": {

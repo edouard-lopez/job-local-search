@@ -11,6 +11,8 @@ import OfferMetrics from "../components/molecules/OfferMetrics.vue";
 import TechList from "../components/molecules/TechList.vue";
 import PeerList from "../components/molecules/PeerList.vue";
 import SyncDiagnostic from "../components/molecules/SyncDiagnostic.vue";
+import OffersAge from "../components/molecules/OffersAge.vue";
+import SearchButton from "../components/molecules/SearchButton.vue";
 import UpdateOffersButton from "../components/organisms/UpdateOffersButton.vue";
 import SyncMenu from "../components/organisms/SyncMenu.vue";
 import OfferCard from "../components/organisms/OfferCard.vue";
@@ -19,6 +21,8 @@ import { isKnown } from "../domain/technos.js";
 import { t } from "../i18n/index.js";
 
 // Sample data: one offer shown in every state, so each component is visible here.
+const NOW = Date.parse("2026-11-27T10:00:00Z");
+const ages = ["2026-11-27T08:00:00Z", "2026-11-24T10:00:00Z", "2026-11-13T10:00:00Z", "2026-08-20T10:00:00Z"];
 const sample = {
   id: 0, poste: "Ingénieur DevOps", entite: "Exemple de Société Coopérative du Numérique", commune: "Bayonne",
   secteur: "privé", contrat: "CDI", publie: "2026-11-20", lien: "#", score_techno: 4, score_libre: 2, salaire: { min: 45, max: 55, brut: true },
@@ -60,12 +64,18 @@ const toggle = (v) => (selected.value = selected.value.includes(v) ? selected.va
       <OfferMetrics :offer="sample" />
       <OfferMetrics :offer="{ ...sample, salaire: { min: 52, max: 60, brut: false } }" data-testid="metrics-net" />
       <TechList :technos="sample.technos" />
+      <p class="flex flex-wrap items-center gap-x-4 text-xs text-gray-500" data-testid="ages">
+        <OffersAge v-for="d in ages" :key="d" :since="d" :now="NOW" />
+      </p>
+      <p class="flex flex-wrap items-center gap-x-4 text-xs text-gray-500" data-testid="search-phases">
+        <SearchButton phase="idle" /><SearchButton phase="running" /><SearchButton phase="done" />
+      </p>
       <PeerList :peers="[{ id: 1, device: 'Linux · Firefox', self: true }, { id: 2, device: 'Android · Firefox' }, { id: 3, device: 'macOS · Safari' }]" />
       <SyncDiagnostic :diag="{ webrtc: true, servers: [{ url: 'wss://relay.exemple.org', ok: true }, { url: 'wss://nos.exemple.net', ok: false }], room: true, links: 1, turn: false, error: 'could not connect to peer after exchanging SDP' }" />
     </section>
 
     <section class="space-y-3">
-      <h3 class="font-semibold">Organismes : menu des pairs, mise à jour des offres</h3>
+      <h3 class="font-semibold">Organismes : menu des pairs, recherche d'offres</h3>
       <div class="flex justify-end gap-2"><SyncMenu /><UpdateOffersButton /></div>
     </section>
 

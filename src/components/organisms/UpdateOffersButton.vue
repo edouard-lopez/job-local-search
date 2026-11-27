@@ -1,12 +1,14 @@
 <script setup>
-import { ref, useId } from "vue";
+import { computed, onMounted, ref, useId } from "vue";
 import AppIcon from "../atoms/AppIcon.vue";
 import ConfirmDialog from "../molecules/ConfirmDialog.vue";
+import SearchButton from "../molecules/SearchButton.vue";
+import { useUpdatesStore } from "../../stores/updates.js";
 import { dispatchWorkflow, runsUrl } from "../../domain/github.js";
 import { t } from "../../i18n/index.js";
 
 /**
- * Starts the paid "update offers" workflow after a confirmation.
+ * Starts the paid "update offers" workflow after a confirmation, then follows it (see the updates store).
  * The GitHub token (Actions: write, this repository only) stays in this browser.
  */
 const WORKFLOW = "update-offers.yml";
@@ -14,12 +16,16 @@ const KEY = "github-actions-token";
 const read = () => { try { return localStorage.getItem(KEY) ?? ""; } catch { return ""; } };
 const save = (v) => { try { v ? localStorage.setItem(KEY, v) : localStorage.removeItem(KEY); } catch { /* storage unavailable */ } };
 
+const updates = useUpdatesStore();
+const phase = computed(() => (updates.phase === "failed" ? "idle" : updates.phase));
 const uid = useId();
 const open = ref(false);
 const saved = ref(read());
 const token = ref("");
 const state = ref("idle"); // idle | sending | done | error
 const error = ref("");
+
+onMounted(() => updates.resume(saved.value));
 
 function show() { state.value = "idle"; open.value = true; }
 function forget() { save(""); saved.value = ""; }
@@ -28,10 +34,12 @@ async function run() {
   const value = saved.value || token.value.trim();
   if (!value) return;
   state.value = "sending";
+  const startedAt = Date.now();
   try {
     await dispatchWorkflow(value, WORKFLOW);
     save(value); saved.value = value; token.value = "";
     state.value = "done";
+    updates.track(value, startedAt);
   } catch (e) {
     error.value = e.message;
     state.value = "error";
@@ -40,11 +48,10 @@ async function run() {
 </script>
 
 <template>
-  <button type="button" :title="t('update-offers-hint')" data-testid="update-offers" @click="show"
-    class="inline-flex shrink-0 items-center gap-1.5 rounded-md px-3 py-1.5 text-sm ring-1 ring-inset ring-gray-300 hover:ring-gray-500 dark:ring-gray-700">
-    <AppIcon name="refresh" />
-    <span class="sr-only sm:not-sr-only">{{ t("update-offers") }}</span>
-  </button>
+  <SearchButton :phase="phase" @click="show" />
+  <p v-if="updates.phase === 'failed'" role="alert" class="flex items-center gap-1 text-red-700 dark:text-red-400">
+    <AppIcon name="x" />{{ t("update-offers-failed", updates.error) }}
+  </p>
   <ConfirmDialog v-if="open" :open="open" :title="t('update-offers')" :busy="state === 'sending'" :cancelable="state !== 'done'"
     :confirm-label="state === 'done' ? t('close') : t('update-offers-run')" @confirm="run" @close="open = false">
     <template v-if="state === 'done'">
